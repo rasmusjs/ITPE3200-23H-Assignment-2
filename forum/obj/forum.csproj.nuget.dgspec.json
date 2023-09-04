@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/rasmus/RiderProjects/forum/forum/forum.csproj": {}
+    "/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/forum.csproj": {}
   },
   "projects": {
-    "/home/rasmus/RiderProjects/forum/forum/forum.csproj": {
+    "/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/forum.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/rasmus/RiderProjects/forum/forum/forum.csproj",
+        "projectUniqueName": "/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/forum.csproj",
         "projectName": "forum",
-        "projectPath": "/home/rasmus/RiderProjects/forum/forum/forum.csproj",
+        "projectPath": "/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/forum.csproj",
         "packagesPath": "/home/rasmus/.nuget/packages/",
-        "outputPath": "/home/rasmus/RiderProjects/forum/forum/obj/",
+        "outputPath": "/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/rasmus/.nuget/NuGet/NuGet.Config"

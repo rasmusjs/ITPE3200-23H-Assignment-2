@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "b1HnVPbs7DH6Uj5vUPAmhqQJzOIiMdn4sL+d8aCnUcmDvzpNM/zBTZlsZXhLqLAvcLpSEZLS7U+PTw8svSRFHQ==",
+  "dgSpecHash": "jJbq+PCEppi+AFm+U940CsG+04mcqlAkIGjOkbaSJjD/R50eWzLzKhVGeZaia8L7TQXGN8Sza41dKLNtAdWmvg==",
   "success": true,
-  "projectFilePath": "/home/rasmus/RiderProjects/forum/forum/forum.csproj",
+  "projectFilePath": "/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/forum.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

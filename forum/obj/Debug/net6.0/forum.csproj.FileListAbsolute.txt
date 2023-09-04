@@ -24,3 +24,14 @@
 /home/rasmus/RiderProjects/forum/forum/obj/Debug/net6.0/forum.pdb
 /home/rasmus/RiderProjects/forum/forum/obj/Debug/net6.0/forum.genruntimeconfig.cache
 /home/rasmus/RiderProjects/forum/forum/obj/Debug/net6.0/ref/forum.dll
+/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/obj/Debug/net6.0/forum.csproj.AssemblyReference.cache
+/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/obj/Debug/net6.0/forum.GeneratedMSBuildEditorConfig.editorconfig
+/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/obj/Debug/net6.0/forum.AssemblyInfoInputs.cache
+/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/obj/Debug/net6.0/forum.AssemblyInfo.cs
+/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/obj/Debug/net6.0/forum.csproj.CoreCompileInputs.cache
+/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/obj/Debug/net6.0/forum.MvcApplicationPartsAssemblyInfo.cache
+/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/obj/Debug/net6.0/forum.RazorAssemblyInfo.cache
+/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/obj/Debug/net6.0/forum.RazorAssemblyInfo.cs
+/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/obj/Debug/net6.0/forum.dll
+/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/obj/Debug/net6.0/refint/forum.dll
+/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/obj/Debug/net6.0/forum.pdb
