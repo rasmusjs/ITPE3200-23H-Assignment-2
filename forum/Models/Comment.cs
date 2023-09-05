@@ -11,8 +11,8 @@ public class Comment
     public DateTime? LastEdit { get; set; } // ? means nullable
 
     // Relations
-    public int UserId { get; set; }
-    public int PostId { get; set; }
-    public int? ParentId { get; set; } // ? means nullable
-    public List<Comment> Comments { get; set; }
+    public int? UserId { get; set; }
+    public int? PostId { get; set; }
+    public int? ParentId { get; set; }
+    public List<Comment> Comments { get; set; } = new();
 }

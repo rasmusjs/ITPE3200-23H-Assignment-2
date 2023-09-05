@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>MyShop</RootNamespace>
+    <RootNamespace>BracketBros</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,10 +16,6 @@
     <None Remove="Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\" />
-    <Folder Include="Controllers\" />
-    <Folder Include="Views\Item\" />
     <Folder Include="Views\Home\" />
-    <Folder Include="Views\Shared\" />
   </ItemGroup>
 </Project>

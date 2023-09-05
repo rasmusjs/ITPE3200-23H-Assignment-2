@@ -1,0 +1,24 @@
+@model forum.ViewModels.PostsListViewModel
+
+<h1>Posts (@Model.CurrentViewName View)</h1>
+<a href="/Posts/Compact">Compact View</a>
+
+<div class="row row-cols-1 row-cols-md-3 g-4 bg-danger">
+    @foreach (var post in Model.Posts)
+    {
+        <div class="col">
+            <div>
+                <h1>@post.Title</h1>
+                <a asp-controller="Posts"
+                        asp-action="Comments"
+                        asp-route-id="@post.PostId">
+                <div>
+                    <span>@post.PostId</span>
+                    <span>@post.Content</span>
+                    <span>@post.CreationDate</span>
+                </div>
+                    Go to post</a>               
+            </div>
+        </div>
+    }
+</div>

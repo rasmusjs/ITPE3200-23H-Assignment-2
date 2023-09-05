@@ -9,11 +9,11 @@ public class Post
 
     // Dates
     public DateTime CreationDate { get; set; } = DateTime.Now;
-    public DateTime? LastEdit { get; set; } // ? means nullable
+    public DateTime? LastEdit { get; set; }
 
     // Relations
-    public int UserId { get; set; }
-    public int TopicId { get; set; }
-    public List<Tag> Tags { get; set; }
-    public List<Comment> Comments { get; set; }
+    public int? UserId { get; set; }
+    public int? TopicId { get; set; }
+    public List<Tag> Tags { get; set; } = new();
+    public List<Comment> Comments { get; set; } = new();
 }

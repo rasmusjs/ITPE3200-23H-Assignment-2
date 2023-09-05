@@ -1,0 +1,20 @@
+﻿@model Post
+@{
+    ViewData["Title"] = @Model.Title;
+}
+
+<div>
+    <h1>@Model.Title</h1>
+    <div>
+        <span>@Model.PostId</span>
+        <span>@Model.Content</span>
+        <span>@Model.CreationDate</span>
+        <h2>Comments</h2>
+        <div>
+            @foreach (var comment in Model.Comments)
+            {
+                <partial name="_Comment" model="comment"/>
+            }
+        </div>
+    </div>
+</div>
