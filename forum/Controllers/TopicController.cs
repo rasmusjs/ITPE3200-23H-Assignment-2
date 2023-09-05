@@ -14,10 +14,10 @@ public class TopicController : Controller
     }
     
     // GET
-    public IActionResult Index()
+    public IActionResult Topics()
     {
         List<Topic> topics = _topicDbContext.Topics.ToList();
-        var topicListViewmodel = new TopicListViewModel(topics);
-        return View(topicListViewmodel);
+        var topicListViewModel = new TopicListViewModel(topics);
+        return View(topicListViewModel);
     }
 }

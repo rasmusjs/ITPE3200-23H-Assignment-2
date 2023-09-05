@@ -1,0 +1,11 @@
+@model forum.ViewModels.TopicListViewModel
+
+<div>
+    @foreach (var topic in Model.Topics)
+        {
+            <div class="mb-4">
+                <div>@topic.TopicId</div>
+                <div>@topic.Name</div>
+            </div>
+        }
+</div>
