@@ -6,8 +6,8 @@ build_property.ProjectTypeGuids =
 build_property.InvariantGlobalization = 
 build_property.PlatformNeutralAssembly = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
-build_property.RootNamespace = forum
-build_property.RootNamespace = forum
+build_property.RootNamespace = MyShop
+build_property.RootNamespace = MyShop
 build_property.ProjectDir = /home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
@@ -15,30 +15,22 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = /home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum
 build_property._RazorSourceGeneratorDebug = 
 
-[/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/Pages/Error.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRXJyb3IuY3NodG1s
+[/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/Pages/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSW5kZXguY3NodG1s
+[/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/Views/Item/Table.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSXRlbS9UYWJsZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/Pages/Privacy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUHJpdmFjeS5jc2h0bWw=
+[/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/Pages/Shared/_ValidationScriptsPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+[/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/Pages/_ViewImports.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/Pages/_ViewStart.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX1ZpZXdTdGFydC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/Pages/Shared/_Layout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU2hhcmVkL19MYXlvdXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = b-i03t5thky2
+[/home/rasmus/RiderProjects/ITPE3200-23H-Assignment-1/forum/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-p2opk249i1
