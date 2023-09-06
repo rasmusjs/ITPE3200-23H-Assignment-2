@@ -9,20 +9,22 @@
         @foreach (var post in Model.Posts)
         {
             <tr>
-                <div>
-                    <h2>@post.Title</h2>
+                <td>
                     <div>
-                        <span>@post.PostId</span>
-                        <span>@post.Content</span>
-                        <span>@post.DateCreated</span>
-                        <span>@post.DateLastEdited</span>
-                        <a asp-controller="Posts"
-                           asp-action="Post"
-                           asp-route-id="@post.PostId">
-                            Go to post
-                        </a>
+                        <h2>@post.Title</h2>
+                        <div>
+                            <span>@post.PostId</span>
+                            <span>@post.Content</span>
+                            <span>@post.DateCreated</span>
+                            <span>@post.DateLastEdited</span>
+                            <a asp-controller="Posts"
+                               asp-action="Post"
+                               asp-route-id="@post.PostId">
+                                Go to post
+                            </a>
+                        </div>
                     </div>
-                </div>
+                </td>
             </tr>
         }
     </table>

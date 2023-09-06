@@ -23,4 +23,7 @@
     <_ContentIncludedByDefault Remove="Views\Item\Grid.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Item\Table.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.10" />
+  </ItemGroup>
 </Project>

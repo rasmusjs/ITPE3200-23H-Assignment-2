@@ -8,6 +8,13 @@ namespace forum.Controllers;
 
 public class PostsController : Controller
 {
+    private readonly PostDbContext _postDbContext;
+
+    public PostsController(PostDbContext postDbContext)
+    {
+        _postDbContext = postDbContext;
+    }
+
     public IActionResult Index()
     {
         return RedirectToAction("Card", "Posts");
@@ -15,28 +22,28 @@ public class PostsController : Controller
 
     public IActionResult Card()
     {
-        var posts = GetPosts();
+        List<Post> posts = _postDbContext.Posts.ToList();
         var postListViewModel = new PostsListViewModel(posts, "Card");
         return View(postListViewModel);
     }
 
     public IActionResult Compact()
     {
-        var posts = GetPosts();
+        List<Post> posts = _postDbContext.Posts.ToList();
         var postListViewModel = new PostsListViewModel(posts, "Compact");
         return View(postListViewModel);
     }
 
     public IActionResult Post(int id)
     {
-        var posts = GetPosts();
+        List<Post> posts = _postDbContext.Posts.ToList();
         var post = posts.FirstOrDefault(i => i.PostId == id);
         if (post == null)
             return NotFound();
         return View(post);
     }
 
-    public List<Post> GetPosts()
+    /*public List<Post> GetPosts()
     {
         var posts = new List<Post>();
 
@@ -84,7 +91,7 @@ public class PostsController : Controller
         posts.Add(post3);
 
         return posts;
-    }
+    }*/
 }
 
 /*var post1Comment1 = new Comment
