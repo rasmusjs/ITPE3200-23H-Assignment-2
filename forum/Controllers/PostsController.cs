@@ -39,7 +39,7 @@ public class PostsController : Controller
     public List<Post> GetPosts()
     {
         var posts = new List<Post>();
-        
+
         var post1 = new Post
         {
             PostId = 1,
@@ -52,26 +52,6 @@ public class PostsController : Controller
                 Name = "Web development"
             },
         };
-        
-        /*var post1Comment1 = new Comment
-        {
-            CommentId = 1,
-            Content = "CommentContent1"
-        };
-        var post1Comment1SubComment1 = new Comment
-        {
-            CommentId = 3,
-            Content = "SubContent3"
-        };
-        post1Comment1.Comments.Add(post1Comment1SubComment1);
-        var post1Comment2 = new Comment
-        {
-            CommentId = 2,
-            Content = "CommentContent2"
-        };
-        post1.Comments.Add(post1Comment1);
-        post1.Comments.Add(post1Comment2);*/
-
 
         var post2 = new Post
         {
@@ -79,6 +59,11 @@ public class PostsController : Controller
             Title = "PostTitle2",
             Content =
                 "Delicious Italian dish with a thin crust topped with tomato sauce, cheese, and various toppings.",
+            Category = new Category()
+            {
+                CategoryId = 1,
+                Name = "Web development"
+            },
         };
 
         var post3 = new Post
@@ -87,6 +72,11 @@ public class PostsController : Controller
             Title = "PostTitle3",
             Content =
                 "Delicious Italian dish with a thin crust topped with tomato sauce, cheese, and various toppings.",
+            Category = new Category()
+            {
+                CategoryId = 1,
+                Name = "Web development"
+            },
         };
 
         posts.Add(post1);
@@ -96,3 +86,22 @@ public class PostsController : Controller
         return posts;
     }
 }
+
+/*var post1Comment1 = new Comment
+{
+    CommentId = 1,
+    Content = "CommentContent1"
+};
+var post1Comment1SubComment1 = new Comment
+{
+    CommentId = 3,
+    Content = "SubContent3"
+};
+post1Comment1.Comments.Add(post1Comment1SubComment1);
+var post1Comment2 = new Comment
+{
+    CommentId = 2,
+    Content = "CommentContent2"
+};
+post1.Comments.Add(post1Comment1);
+post1.Comments.Add(post1Comment2);*/
