@@ -1,5 +1,7 @@
 @model forum.ViewModels.PostsListViewModel
-
+@{
+    ViewData["Title"] = @Model.CurrentViewName + " View";
+}
 <h1>Posts (@Model.CurrentViewName View)</h1>
 <a href="/Posts/Card">Change to Card View</a>
 <div class="container">

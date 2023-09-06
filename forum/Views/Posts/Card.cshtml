@@ -1,5 +1,10 @@
 @model forum.ViewModels.PostsListViewModel
 
+@{
+    ViewData["Title"] = @Model.CurrentViewName + " View";
+}
+
+
 <h1>Posts (@Model.CurrentViewName View)</h1>
 <a href="/Posts/Compact">Change to Compact View</a>
 
