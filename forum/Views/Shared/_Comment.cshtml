@@ -3,7 +3,7 @@
 <div class="ps-2">
     <h3>@Model.CommentId</h3>
     <span>@Model.Content</span>
-    @foreach (var comment in @Model.Comments)
+    @foreach (var comment in @Model.CommentReplies)
     {
         <partial name="_Comment" model="@comment"/>
     }

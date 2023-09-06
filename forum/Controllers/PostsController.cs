@@ -177,11 +177,11 @@ var post1Comment1SubComment1 = new Comment
     CommentId = 3,
     Content = "SubContent3"
 };
-post1Comment1.Comments.Add(post1Comment1SubComment1);
+post1Comment1.CommentReplies.Add(post1Comment1SubComment1);
 var post1Comment2 = new Comment
 {
     CommentId = 2,
     Content = "CommentContent2"
 };
-post1.Comments.Add(post1Comment1);
-post1.Comments.Add(post1Comment2);*/
+post1.CommentReplies.Add(post1Comment1);
+post1.CommentReplies.Add(post1Comment2);*/
