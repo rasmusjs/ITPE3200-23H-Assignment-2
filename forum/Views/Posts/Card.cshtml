@@ -15,11 +15,13 @@
             <div>
                 <h1>@post.Title</h1>
                 <div>
-                    <span>@post.PostId</span>
-                    <span>@post.Content</span>
-                    <span>@post.DateCreated</span>
-                    <span>@post.DateLastEdited</span>
-                    <span>Total likes: @post.Likes</span>
+                    <div>@post.PostId</div>
+                    <div>@post.Content</div>
+                    <div>@post.DateCreated</div>
+                    <div>@post.DateLastEdited</div>
+                    <div>Total likes: @post.Likes</div>
+                    <div>Category: @post.Category</div>
+                    <div>Tags: @foreach(var tag in @post.Tags) {<span>(@tag.TagId @tag.Name)</span>}</div>
                 </div>
                 <a asp-controller="Posts"
                    asp-action="Post"
