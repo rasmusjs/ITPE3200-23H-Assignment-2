@@ -6,19 +6,19 @@ public class Post
     public string Title { get; set; }
     public string Content { get; set; }
     public int Likes { get; set; } = 0;
-
-    // Dates
     public DateTime DateCreated { get; set; } = DateTime.Now;
     public DateTime? DateLastEdited { get; set; }
-
-    // Relations
-    //public User User { get; set; }
-    public Category Category { get; set; } = new()
+    public int UserId { get; set; }
+    // navigation property
+    public User User { get; set; } = default!;
+    /*public Category Category { get; set; } = new()
     {
-        CategoryId = new Random().Next(1, 9999),
+        CategoryId = new Random().Next(1, 99999),
         Name = "General"
-    };
-
-    public List<Tag> Tags { get; set; } = new();
-    public List<Comment> Comments { get; set; } = new();
+    };*/
+    public string Category { get; set; }
+    // navigation property
+    public List<Tag>? Tags { get; set; }
+    // navigation property
+    public List<Comment>? Comments { get; set; }
 }

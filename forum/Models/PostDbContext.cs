@@ -6,11 +6,14 @@ public class PostDbContext : DbContext
 {
     public PostDbContext(DbContextOptions<PostDbContext> options) : base(options)
     {
-        //Database.EnsureCreated();
+        Database.EnsureCreated();
     }
 
+    public DbSet<User> Users { get; set; }
     public DbSet<Post> Posts { get; set; }
-
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Tag> Tags { get; set; }
+    public DbSet<Comment> Comments { get; set; }
 
     /*public DbSet<Post> Posts { get; set; }
     public DbSet<Comment> Comments { get; set; }
