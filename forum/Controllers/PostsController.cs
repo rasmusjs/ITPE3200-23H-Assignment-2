@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using forum.Models;
 using forum.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace forum.Controllers;
 
@@ -20,30 +21,30 @@ public class PostsController : Controller
         return RedirectToAction("Card", "Posts");
     }
 
-    public IActionResult Card()
+    public async Task<IActionResult> Card()
     {
-        List<Post> posts = _postDbContext.Posts.ToList();
+        List<Post> posts = await _postDbContext.Posts.ToListAsync();
         var postListViewModel = new PostsListViewModel(posts, "Card");
         return View(postListViewModel);
     }
 
-    public IActionResult Compact()
+    public async Task<IActionResult> Compact()
     {
-        List<Post> posts = _postDbContext.Posts.ToList();
+        List<Post> posts = await _postDbContext.Posts.ToListAsync();
         var postListViewModel = new PostsListViewModel(posts, "Compact");
         return View(postListViewModel);
     }
 
-    public IActionResult Post(int id)
+    public async Task<IActionResult> Post(int id)
     {
-        List<Post> posts = _postDbContext.Posts.ToList();
+        List<Post> posts = await _postDbContext.Posts.ToListAsync();
         var post = posts.FirstOrDefault(i => i.PostId == id);
         if (post == null)
             return NotFound();
         return View(post);
     }
-    
-    
+
+
     [HttpGet]
     public IActionResult Create()
     {
@@ -51,64 +52,69 @@ public class PostsController : Controller
     }
 
     [HttpPost]
-    public IActionResult Create(Post post)
+    public async Task<IActionResult> Create(Post post)
     {
         if (ModelState.IsValid)
         {
             _postDbContext.Posts.Add(post);
-            _postDbContext.SaveChanges();
+            await _postDbContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index)); // nameof(Index) keep track of where the use came from
         }
+
         return View(post);
     }
 
-  [HttpGet]
-  public IActionResult Update(int id)
-  {
-      var post = _postDbContext.Posts.Find(id);
-      if (post == null)
-      {
-          return NotFound();
-      }
-      return View(post);
-  }
+    [HttpGet]
+    public async Task<IActionResult> Update(int id)
+    {
+        var post = await _postDbContext.Posts.FindAsync(id);
+        if (post == null)
+        {
+            return NotFound();
+        }
 
-  [HttpPost]
-  public IActionResult Update(Post post)
-  {
-      if (ModelState.IsValid)
-      {
-          _postDbContext.Posts.Update(post);
-          _postDbContext.SaveChanges();
-          return RedirectToAction(nameof(Index));
-      }
-      return View(post);
-  }
+        return View(post);
+    }
 
-  [HttpGet]
-  public IActionResult Delete(int id)
-  {
-      var post = _postDbContext.Posts.Find(id);
-      if (post == null)
-      {
-          return NotFound();
-      }
-      return View(post);
-  }
+    [HttpPost]
+    public async Task<IActionResult> Update(Post post)
+    {
+        if (ModelState.IsValid)
+        {
+            _postDbContext.Posts.Update(post);
+            await _postDbContext.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
 
-  [HttpPost]
-  public IActionResult DeleteConfirmed(int id)
-  {
-      var post = _postDbContext.Posts.Find(id);
-      if (post == null)
-      {
-          return NotFound();
-      }
-      _postDbContext.Posts.Remove(post);
-      _postDbContext.SaveChanges();
-      return RedirectToAction(nameof(Index));
-  }
-  
+        return View(post);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var post = await _postDbContext.Posts.FindAsync(id);
+        if (post == null)
+        {
+            return NotFound();
+        }
+
+        return View(post);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var post = _postDbContext.Posts.Find(id);
+        if (post == null)
+        {
+            return NotFound();
+        }
+
+        _postDbContext.Posts.Remove(post);
+        await _postDbContext.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
     /*public List<Post> GetPosts()
     {
         var posts = new List<Post>();
