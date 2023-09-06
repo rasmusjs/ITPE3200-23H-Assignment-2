@@ -20,7 +20,7 @@
                     <div>@post.DateCreated</div>
                     <div>@post.DateLastEdited</div>
                     <div>Total likes: @post.Likes</div>
-                    <div>Category: @post.Category</div>
+                    <div>Category: (@post.Category).Name</div>
                     <div>Tags: @foreach(var tag in @post.Tags) {<span>(@tag.TagId @tag.Name)</span>}</div>
                 </div>
                 <a asp-controller="Posts"

@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "MyShop": {
+    "forum": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "Posts/Card",
