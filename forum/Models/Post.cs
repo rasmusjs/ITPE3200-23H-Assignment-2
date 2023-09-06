@@ -12,8 +12,7 @@ public class Post
     public DateTime? DateLastEdited { get; set; }
 
     // Relations
-    public int? UserId { get; set; }
-    public int? TopicId { get; set; }
-    public List<Tag> Tags { get; set; } = new();
+    public User User { get; set; }
+    public Category Category { get; set; } = new();
     public List<Comment> Comments { get; set; } = new();
 }

@@ -46,6 +46,7 @@ public class PostsController : Controller
             Content =
                 "Delicious Italian dish with a thin crust topped with tomato sauce, cheese, and various toppings.",
             DateCreated = DateTime.Now,
+            
         };
         var post1Comment1 = new Comment
         {
