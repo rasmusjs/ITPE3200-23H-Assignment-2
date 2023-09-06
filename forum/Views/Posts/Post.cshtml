@@ -8,7 +8,8 @@
     <div>
         <span>@Model.PostId</span>
         <span>@Model.Content</span>
-        <span>@Model.CreationDate</span>
+        <span>Created @Model.DateCreated</span>
+        <span>Last active @Model.DateLastEdited</span>
         <h2>Comments</h2>
         <div>
             @foreach (var comment in Model.Comments)

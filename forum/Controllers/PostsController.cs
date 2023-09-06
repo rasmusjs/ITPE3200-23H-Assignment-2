@@ -45,7 +45,7 @@ public class PostsController : Controller
             Title = "PostTitle1",
             Content =
                 "Delicious Italian dish with a thin crust topped with tomato sauce, cheese, and various toppings.",
-            CreationDate = DateTime.Now,
+            DateCreated = DateTime.Now,
         };
         var post1Comment1 = new Comment
         {
@@ -73,7 +73,7 @@ public class PostsController : Controller
             Title = "PostTitle2",
             Content =
                 "Delicious Italian dish with a thin crust topped with tomato sauce, cheese, and various toppings.",
-            CreationDate = DateTime.Now
+            DateCreated = DateTime.Now
         };
 
         var post3 = new Post
@@ -82,7 +82,7 @@ public class PostsController : Controller
             Title = "PostTitle3",
             Content =
                 "Delicious Italian dish with a thin crust topped with tomato sauce, cheese, and various toppings.",
-            CreationDate = DateTime.Now
+            DateCreated = DateTime.Now
         };
 
         posts.Add(post1);

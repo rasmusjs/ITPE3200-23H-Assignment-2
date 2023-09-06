@@ -9,11 +9,11 @@
         <div class="col">
             <div>
                 <h1>@post.Title</h1>
-
                 <div>
                     <span>@post.PostId</span>
                     <span>@post.Content</span>
-                    <span>@post.CreationDate</span>
+                    <span>@post.DateCreated</span>
+                    <span>@post.DateLastEdited</span>
                 </div>
                 <a asp-controller="Posts"
                    asp-action="Post"

@@ -8,8 +8,8 @@ public class Post
     public int Likes { get; set; } = 0;
 
     // Dates
-    public DateTime CreationDate { get; set; } = DateTime.Now;
-    public DateTime? LastEdit { get; set; }
+    public DateTime DateCreated { get; set; } = DateTime.Now;
+    public DateTime? DateLastEdited { get; set; }
 
     // Relations
     public int? UserId { get; set; }
