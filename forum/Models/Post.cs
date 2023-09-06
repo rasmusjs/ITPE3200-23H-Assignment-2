@@ -13,6 +13,7 @@ public class Post
 
     // Relations
     public User User { get; set; }
-    public Category Category { get; set; } = new();
+    public Category Category { get; set; }
+    public List<Tag> Tags { get; set; }
     public List<Comment> Comments { get; set; } = new();
 }
