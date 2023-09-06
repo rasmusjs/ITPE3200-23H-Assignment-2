@@ -42,7 +42,73 @@ public class PostsController : Controller
             return NotFound();
         return View(post);
     }
+    
+    
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View();
+    }
 
+    [HttpPost]
+    public IActionResult Create(Post post)
+    {
+        if (ModelState.IsValid)
+        {
+            _postDbContext.Posts.Add(post);
+            _postDbContext.SaveChanges();
+            return RedirectToAction(nameof(Index)); // nameof(Index) keep track of where the use came from
+        }
+        return View(post);
+    }
+
+  [HttpGet]
+  public IActionResult Update(int id)
+  {
+      var post = _postDbContext.Posts.Find(id);
+      if (post == null)
+      {
+          return NotFound();
+      }
+      return View(post);
+  }
+
+  [HttpPost]
+  public IActionResult Update(Post post)
+  {
+      if (ModelState.IsValid)
+      {
+          _postDbContext.Posts.Update(post);
+          _postDbContext.SaveChanges();
+          return RedirectToAction(nameof(Index));
+      }
+      return View(post);
+  }
+
+  [HttpGet]
+  public IActionResult Delete(int id)
+  {
+      var post = _postDbContext.Posts.Find(id);
+      if (post == null)
+      {
+          return NotFound();
+      }
+      return View(post);
+  }
+
+  [HttpPost]
+  public IActionResult DeleteConfirmed(int id)
+  {
+      var post = _postDbContext.Posts.Find(id);
+      if (post == null)
+      {
+          return NotFound();
+      }
+      _postDbContext.Posts.Remove(post);
+      _postDbContext.SaveChanges();
+      return RedirectToAction(nameof(Index));
+  }
+  
     /*public List<Post> GetPosts()
     {
         var posts = new List<Post>();

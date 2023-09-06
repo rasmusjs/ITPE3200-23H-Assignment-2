@@ -13,7 +13,12 @@ public class Post
 
     // Relations
     //public User User { get; set; }
-    public Category Category { get; set; }
+    public Category Category { get; set; } = new()
+    {
+        CategoryId = new Random().Next(1, 9999),
+        Name = "General"
+    };
+
     public List<Tag> Tags { get; set; } = new();
     public List<Comment> Comments { get; set; } = new();
 }
