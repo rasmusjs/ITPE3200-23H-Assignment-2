@@ -1,23 +1,26 @@
 @model forum.ViewModels.PostsListViewModel
 
 <h1>Posts (@Model.CurrentViewName View)</h1>
-<a href="/Posts/Card">Card View</a>
-
-<div class="row row-cols-1 row-cols-md-3 g-4 bg-orange">
-    @foreach (var post in Model.Posts)
-    {
-        <div class="col">
-            <div>
-                <h1>@post.Title</h1>
+<a href="/Posts/Card">Change to Card View</a>
+<div class="container">
+    <table class='table table-striped'>
+        @foreach (var post in Model.Posts)
+        {
+            <tr>
                 <div>
-                    <span>@post.PostId</span>
-                    <span>@post.Content</span>
-                    <span>@post.CreationDate</span>
-                    <a asp-controller="Posts"
-                        asp-action="Comments"
-                        asp-route-id="@post.PostId">Go to post</a>
+                    <h2>@post.Title</h2>
+                    <div>
+                        <span>@post.PostId</span>
+                        <span>@post.Content</span>
+                        <span>@post.CreationDate</span>
+                        <a asp-controller="Posts"
+                           asp-action="Post"
+                           asp-route-id="@post.PostId">
+                            Go to post
+                        </a>
+                    </div>
                 </div>
-            </div>
-        </div>
-    }
+            </tr>
+        }
+    </table>
 </div>

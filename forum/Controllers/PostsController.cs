@@ -10,10 +10,9 @@ public class PostsController : Controller
 {
     public IActionResult Index()
     {
-        return RedirectToAction("Card", "Posts");  
-
+        return RedirectToAction("Card", "Posts");
     }
-    
+
     public IActionResult Card()
     {
         var posts = GetPosts();
@@ -27,8 +26,8 @@ public class PostsController : Controller
         var postListViewModel = new PostsListViewModel(posts, "Compact");
         return View(postListViewModel);
     }
-    
-    public IActionResult Comments(int id)
+
+    public IActionResult Post(int id)
     {
         var posts = GetPosts();
         var post = posts.FirstOrDefault(i => i.PostId == id);
@@ -44,7 +43,8 @@ public class PostsController : Controller
         {
             PostId = 1,
             Title = "PostTitle1",
-            Content = "Delicious Italian dish with a thin crust topped with tomato sauce, cheese, and various toppings.",
+            Content =
+                "Delicious Italian dish with a thin crust topped with tomato sauce, cheese, and various toppings.",
             CreationDate = DateTime.Now,
         };
         var post1Comment1 = new Comment
@@ -71,15 +71,17 @@ public class PostsController : Controller
         {
             PostId = 2,
             Title = "PostTitle2",
-            Content = "Delicious Italian dish with a thin crust topped with tomato sauce, cheese, and various toppings.",
+            Content =
+                "Delicious Italian dish with a thin crust topped with tomato sauce, cheese, and various toppings.",
             CreationDate = DateTime.Now
         };
-        
+
         var post3 = new Post
         {
             PostId = 3,
             Title = "PostTitle3",
-            Content = "Delicious Italian dish with a thin crust topped with tomato sauce, cheese, and various toppings.",
+            Content =
+                "Delicious Italian dish with a thin crust topped with tomato sauce, cheese, and various toppings.",
             CreationDate = DateTime.Now
         };
 
