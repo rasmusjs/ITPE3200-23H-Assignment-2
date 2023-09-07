@@ -1,9 +1,7 @@
 @model forum.ViewModels.PostsListViewModel
-
 @{
     ViewData["Title"] = @Model.CurrentViewName + " View";
 }
-
 
 <h1>Posts (@Model.CurrentViewName View)</h1>
 <a href="/Posts/Compact">Change to Compact View</a>
@@ -13,41 +11,76 @@
     {
         <div class="col">
             <div>
-                <h1>@post.Title</h1>
+                <h1>Post</h1>
                 <div>
-                    <div>@post.PostId</div>
-                    <div>@post.Content</div>
-                    <div>@post.DateCreated</div>
-                    <div>@post.DateLastEdited</div>
-                    <div>Total likes: @post.Likes</div>
-                    @*
-                    <div>Category: @post.Category.Name</div>
-                    *@
+                    <div>PostId: @post.PostId</div>
+                    <div>Title: @post.Title</div>
+                    <div>Content: @post.Content</div>
+                    <div>Likes: @post.Likes</div>
+                    <div>DateCreated: @post.DateCreated</div>
+                    @if (post.DateLastEdited != null)
+                    {
+                        <div>DateLastEdited: @post.DateLastEdited</div>
+                    }
+                    <div>CategoryId: @post.CategoryId</div>
                     <div>Category: @post.Category</div>
+                    <div>Category.CategoryId: @post.Category.CategoryId</div>
+                    @*<div>Category.Name: @post.Category.Name</div>*@
                     <div>
                         Tags:
-                        @foreach (var tag in @post.Tags)
+                        @if (post.Tags != null)
                         {
-                            <span>(@tag.TagId @tag.Name)</span>
+                            foreach (var tag in post.Tags)
+                            {
+                                <div>TagId: @tag.TagId</div>
+                                <div>Name: @tag.Name</div>
+                            }
                         }
                     </div>
+                    
+                    <br/>
+                    
+                    @*<h2>User</h2>
+                    <div>UserId: @post.UserId</div>
+                    <div>Post.User.Username: @post.User.Username</div>
+                    <div>Post.User.Email: @post.User.Email</div>
+                    <div>Post.User.Password: @post.User.Password</div>
+                    <div>Post.User.CreationDate: @post.User.CreationDate</div>
+                    <div>
+                        Posts:
+                        @if (post.User.Posts != null)
+                        {
+                            foreach (var userPost in post.User.Posts)
+                            {
+                                <div>post.PostId: @userPost.PostId</div>
+                            }
+                        }
+                    </div>*@
                 </div>
+                
+                <br/>
 
-                <a asp-controller="Posts"
-                   asp-action="Update"
-                   asp-route-id="@post.PostId">
-                    Update
-                </a>
-                <a asp-controller="Posts"
-                   asp-action="Delete"
-                   asp-route-id="@post.PostId">
-                    Delete
-                </a>
-                <a asp-controller="Posts"
-                   asp-action="Post"
-                   asp-route-id="@post.PostId">
-                    Go to post
-                </a>
+                <div>
+                    <a asp-controller="Posts"
+                       asp-action="Update"
+                       asp-route-id="@post.PostId">
+                        Update
+                    </a>
+                </div>
+                <div>
+                    <a asp-controller="Posts"
+                       asp-action="Delete"
+                       asp-route-id="@post.PostId">
+                        Delete
+                    </a>
+                </div>
+                <div>
+                    <a asp-controller="Posts"
+                       asp-action="Post"
+                       asp-route-id="@post.PostId">
+                        Go to post
+                    </a>
+                </div>
             </div>
         </div>
     }

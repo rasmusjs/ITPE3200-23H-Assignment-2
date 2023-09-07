@@ -21,11 +21,11 @@
         <input asp-for="Category" class="form-control"/>
         <span asp-validation-for="Category" class="text-danger"></span>
     </div>
-    <div class="form-group">
+    @*<div class="form-group">
         <label asp-for="Tags"></label><span class="text-danger">*</span>
         <input asp-for="Tags" class="form-control"/>
         <span asp-validation-for="Tags" class="text-danger"></span>
-    </div>
+    </div>*@
 
     <button type="submit" class="btn btn-primary">Save</button>
     <a asp-action="Card" class="btn btn-secondary">Back to Card View</a>

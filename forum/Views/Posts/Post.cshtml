@@ -9,13 +9,13 @@
         <span>@Model.PostId</span>
         <span>@Model.Content</span>
         <span>Created @Model.DateCreated</span>
-        <span>Last active @Model.DateLastEdited</span>
+        @*<span>Last active @Model.DateLastEdited</span>*@
         <h2>Comments</h2>
-        <div>
+        @*<div>
             @foreach (var comment in Model.Comments)
             {
                 <partial name="_Comment" model="comment"/>
             }
-        </div>
+        </div>*@
     </div>
 </div>

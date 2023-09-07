@@ -6,7 +6,7 @@ public class Post
     public string Title { get; set; }
     public string Content { get; set; }
     public int Likes { get; set; } = 0;
-    public DateTime DateCreated { get; set; } = DateTime.Now;
+    public DateTime DateCreated { get; set; }
     public DateTime? DateLastEdited { get; set; }
 
     public int UserId { get; set; }
@@ -16,16 +16,12 @@ public class Post
 
    // public virtual Category Category { get; set; } = new();
 
-    public virtual Category Category { get; set; } = new()
-    {
-        CategoryId = 1,
-        Name = "General"
-    };
     public int CategoryId { get; set; }
+    public virtual Category Category { get; set; } = default!;
 
     // navigation property
     public List<Tag>? Tags { get; set; }
 
     // navigation property
-    public List<Comment>? Comments { get; set; }
+    //public List<Comment>? Comments { get; set; }
 }

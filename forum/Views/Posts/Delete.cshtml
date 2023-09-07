@@ -20,7 +20,7 @@
         <dd class="col-sm-10">@Model.Category</dd>
 
         <dt class="col-sm-2">Tags</dt>
-        <dd class="col-sm-10">@Model.Tags</dd>
+        @*<dd class="col-sm-10">@Model.Tags</dd>*@
     </dl>
 
     <form asp-action="DeleteConfirmed" asp-route-id="@Model.PostId" method="post">

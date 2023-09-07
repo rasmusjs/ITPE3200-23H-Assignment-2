@@ -54,9 +54,52 @@ public class PostsController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(Post post)
     {
-        Console.WriteLine("Valid model?");
-        Console.WriteLine(ModelState.IsValid);
-        if (ModelState.IsValid)
+        post.DateCreated = DateTime.Now;   
+        
+        var newUser = new User()
+        {
+            UserId = new Random().Next(1, 999999),
+            Username = "UsernamePlaceholder",
+            Email = "EmailPlaceholder@email.com",
+            Password = "Password123",
+            CreationDate = DateTime.Now,
+        };
+
+        post.UserId = newUser.UserId;
+        post.User = newUser;
+        
+        var newCategory = new Category()
+        {
+            CategoryId = new Random().Next(1, 999999),
+            Name = "CategoryPlaceholder"
+        };
+        
+        post.CategoryId = newCategory.CategoryId;
+        post.Category = newCategory;
+
+        var newTag1 = new Tag()
+        {
+            TagId = new Random().Next(1, 999999),
+            Name = "TagPlaceholder1"
+        };
+        var newTag2 = new Tag()
+        {
+            TagId = new Random().Next(1, 999999),
+            Name = "TagPlaceholder2"
+        };
+
+        post.Tags = new List<Tag>();
+        post.Tags.Add(newTag1);
+        post.Tags.Add(newTag2);
+        
+        //Console.WriteLine(post.DateCreated);
+        //Console.WriteLine(postCopy.DateCreated);
+        
+        //Console.WriteLine("Valid model?");
+        //Console.WriteLine(ModelState.IsValid);
+        
+        //if (ModelState.IsValid)
+        if (true)
         {
             _postDbContext.Posts.Add(post);
             await _postDbContext.SaveChangesAsync();

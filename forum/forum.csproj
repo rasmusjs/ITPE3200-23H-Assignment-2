@@ -16,7 +16,6 @@
     <None Remove="Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Migrations\" />
     <Folder Include="Views\Home\" />
   </ItemGroup>
   <ItemGroup>
