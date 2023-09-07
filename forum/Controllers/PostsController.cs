@@ -54,6 +54,7 @@ public class PostsController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(Post post)
     {
+        Console.WriteLine("Valid model?");
         Console.WriteLine(ModelState.IsValid);
         if (ModelState.IsValid)
         {
