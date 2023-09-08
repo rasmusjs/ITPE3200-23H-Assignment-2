@@ -10,7 +10,7 @@ using forum.Models;
 
 namespace forum.Migrations
 {
-    [DbContext(typeof(PostDbContext))]
+    [DbContext(typeof(ForumDbContext))]
     [Migration("20230906135540_InitDb")]
     partial class InitDb
     {

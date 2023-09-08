@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace forum.Models;
 
-public class PostDbContext : DbContext
+public class ForumDbContext : DbContext
 {
-    public PostDbContext(DbContextOptions<PostDbContext> options) : base(options)
+    public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
     {
         Database.EnsureCreated();
     }

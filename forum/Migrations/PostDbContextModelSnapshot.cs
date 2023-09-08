@@ -9,7 +9,7 @@ using forum.Models;
 
 namespace forum.Migrations
 {
-    [DbContext(typeof(PostDbContext))]
+    [DbContext(typeof(ForumDbContext))]
     partial class PostDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

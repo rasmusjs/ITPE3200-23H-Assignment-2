@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using forum.DAL;
 using Microsoft.AspNetCore.Mvc;
 using forum.Models;
 using forum.ViewModels;
@@ -9,11 +10,17 @@ namespace forum.Controllers;
 
 public class PostsController : Controller
 {
-    private readonly PostDbContext _postDbContext;
+    //private readonly ForumDbContext _forumDbContext;
 
-    public PostsController(PostDbContext postDbContext)
+
+    private readonly IForumRepository<Post> _postRepository;
+
+    private readonly ILogger<PostsController> _logger;
+
+    public PostsController(IForumRepository<Post> postRepository, ILogger<PostsController> logger)
     {
-        _postDbContext = postDbContext;
+        _postRepository = postRepository;
+        _logger = logger;
     }
 
     public IActionResult Index()
@@ -23,21 +30,33 @@ public class PostsController : Controller
 
     public async Task<IActionResult> Card()
     {
-        List<Post> posts = await _postDbContext.Posts.ToListAsync();
+        var posts = await _postRepository.GetAll();
+        if (posts == null)
+        {
+            _logger.LogError("[ItemController] Item list not found while executing _itemRepository.GetAll()");
+            return NotFound("Item list not found");
+        }
+
         var postListViewModel = new PostsListViewModel(posts, "Card");
         return View(postListViewModel);
     }
 
     public async Task<IActionResult> Compact()
     {
-        List<Post> posts = await _postDbContext.Posts.ToListAsync();
+        var posts = await _postRepository.GetAll();
+        if (posts == null)
+        {
+            _logger.LogError("[ItemController] Item list not found while executing _itemRepository.GetAll()");
+            return NotFound("Item list not found");
+        }
+
         var postListViewModel = new PostsListViewModel(posts, "Compact");
         return View(postListViewModel);
     }
-
+/*
     public async Task<IActionResult> Post(int id)
     {
-        List<Post> posts = await _postDbContext.Posts.ToListAsync();
+        List<Post> posts = await _forumDbContext.Posts.ToListAsync();
         var post = posts.FirstOrDefault(i => i.PostId == id);
         if (post == null)
             return NotFound();
@@ -54,8 +73,8 @@ public class PostsController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(Post post)
     {
-        post.DateCreated = DateTime.Now;   
-        
+        post.DateCreated = DateTime.Now;
+
         var newUser = new User()
         {
             UserId = new Random().Next(1, 999999),
@@ -67,13 +86,13 @@ public class PostsController : Controller
 
         post.UserId = newUser.UserId;
         post.User = newUser;
-        
+
         var newCategory = new Category()
         {
             CategoryId = new Random().Next(1, 999999),
             Name = "CategoryPlaceholder"
         };
-        
+
         post.CategoryId = newCategory.CategoryId;
         post.Category = newCategory;
 
@@ -91,18 +110,18 @@ public class PostsController : Controller
         post.Tags = new List<Tag>();
         post.Tags.Add(newTag1);
         post.Tags.Add(newTag2);
-        
+
         //Console.WriteLine(post.DateCreated);
         //Console.WriteLine(postCopy.DateCreated);
-        
+
         //Console.WriteLine("Valid model?");
         //Console.WriteLine(ModelState.IsValid);
-        
+
         //if (ModelState.IsValid)
         if (true)
         {
-            _postDbContext.Posts.Add(post);
-            await _postDbContext.SaveChangesAsync();
+            _forumDbContext.Posts.Add(post);
+            await _forumDbContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index)); // nameof(Index) keep track of where the use came from
         }
 
@@ -112,7 +131,7 @@ public class PostsController : Controller
     [HttpGet]
     public async Task<IActionResult> Update(int id)
     {
-        var post = await _postDbContext.Posts.FindAsync(id);
+        var post = await _forumDbContext.Posts.FindAsync(id);
         if (post == null)
         {
             return NotFound();
@@ -126,8 +145,8 @@ public class PostsController : Controller
     {
         if (ModelState.IsValid)
         {
-            _postDbContext.Posts.Update(post);
-            await _postDbContext.SaveChangesAsync();
+            _forumDbContext.Posts.Update(post);
+            await _forumDbContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -137,7 +156,7 @@ public class PostsController : Controller
     [HttpGet]
     public async Task<IActionResult> Delete(int id)
     {
-        var post = await _postDbContext.Posts.FindAsync(id);
+        var post = await _forumDbContext.Posts.FindAsync(id);
         if (post == null)
         {
             return NotFound();
@@ -149,16 +168,16 @@ public class PostsController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var post = _postDbContext.Posts.Find(id);
+        var post = _forumDbContext.Posts.Find(id);
         if (post == null)
         {
             return NotFound();
         }
 
-        _postDbContext.Posts.Remove(post);
-        await _postDbContext.SaveChangesAsync();
+        _forumDbContext.Posts.Remove(post);
+        await _forumDbContext.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
-    }
+    }*/
 
     /*public List<Post> GetPosts()
     {

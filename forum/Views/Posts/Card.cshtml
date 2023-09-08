@@ -23,7 +23,7 @@
                         <div>DateLastEdited: @post.DateLastEdited</div>
                     }
                     <div>CategoryId: @post.CategoryId</div>
-                    <div>Category: @post.Category</div>
+                    <div>Category: @post.Category.Name</div>
                     <div>Category.CategoryId: @post.Category.CategoryId</div>
                     @*<div>Category.Name: @post.Category.Name</div>*@
                     <div>
@@ -60,7 +60,7 @@
                 
                 <br/>
 
-                <div>
+                @*<div>
                     <a asp-controller="Posts"
                        asp-action="Update"
                        asp-route-id="@post.PostId">
@@ -80,7 +80,7 @@
                        asp-route-id="@post.PostId">
                         Go to post
                     </a>
-                </div>
+                </div>*@
             </div>
         </div>
     }
