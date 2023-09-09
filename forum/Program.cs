@@ -13,6 +13,7 @@ builder.Services.AddDbContext<ForumDbContext>(options =>
         builder.Configuration["ConnectionStrings:PostDbContextConnection"]);
 });
 builder.Services.AddScoped<IForumRepository<Post>, ForumRepository<Post>>();
+builder.Services.AddScoped<IForumRepository<Category>, ForumRepository<Category>>();
 builder.Services.AddScoped<IForumRepository<Tag>, ForumRepository<Tag>>();
 
 

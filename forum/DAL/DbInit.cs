@@ -10,7 +10,7 @@ public static class DbInit
         using var serviceScope = app.ApplicationServices.CreateScope();
         ForumDbContext context = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
         //context.Database.EnsureDeleted();
-        //context.Database.EnsureCreated();
+        context.Database.EnsureCreated();
 
         if (!context.Categories.Any())
         {
@@ -94,6 +94,92 @@ public static class DbInit
             context.AddRange(usersList);
             context.SaveChanges();
             Console.WriteLine("Temp users added");
+        }
+
+        if (!context.Posts.Any())
+        {
+            var postsList = new List<Post>()
+            {
+                new()
+                {
+                    Title = "First post",
+                    Content = "This is the first post",
+                    DateCreated = DateTime.Now,
+                    DateLastEdited = DateTime.Now,
+                    UserId = 1,
+                    CategoryId = 1,
+                    Tags = new List<Tag>()
+                    {
+                        new()
+                        {
+                            Name = "Java"
+                        },
+                        new()
+                        {
+                            Name = "C#"
+                        }
+                    }
+                },
+                new()
+                {
+                    Title = "Second post",
+                    Content = "This is the second post",
+                    DateCreated = DateTime.Now,
+                    DateLastEdited = DateTime.Now,
+                    UserId = 2,
+                    CategoryId = 2,
+                    Tags = new List<Tag>()
+                    {
+                        new()
+                        {
+                            Name = "Python"
+                        },
+                        new()
+                        {
+                            Name = "JavaScript"
+                        }
+                    }
+                },
+                new()
+                {
+                    Title = "Third post",
+                    Content = "This is the third post",
+                    DateCreated = DateTime.Now,
+                    DateLastEdited = DateTime.Now,
+                    UserId = 3,
+                    CategoryId = 3,
+                    Tags = new List<Tag>()
+                    {
+                        new()
+                        {
+                            Name = "Java"
+                        },
+                        new()
+                        {
+                            Name = "JavaScript"
+                        }
+                    }
+                }
+            };
+            /*var mapTags = new Dictionary<string, Tag>();
+            foreach (var tag in postsList.SelectMany(post => post.Tags))
+            {
+                if (!mapTags.ContainsKey(tag.Name))
+                {
+                    mapTags.Add(tag.Name, tag);
+                }
+                else
+                {
+                    tag.TagId = mapTags[tag.Name].TagId;
+                }
+            }*/
+
+            context.AddRange(postsList);
+            //context.AddRange(mapTags);
+            context.SaveChanges();
+
+
+            Console.WriteLine("Temp posts added");
         }
 
         /*

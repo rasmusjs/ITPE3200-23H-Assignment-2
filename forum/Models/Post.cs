@@ -13,13 +13,13 @@ public class Post
 
     // navigation property
     public User User { get; set; } = default!;
-    
+
     public int CategoryId { get; set; }
-    public virtual Category Category { get; set; } = new();
+    public virtual Category Category { get; set; } = default!;
 
     // navigation property
     public virtual List<Tag>? Tags { get; set; }
 
     // navigation property
-    public List<Comment>? Comments { get; set; }
+    public List<Comment> Comments { get; set; } = default!;
 }

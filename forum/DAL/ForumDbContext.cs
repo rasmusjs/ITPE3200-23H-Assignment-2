@@ -6,7 +6,7 @@ public class ForumDbContext : DbContext
 {
     public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
     { 
-        Database.EnsureCreated();
+        //Database.EnsureCreated();
     }
 
     public DbSet<User> Users { get; set; }
@@ -17,6 +17,10 @@ public class ForumDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //modelBuilder.Entity<Post>().HasOne(p => p.User).WithMany(u => u.Posts).HasForeignKey(p => p.UserId);
+        modelBuilder.Entity<Post>().HasOne(p => p.Category).WithMany().HasForeignKey(p => p.CategoryId);
+
+        
         modelBuilder.Entity<Comment>()
             .HasOne(c => c.CommentParent) // Comment can have one parent
             .WithMany(c => c.CommentReplies) // Can have many children

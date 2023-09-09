@@ -23,8 +23,8 @@
                         <div>DateLastEdited: @post.DateLastEdited</div>
                     }
                     <div>CategoryId: @post.CategoryId</div>
-                    <div>Category: @post.Category.Name</div>
-                    <div>Category.CategoryId: @post.Category.CategoryId</div>
+                    @*<div>Category: @post.Category.Name</div>
+                    <div>Category.CategoryId: @post.Category.CategoryId</div>*@
                     @*<div>Category.Name: @post.Category.Name</div>*@
                     <div>
                         Tags:
@@ -35,6 +35,10 @@
                                 <div>TagId: @tag.TagId</div>
                                 <div>Name: @tag.Name</div>
                             }
+                        }
+                        else
+                        {
+                            <div>null</div>
                         }
                     </div>
 
