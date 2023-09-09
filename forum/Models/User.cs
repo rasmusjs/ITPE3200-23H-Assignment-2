@@ -8,7 +8,7 @@ public class User
     public string Password { get; set; }
     public DateTime CreationDate { get; set; }
     // navigation property
-    //public List<Post>? Posts { get; set; }
+    public List<Post>? Posts { get; set; }
     // navigation property
     //public List<Comment>? Comments { get; set; }
     // navigation property

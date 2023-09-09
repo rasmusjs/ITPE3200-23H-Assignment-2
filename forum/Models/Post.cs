@@ -20,7 +20,7 @@ public class Post
     public virtual Category Category { get; set; } = new();
 
     // navigation property
-    public List<Tag>? Tags { get; set; }
+    public virtual List<Tag>? Tags { get; set; }
 
     // navigation property
     //public List<Comment>? Comments { get; set; }

@@ -10,15 +10,15 @@ namespace forum.Controllers;
 
 public class PostsController : Controller
 {
-    //private readonly ForumDbContext _forumDbContext;
-
-
     private readonly IForumRepository<Post> _postRepository;
+    private readonly IForumRepository<Tag> _tags;
 
-    private readonly ILogger<PostsController> _logger;
+    private readonly ILogger<PostsController> _logger; // Ikke satt opp enda!
 
-    public PostsController(IForumRepository<Post> postRepository, ILogger<PostsController> logger)
+    public PostsController(IForumRepository<Tag> tagRepo, IForumRepository<Post> postRepository,
+        ILogger<PostsController> logger)
     {
+        _tags = tagRepo;
         _postRepository = postRepository;
         _logger = logger;
     }
@@ -53,11 +53,10 @@ public class PostsController : Controller
         var postListViewModel = new PostsListViewModel(posts, "Compact");
         return View(postListViewModel);
     }
-/*
+
     public async Task<IActionResult> Post(int id)
     {
-        List<Post> posts = await _forumDbContext.Posts.ToListAsync();
-        var post = posts.FirstOrDefault(i => i.PostId == id);
+        var post = await _postRepository.GetTById(id);
         if (post == null)
             return NotFound();
         return View(post);
@@ -74,54 +73,9 @@ public class PostsController : Controller
     public async Task<IActionResult> Create(Post post)
     {
         post.DateCreated = DateTime.Now;
-
-        var newUser = new User()
+        if (ModelState.IsValid)
         {
-            UserId = new Random().Next(1, 999999),
-            Username = "UsernamePlaceholder",
-            Email = "EmailPlaceholder@email.com",
-            Password = "Password123",
-            CreationDate = DateTime.Now,
-        };
-
-        post.UserId = newUser.UserId;
-        post.User = newUser;
-
-        var newCategory = new Category()
-        {
-            CategoryId = new Random().Next(1, 999999),
-            Name = "CategoryPlaceholder"
-        };
-
-        post.CategoryId = newCategory.CategoryId;
-        post.Category = newCategory;
-
-        var newTag1 = new Tag()
-        {
-            TagId = new Random().Next(1, 999999),
-            Name = "TagPlaceholder1"
-        };
-        var newTag2 = new Tag()
-        {
-            TagId = new Random().Next(1, 999999),
-            Name = "TagPlaceholder2"
-        };
-
-        post.Tags = new List<Tag>();
-        post.Tags.Add(newTag1);
-        post.Tags.Add(newTag2);
-
-        //Console.WriteLine(post.DateCreated);
-        //Console.WriteLine(postCopy.DateCreated);
-
-        //Console.WriteLine("Valid model?");
-        //Console.WriteLine(ModelState.IsValid);
-
-        //if (ModelState.IsValid)
-        if (true)
-        {
-            _forumDbContext.Posts.Add(post);
-            await _forumDbContext.SaveChangesAsync();
+            await _postRepository.Create(post);
             return RedirectToAction(nameof(Index)); // nameof(Index) keep track of where the use came from
         }
 
@@ -131,7 +85,7 @@ public class PostsController : Controller
     [HttpGet]
     public async Task<IActionResult> Update(int id)
     {
-        var post = await _forumDbContext.Posts.FindAsync(id);
+        var post = await _postRepository.GetTById(id);
         if (post == null)
         {
             return NotFound();
@@ -145,8 +99,7 @@ public class PostsController : Controller
     {
         if (ModelState.IsValid)
         {
-            _forumDbContext.Posts.Update(post);
-            await _forumDbContext.SaveChangesAsync();
+            await _postRepository.Update(post);
             return RedirectToAction(nameof(Index));
         }
 
@@ -156,7 +109,7 @@ public class PostsController : Controller
     [HttpGet]
     public async Task<IActionResult> Delete(int id)
     {
-        var post = await _forumDbContext.Posts.FindAsync(id);
+        var post = await _postRepository.GetTById(id);
         if (post == null)
         {
             return NotFound();
@@ -168,83 +121,12 @@ public class PostsController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var post = _forumDbContext.Posts.Find(id);
-        if (post == null)
+        bool post = await _postRepository.Delete(id);
+        if (post == false)
         {
             return NotFound();
         }
 
-        _forumDbContext.Posts.Remove(post);
-        await _forumDbContext.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
-    }*/
-
-    /*public List<Post> GetPosts()
-    {
-        var posts = new List<Post>();
-
-        var post1 = new Post
-        {
-            PostId = 1,
-            Title = "PostTitle1",
-            Content =
-                "Delicious Italian dish with a thin crust topped with tomato sauce, cheese, and various toppings.",
-            Category = new Category()
-            {
-                CategoryId = 1,
-                Name = "Web development"
-            },
-        };
-
-        var post2 = new Post
-        {
-            PostId = 2,
-            Title = "PostTitle2",
-            Content =
-                "Delicious Italian dish with a thin crust topped with tomato sauce, cheese, and various toppings.",
-            Category = new Category()
-            {
-                CategoryId = 1,
-                Name = "Web development"
-            },
-        };
-
-        var post3 = new Post
-        {
-            PostId = 3,
-            Title = "PostTitle3",
-            Content =
-                "Delicious Italian dish with a thin crust topped with tomato sauce, cheese, and various toppings.",
-            Category = new Category()
-            {
-                CategoryId = 1,
-                Name = "Web development"
-            },
-        };
-
-        posts.Add(post1);
-        posts.Add(post2);
-        posts.Add(post3);
-
-        return posts;
-    }*/
+    }
 }
-
-/*var post1Comment1 = new Comment
-{
-    CommentId = 1,
-    Content = "CommentContent1"
-};
-var post1Comment1SubComment1 = new Comment
-{
-    CommentId = 3,
-    Content = "SubContent3"
-};
-post1Comment1.CommentReplies.Add(post1Comment1SubComment1);
-var post1Comment2 = new Comment
-{
-    CommentId = 2,
-    Content = "CommentContent2"
-};
-post1.CommentReplies.Add(post1Comment1);
-post1.CommentReplies.Add(post1Comment2);*/

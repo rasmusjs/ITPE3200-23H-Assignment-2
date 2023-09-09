@@ -5,7 +5,7 @@ namespace forum.Models;
 public class ForumDbContext : DbContext
 {
     public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
-    {
+    { 
         Database.EnsureCreated();
     }
 

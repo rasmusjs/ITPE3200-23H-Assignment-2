@@ -10,7 +10,7 @@ public static class DbInit
         using var serviceScope = app.ApplicationServices.CreateScope();
         ForumDbContext context = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
         //context.Database.EnsureDeleted();
-        context.Database.EnsureCreated();
+        //context.Database.EnsureCreated();
 
         if (!context.Categories.Any())
         {
@@ -35,6 +35,7 @@ public static class DbInit
             };
             context.AddRange(categoriesList);
             context.SaveChanges();
+            Console.WriteLine("Categories added");
         }
 
         if (!context.Tags.Any())
@@ -60,6 +61,7 @@ public static class DbInit
             };
             context.AddRange(tagsList);
             context.SaveChanges();
+            Console.WriteLine("Tags added");
         }
 
         if (!context.Users.Any())
@@ -91,6 +93,7 @@ public static class DbInit
 
             context.AddRange(usersList);
             context.SaveChanges();
+            Console.WriteLine("Temp users added");
         }
 
         /*
