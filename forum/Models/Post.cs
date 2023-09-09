@@ -13,9 +13,7 @@ public class Post
 
     // navigation property
     public User User { get; set; } = default!;
-
-   // public virtual Category Category { get; set; } = new();
-
+    
     public int CategoryId { get; set; }
     public virtual Category Category { get; set; } = new();
 
@@ -23,5 +21,5 @@ public class Post
     public virtual List<Tag>? Tags { get; set; }
 
     // navigation property
-    //public List<Comment>? Comments { get; set; }
+    public List<Comment>? Comments { get; set; }
 }
