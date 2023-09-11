@@ -11,12 +11,16 @@
         <span>Created @Model.DateCreated</span>
         @*<span>Last active @Model.DateLastEdited</span>*@
         <div>
-            @if (Model.Comments.Count > 0)
+            @if (@Model.Comments != null && @Model.Comments.Count > 0)
             {
                 @foreach (var comment in Model.Comments)
                 {
                     <partial name="_Comment" model="comment"/>
                 }
+            }
+            else
+            {
+                <span>No comments yet, be the first to comment</span>
             }
 
         </div>

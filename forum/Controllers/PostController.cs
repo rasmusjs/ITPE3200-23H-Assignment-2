@@ -77,15 +77,23 @@ public class PostController : Controller
     public async Task<IActionResult> Post(int id)
     {
         var post = await _postRepository.GetTById(id);
-
-        /*foreach (var comment in post.Comments)
-        {
-            Console.WriteLine(comment.Content);
-        }*/
-        
-        //var comments = await _commentRepository.GetAll();
+        var comments = await _commentRepository.GetCommentsByPostId(id);
         if (post == null)
             return NotFound();
+
+        //post.Comments = (List<Comment>?)comments;
+
+
+        /*// Display comments and replies
+        foreach (var comment in comments)
+        {
+            Console.WriteLine($"Comment: {comment.Content}");
+            foreach (var reply in comment.CommentReplies)
+            {
+                Console.WriteLine($"  Reply: {reply.Content}");
+            }
+        }*/
+
         return View(post);
     }
 

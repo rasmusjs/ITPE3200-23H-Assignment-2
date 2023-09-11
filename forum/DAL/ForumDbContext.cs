@@ -29,6 +29,14 @@ public class ForumDbContext : DbContext
         modelBuilder.Entity<Post>().HasOne(p => p.Category).WithMany().HasForeignKey(p => p.CategoryId);
 
 
+        // Link Comments with Posts
+        //modelBuilder.Entity<Comment>().HasOne(c => c.Post).WithMany(p => p.Comments).HasForeignKey(c => c.PostId);
+
+
+        modelBuilder.Entity<Comment>()
+            .HasMany(c => c.CommentReplies)
+            .WithOne(c => c.ParentComment)
+            .HasForeignKey(c => c.ParentCommentId);
         //modelBuilder.Entity<Post>().HasOne(p => p.User).WithMany(u => u.Posts).HasForeignKey(p => p.UserId);
         /*modelBuilder.Entity<Comment>()
             .HasOne(c => c.CommentParent) // Comment can have one parent

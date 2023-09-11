@@ -44,6 +44,20 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         }
     }
 
+    public async Task<IEnumerable<Comment>?> GetCommentsByPostId(int postId)
+    {
+        try
+        {
+            return await _db.Comments.Include(comment => comment.CommentReplies)
+                .Where(comment => comment.PostId == postId)
+                .Where(comment => comment.ParentCommentId == null).ToListAsync();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"[{typeof(Comment).Name} Repository] GetAll() failed, error message: {e.Message}");
+            return null;
+        }
+    }
 
     public async Task<TEntity?> GetTById(int id)
     {

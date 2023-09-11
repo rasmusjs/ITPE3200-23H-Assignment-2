@@ -11,15 +11,16 @@ public class Comment
 
     // navigation property
     public int PostId { get; set; }
+    public virtual Post? Post { get; set; }
 
+    /*
     public int UserId { get; set; }
 
     // navigation property
-    public User User { get; set; } = default!;
+    public User User { get; set; } = default!;*/
 
     // navigation property
     public int? ParentCommentId { get; set; } // Self-referencing foreign key
-
-    public Comment? CommentParent { get; set; } // Self-referencing navigation property
+    public Comment? ParentComment { get; set; } // Self-referencing navigation property
     public virtual List<Comment>? CommentReplies { get; set; }
 }

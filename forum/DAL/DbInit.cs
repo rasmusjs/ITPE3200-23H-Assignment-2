@@ -168,65 +168,113 @@ public static class DbInit
             Console.WriteLine("Temp posts added");
         }
 
-        /*if (!context.Comments.Any())
+        if (!context.Comments.Any())
         {
-            var commentsList = new List<Comment>()
+            // Create some top-level comments
+            var comment1 = new Comment
             {
-                new()
-                {
-                    CommentId = 1,
-                    Content = "This is a great post!",
-                    Likes = 10,
-                    DateCreated = DateTime.Now.AddHours(-1),
-                    PostId = 1,
-                    UserId = 2,
-                },
-
-                new()
-                {
-                    CommentId = 2,
-                    Content = "I agree with you!",
-                    Likes = 5,
-                    DateCreated = DateTime.Now.AddMinutes(-30),
-                    PostId = 1,
-                    UserId = 3,
-                },
-
-                new()
-
-                {
-                    CommentId = 3,
-                    Content = "Thanks for sharing!",
-                    Likes = 3,
-                    DateCreated = DateTime.Now.AddMinutes(-15),
-                    PostId = 1,
-                    UserId = 4,
-                },
-
-                new()
-
-                {
-                    CommentId = 4,
-                    Content = "I have a question...",
-                    DateCreated = DateTime.Now.AddMinutes(-10),
-                    PostId = 1,
-                    UserId = 5,
-                    ParentCommentId = 1,
-                },
-
-                new()
-
-                {
-                    CommentId = 5,
-                    Content = "Sure, what's your question?",
-                    DateCreated = DateTime.Now.AddMinutes(-5),
-                    PostId = 1,
-                    UserId = 2,
-                    ParentCommentId = 1,
-                }
+                Content = "This post is soo cool!",
+                DateCreated = DateTime.Now,
+                PostId = 1,
+                Likes = 420
             };
-            context.AddRange(commentsList);
+            var comment2 = new Comment
+            {
+                Content = "I hate this post",
+                DateCreated = DateTime.Now,
+                PostId = 1,
+                Likes = 69
+            };
+
+            // Add comments to the database
+            context.Comments.AddRange(comment1, comment2);
             context.SaveChanges();
-        }*/
+
+            // Add replies to comments
+            var reply1 = new Comment
+            {
+                Content = "This is sooo right!",
+                DateCreated = DateTime.Now,
+                PostId = 1,
+                ParentCommentId = 1 // Set the parent comment ID
+            };
+            var reply2 = new Comment
+            {
+                Content = "You are stupid",
+                DateCreated = DateTime.Now,
+                PostId = 1,
+                ParentCommentId = 1 // Set the parent comment ID
+            };
+            var reply3 = new Comment
+            {
+                Content = "No, you are stupid!",
+                DateCreated = DateTime.Now,
+                PostId = 1,
+                ParentCommentId = 2 // Set the parent comment ID
+            };
+
+            context.Comments.AddRange(reply1, reply2, reply3);
+            context.SaveChanges();
+        }
     }
+    /*if (!context.Comments.Any())
+    {
+        var commentsList = new List<Comment>()
+        {
+            new()
+            {
+                CommentId = 1,
+                Content = "This is a great post!",
+                Likes = 10,
+                DateCreated = DateTime.Now.AddHours(-1),
+                PostId = 1,
+                UserId = 2,
+            },
+
+            new()
+            {
+                CommentId = 2,
+                Content = "I agree with you!",
+                Likes = 5,
+                DateCreated = DateTime.Now.AddMinutes(-30),
+                PostId = 1,
+                UserId = 3,
+            },
+
+            new()
+
+            {
+                CommentId = 3,
+                Content = "Thanks for sharing!",
+                Likes = 3,
+                DateCreated = DateTime.Now.AddMinutes(-15),
+                PostId = 1,
+                UserId = 4,
+            },
+
+            new()
+
+            {
+                CommentId = 4,
+                Content = "I have a question...",
+                DateCreated = DateTime.Now.AddMinutes(-10),
+                PostId = 1,
+                UserId = 5,
+                ParentCommentId = 1,
+            },
+
+            new()
+
+            {
+                CommentId = 5,
+                Content = "Sure, what's your question?",
+                DateCreated = DateTime.Now.AddMinutes(-5),
+                PostId = 1,
+                UserId = 2,
+                ParentCommentId = 1,
+            }
+        };
+        context.AddRange(commentsList);
+        context.SaveChanges();
+    }*/
 }
