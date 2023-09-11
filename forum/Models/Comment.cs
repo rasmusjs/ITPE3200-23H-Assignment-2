@@ -8,6 +8,10 @@ public class Comment
     public DateTime CreationDate { get; set; } = DateTime.Now;
     public DateTime? LastEdit { get; set; }
 
+
+    // navigation property
+    public int PostId { get; set; }
+
     public int UserId { get; set; }
 
     // navigation property

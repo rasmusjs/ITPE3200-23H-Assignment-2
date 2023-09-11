@@ -9,8 +9,8 @@ public static class DbInit
     {
         using var serviceScope = app.ApplicationServices.CreateScope();
         ForumDbContext context = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
-        //context.Database.EnsureDeleted();
-        //context.Database.EnsureCreated();
+        context.Database.EnsureDeleted();
+        context.Database.EnsureCreated();
 
         if (!context.Categories.Any())
         {
@@ -132,11 +132,11 @@ public static class DbInit
                     {
                         new()
                         {
-                            Name = "Python"
+                            Name = "PowerShell"
                         },
                         new()
                         {
-                            Name = "JavaScript"
+                            Name = "Windows"
                         }
                     }
                 },
@@ -156,7 +156,7 @@ public static class DbInit
                         },
                         new()
                         {
-                            Name = "JavaScript"
+                            Name = "Linux"
                         }
                     }
                 }

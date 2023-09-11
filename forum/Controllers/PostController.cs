@@ -3,30 +3,35 @@ using Microsoft.AspNetCore.Mvc;
 using forum.Models;
 using forum.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace forum.Controllers;
 
-public class PostsController : Controller
+public class PostController : Controller
 {
     private readonly IForumRepository<Post> _postRepository;
     private readonly IForumRepository<Category> _categoryRepository;
     private readonly IForumRepository<Tag> _tags;
+    private readonly IForumRepository<Comment> _commentRepository;
 
-    private readonly ILogger<PostsController> _logger; // Ikke satt opp enda!
+    private readonly ILogger<PostController> _logger; // Ikke satt opp enda!
 
-    public PostsController(IForumRepository<Category> categoryRepository,
+
+    public PostController(IForumRepository<Category> categoryRepository,
         IForumRepository<Tag> tagRepo, IForumRepository<Post> postRepository,
-        ILogger<PostsController> logger)
+        IForumRepository<Comment> commentRepository,
+        ILogger<PostController> logger)
     {
         _categoryRepository = categoryRepository;
         _tags = tagRepo;
         _postRepository = postRepository;
+        _commentRepository = commentRepository;
         _logger = logger;
     }
 
     public IActionResult Index()
     {
-        return RedirectToAction("Card", "Posts");
+        return RedirectToAction("Card", "Post");
     }
 
     public async Task<IActionResult> Card()
@@ -59,15 +64,25 @@ public class PostsController : Controller
 
     public async Task<IEnumerable<Post>?> GetAllPosts()
     {
-        var posts = await _postRepository.GetAll();
-        var categories = await _categoryRepository.GetAll(); // Needed to link category to post
-        var tags = await _tags.GetAll(); // Needed to link tags to post
+        var posts = await _postRepository.GetAllPosts();
+        /*var categories = await _categoryRepository.GetAll(); // Needed to link category to post
+        var tags = await _tags.GetAll(); // Needed to link tags to post*/
+        //SELECT Name FROM Tags,PostTag WHERE TagsTagId = TagId AND PostsPostId = "1";
 
+        /*
         if (posts == null || categories == null || tags == null)
         {
             _logger.LogError("[PostController] GetAllPosts failed while executing _itemRepository.GetAll()");
             return null;
-        }
+        }*/
+
+
+        /*foreach (var post in posts)
+        {
+            //post.Category = categories.FirstOrDefault(c => c.CategoryId == post.CategoryId);
+            //post.Tags = tags.Where(t => t.PostId == post.PostId).ToList();
+
+        }*/
 
         return posts;
     }
@@ -75,6 +90,9 @@ public class PostsController : Controller
     public async Task<IActionResult> Post(int id)
     {
         var post = await _postRepository.GetTById(id);
+        var comments = await _commentRepository.GetAll();
+        post.Comments = comments.Where(c => c.PostId == id).ToList();
+
         if (post == null)
             return NotFound();
         return View(post);
@@ -85,9 +103,7 @@ public class PostsController : Controller
     public async Task<IActionResult> Create()
     {
         var categories = await _categoryRepository.GetAll();
-
         var tags = await _tags.GetAll();
-
         var postCreateViewModel = new PostCreateViewModel
         {
             Post = new Post(),

@@ -18,8 +18,8 @@ public class Post
     public virtual Category? Category { get; set; }
 
     // navigation property
-    public virtual List<Tag>? Tags { get; set; }
+    public List<Tag>? Tags { get; set; }
 
     // navigation property
-    public List<Comment> Comments { get; set; } = default!;
+    public virtual List<Comment> Comments { get; set; } = default!;
 }

@@ -15,6 +15,7 @@ builder.Services.AddDbContext<ForumDbContext>(options =>
 builder.Services.AddScoped<IForumRepository<Post>, ForumRepository<Post>>();
 builder.Services.AddScoped<IForumRepository<Category>, ForumRepository<Category>>();
 builder.Services.AddScoped<IForumRepository<Tag>, ForumRepository<Tag>>();
+builder.Services.AddScoped<IForumRepository<Comment>, ForumRepository<Comment>>();
 
 
 var app = builder.Build();

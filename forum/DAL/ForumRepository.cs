@@ -30,6 +30,21 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         }
     }
 
+
+    public async Task<IEnumerable<Post>?> GetAllPosts()
+    {
+        try
+        {
+            return await _db.Posts.Include(post => post.Tags).Include(post => post.Category).ToListAsync();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"[{typeof(Post).Name} Repository] GetAll() failed, error message: {e.Message}");
+            return null;
+        }
+    }
+
+
     public async Task<TEntity?> GetTById(int id)
     {
         try

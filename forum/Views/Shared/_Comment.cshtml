@@ -3,17 +3,15 @@
 <div class="ps-2">
     <h3>@Model.CommentId</h3>
     <span>@Model.Content</span>
-    @if (@Model.CommentReplies != null)
+
+    @foreach (var comment in @Model.CommentReplies)
     {
-        foreach (var comment in @Model.CommentReplies)
-        {
-            <partial name="_Comment" model="@comment"/>
-        }
-        <p>No comments</p>
+        <partial name="_Comment" model="@comment"/>
         @*<a asp-controller="Comments"
-           asp-action="Create"
-           asp-route-id="@Model.CommentId">
-            Reply
-        </a>*@
+               asp-action="Create"
+               asp-route-id="@Model.CommentId">
+                Reply
+            </a>*@
     }
+
 </div>

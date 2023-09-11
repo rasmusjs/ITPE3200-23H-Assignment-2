@@ -4,18 +4,23 @@
 }
 
 <div>
+    <a href="../">Back</a>
+
     <h1>@Model.Title</h1>
     <div>
         <span>@Model.PostId</span>
         <span>@Model.Content</span>
         <span>Created @Model.DateCreated</span>
         @*<span>Last active @Model.DateLastEdited</span>*@
-        <h2>Comments</h2>
-        @*<div>
-            @foreach (var comment in Model.Comments)
+        <div>
+            @if (Model.Comments.Count > 0)
             {
-                <partial name="_Comment" model="comment"/>
+                @foreach (var comment in Model.Comments)
+                {
+                    <partial name="_Comment" model="comment"/>
+                }
             }
-        </div>*@
+
+        </div>
     </div>
 </div>

@@ -46,6 +46,10 @@
                                 <span class="badge rounded-pill bg-primary">@tag.Name</span>
                             }
                         }
+                        else
+                        {
+                            <span class="badge rounded-pill bg-danger">No tags</span>
+                        }
                     </div>
 
                     <br/>
@@ -71,21 +75,21 @@
                 <br/>
 
                 <div>
-                    <a asp-controller="Posts"
+                    <a asp-controller="Post"
                        asp-action="Update"
                        asp-route-id="@post.PostId">
                         Update
                     </a>
                 </div>
                 <div>
-                    <a asp-controller="Posts"
+                    <a asp-controller="Post"
                        asp-action="Delete"
                        asp-route-id="@post.PostId">
                         Delete
                     </a>
                 </div>
                 <div>
-                    <a asp-controller="Posts"
+                    <a asp-controller="Post"
                        asp-action="Post"
                        asp-route-id="@post.PostId">
                         Go to post
