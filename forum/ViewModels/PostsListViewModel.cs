@@ -7,6 +7,7 @@ namespace forum.ViewModels
     public class PostsListViewModel
     {
         public IEnumerable<Post> Posts;
+        public Category? Categories;
         public string? CurrentViewName;
 
         public PostsListViewModel(IEnumerable<Post> posts, string? currentViewName)

@@ -16,29 +16,35 @@
                     <div>PostId: @post.PostId</div>
                     <div>Title: @post.Title</div>
                     <div>Content: @post.Content</div>
-                    <div>Likes: @post.Likes</div>
-                    <div>DateCreated: @post.DateCreated</div>
+                    <div>Total likes: @post.Likes</div>
+                    <div>Created: @post.DateCreated</div>
                     @if (post.DateLastEdited != null)
                     {
-                        <div>DateLastEdited: @post.DateLastEdited</div>
+                        <div>Last active: @post.DateLastEdited</div>
                     }
+                    @*
                     <div>CategoryId: @post.CategoryId</div>
-                    @*<div>Category: @post.Category.Name</div>
-                    <div>Category.CategoryId: @post.Category.CategoryId</div>*@
+                    *@
+                    <b>Category</b>
+                    <span class="badge rounded-pill bg-success">
+                        @if (post.Category != null)
+                        {
+                            @post.Category.Name
+                        }
+                    </span>
+                    @*<<div>Category.CategoryId: @post.Category.CategoryId</div>*@
                     @*<div>Category.Name: @post.Category.Name</div>*@
                     <div>
-                        Tags:
                         @if (post.Tags != null)
                         {
+                            <b>Tags</b>
                             foreach (var tag in post.Tags)
                             {
+                                @*
                                 <div>TagId: @tag.TagId</div>
-                                <div>Name: @tag.Name</div>
+                                *@
+                                <span class="badge rounded-pill bg-primary">@tag.Name</span>
                             }
-                        }
-                        else
-                        {
-                            <div>null</div>
                         }
                     </div>
 

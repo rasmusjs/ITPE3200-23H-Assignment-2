@@ -15,7 +15,7 @@ public class Post
     public User User { get; set; } = default!;
 
     public int CategoryId { get; set; }
-    public virtual Category Category { get; set; } = default!;
+    public virtual Category? Category { get; set; }
 
     // navigation property
     public virtual List<Tag>? Tags { get; set; }

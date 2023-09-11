@@ -1,12 +1,8 @@
-﻿using System.Collections;
-using System.Linq;
-using System.Threading.Tasks;
-using forum.DAL;
+﻿using forum.DAL;
 using Microsoft.AspNetCore.Mvc;
 using forum.Models;
 using forum.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace forum.Controllers;
 
@@ -35,7 +31,7 @@ public class PostsController : Controller
 
     public async Task<IActionResult> Card()
     {
-        var posts = await _postRepository.GetAll();
+        var posts = await GetAllPosts();
 
         if (posts == null)
         {
@@ -49,7 +45,7 @@ public class PostsController : Controller
 
     public async Task<IActionResult> Compact()
     {
-        var posts = await _postRepository.GetAll();
+        var posts = await GetAllPosts();
         if (posts == null)
         {
             _logger.LogError("[ItemController] Item list not found while executing _itemRepository.GetAll()");
@@ -61,16 +57,17 @@ public class PostsController : Controller
     }
 
 
-    public async Task<IEnumerable?> GetAllPosts()
+    public async Task<IEnumerable<Post>?> GetAllPosts()
     {
         var posts = await _postRepository.GetAll();
-        var category = await _categoryRepository.GetAll();
-        if (posts == null || category == null)
+        var categories = await _categoryRepository.GetAll(); // Needed to link category to post
+        var tags = await _tags.GetAll(); // Needed to link tags to post
+
+        if (posts == null || categories == null || tags == null)
         {
-            _logger.LogError("[ItemController] Item list not found while executing _itemRepository.GetAll()");
+            _logger.LogError("[PostController] GetAllPosts failed while executing _itemRepository.GetAll()");
             return null;
         }
-
 
         return posts;
     }
@@ -118,22 +115,18 @@ public class PostsController : Controller
         post.DateLastEdited = DateTime.Now;
         post.UserId = 1;
 
-        Console.WriteLine("Valid" + ModelState.IsValid);
-
-
         //Check https://stackoverflow.com/questions/62783700/asp-net-core-razor-pages-select-multiple-items-from-ienumerable-dropdownlist
         // for how to get the selected tags
 
-        if (post.Tags != null)
+
+        /*//var Tags = Request.Form["Tags"];
+        if (post.Tags.Count > 0)
+        {
             foreach (var tag in post.Tags)
             {
-                Console.WriteLine("Tag: " + tag.Name);
+                tag.PostId = post.PostId;
             }
-        else
-        {
-            Console.WriteLine("Tags is null!");
-        }
-
+        }*/
 
         /*if (ModelState.IsValid)
         {*/
