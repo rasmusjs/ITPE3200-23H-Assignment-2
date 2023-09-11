@@ -161,33 +161,72 @@ public static class DbInit
                     }
                 }
             };
-            /*var mapTags = new Dictionary<string, Tag>();
-            foreach (var tag in postsList.SelectMany(post => post.Tags))
-            {
-                if (!mapTags.ContainsKey(tag.Name))
-                {
-                    mapTags.Add(tag.Name, tag);
-                }
-                else
-                {
-                    tag.TagId = mapTags[tag.Name].TagId;
-                }
-            }*/
-
             context.AddRange(postsList);
-            //context.AddRange(mapTags);
             context.SaveChanges();
 
 
             Console.WriteLine("Temp posts added");
         }
 
-        /*
-        var ordersToUpdate = context.Orders.Include(o => o.OrderItems);
-        foreach (var order in ordersToUpdate)
+        /*if (!context.Comments.Any())
         {
-            order.TotalPrice = order.OrderItems?.Sum(oi => oi.OrderItemPrice) ?? 0;
-        }
-        context.SaveChanges();*/
+            var commentsList = new List<Comment>()
+            {
+                new()
+                {
+                    CommentId = 1,
+                    Content = "This is a great post!",
+                    Likes = 10,
+                    DateCreated = DateTime.Now.AddHours(-1),
+                    PostId = 1,
+                    UserId = 2,
+                },
+
+                new()
+                {
+                    CommentId = 2,
+                    Content = "I agree with you!",
+                    Likes = 5,
+                    DateCreated = DateTime.Now.AddMinutes(-30),
+                    PostId = 1,
+                    UserId = 3,
+                },
+
+                new()
+
+                {
+                    CommentId = 3,
+                    Content = "Thanks for sharing!",
+                    Likes = 3,
+                    DateCreated = DateTime.Now.AddMinutes(-15),
+                    PostId = 1,
+                    UserId = 4,
+                },
+
+                new()
+
+                {
+                    CommentId = 4,
+                    Content = "I have a question...",
+                    DateCreated = DateTime.Now.AddMinutes(-10),
+                    PostId = 1,
+                    UserId = 5,
+                    ParentCommentId = 1,
+                },
+
+                new()
+
+                {
+                    CommentId = 5,
+                    Content = "Sure, what's your question?",
+                    DateCreated = DateTime.Now.AddMinutes(-5),
+                    PostId = 1,
+                    UserId = 2,
+                    ParentCommentId = 1,
+                }
+            };
+            context.AddRange(commentsList);
+            context.SaveChanges();
+        }*/
     }
 }

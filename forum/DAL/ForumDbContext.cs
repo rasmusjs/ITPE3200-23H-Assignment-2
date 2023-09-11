@@ -6,7 +6,7 @@ public class ForumDbContext : DbContext
 {
     public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
     {
-        ChangeTracker.LazyLoadingEnabled = true;
+        //ChangeTracker.LazyLoadingEnabled = true;
         //Database.EnsureCreated();
     }
 
@@ -30,8 +30,6 @@ public class ForumDbContext : DbContext
 
 
         //modelBuilder.Entity<Post>().HasOne(p => p.User).WithMany(u => u.Posts).HasForeignKey(p => p.UserId);
-        //modelBuilder.Entity<Post>().HasOne(p => p.Category).WithMany().HasForeignKey(p => p.CategoryId);
-        //modelBuilder.Entity<Post>().HasMany(p => p.Tags).WithMany(t => t.Posts);
         /*modelBuilder.Entity<Comment>()
             .HasOne(c => c.CommentParent) // Comment can have one parent
             .WithMany(c => c.CommentReplies) // Can have many children

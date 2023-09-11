@@ -65,24 +65,11 @@ public class PostController : Controller
     public async Task<IEnumerable<Post>?> GetAllPosts()
     {
         var posts = await _postRepository.GetAllPosts();
-        /*var categories = await _categoryRepository.GetAll(); // Needed to link category to post
-        var tags = await _tags.GetAll(); // Needed to link tags to post*/
-        //SELECT Name FROM Tags,PostTag WHERE TagsTagId = TagId AND PostsPostId = "1";
-
-        /*
-        if (posts == null || categories == null || tags == null)
+        if (posts == null)
         {
             _logger.LogError("[PostController] GetAllPosts failed while executing _itemRepository.GetAll()");
             return null;
-        }*/
-
-
-        /*foreach (var post in posts)
-        {
-            //post.Category = categories.FirstOrDefault(c => c.CategoryId == post.CategoryId);
-            //post.Tags = tags.Where(t => t.PostId == post.PostId).ToList();
-
-        }*/
+        }
 
         return posts;
     }
@@ -90,9 +77,13 @@ public class PostController : Controller
     public async Task<IActionResult> Post(int id)
     {
         var post = await _postRepository.GetTById(id);
-        var comments = await _commentRepository.GetAll();
-        post.Comments = comments.Where(c => c.PostId == id).ToList();
 
+        /*foreach (var comment in post.Comments)
+        {
+            Console.WriteLine(comment.Content);
+        }*/
+        
+        //var comments = await _commentRepository.GetAll();
         if (post == null)
             return NotFound();
         return View(post);
