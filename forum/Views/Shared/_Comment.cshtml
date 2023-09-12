@@ -1,26 +1,31 @@
 @model Comment
 
-<div class="ps-3">
+<div>
     <h3>@Model.CommentId</h3>
     <span>@Model.Content</span>
-
-    @if (@Model.CommentReplies != null)
-    {
-        foreach (var comment in @Model.CommentReplies)
+    <div>
+        <button disabled>Like (not implemented)</button>
+        <button>Reply</button>
+        <div>
+            @*Create reply(comment) to comment*@
+            @*Passes down the Comment as Model so that the view can use its CommentId as ParentCommentId, and its PostId*@
+            <partial name="_CreateReply" model="Model"/>
+        </div>
+    </div>
+    <div class="ps-3">
+        @if (Model.CommentReplies != null)
         {
-            if (comment.ParentCommentId != @Model.CommentId)
+            foreach (var comment in Model.CommentReplies)
             {
-                <partial name="_Comment" model="@comment"/>
+                <partial name="_Comment" model="comment"/>
             }
-           
         }
-    }
-    <span>Reply</span>
-     @*//<partial name="_Comment" model="@comment"/>
-                /*<a asp-controller="Comments"
-                   asp-action="Create"
-                   asp-route-id="@Model.CommentId">
-                    Reply
-                </a>*/*@
-
+    </div>
 </div>
+
+@*<partial name="_Comment" model="@comment"/>
+<a asp-controller="Comments"
+   asp-action="Create"
+   asp-route-id="@Model.CommentId">
+    Reply
+</a>*@
