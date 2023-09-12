@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace forum.Models;
 
 public class Post
@@ -9,15 +11,16 @@ public class Post
     public DateTime DateCreated { get; set; }
     public DateTime? DateLastEdited { get; set; }
 
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
 
     // navigation property
-    public User User { get; set; } = default!;
+    public User? User { get; set; } = default!;
 
     public int CategoryId { get; set; }
     public virtual Category? Category { get; set; }
 
-    public List<int>? TagIds { get; set; }
+    [NotMapped] public virtual List<int>? TagsId { get; set; } // ony used for creating a post
+
     // navigation property
     public virtual List<Tag>? Tags { get; set; }
 
