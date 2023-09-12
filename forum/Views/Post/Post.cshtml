@@ -15,14 +15,16 @@
             {
                 @foreach (var comment in Model.Comments)
                 {
-                    <partial name="_Comment" model="comment"/>
+                    @if (comment.ParentCommentId == null)
+                    {
+                        <partial name="_Comment" model="comment"/>
+                    }
                 }
             }
             else
             {
                 <span>No comments yet, be the first to comment</span>
             }
-
         </div>
     </div>
 </div>
