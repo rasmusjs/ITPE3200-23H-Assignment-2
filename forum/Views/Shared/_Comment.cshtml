@@ -6,12 +6,14 @@
     <div>
         <button disabled>Like (not implemented)</button>
         <button>Reply</button>
-        <div>
+        <div class="reply-form">
             @*Create reply(comment) to comment*@
             @*Passes down the Comment as Model so that the view can use its CommentId as ParentCommentId, and its PostId*@
-            <partial name="_CreateReply" model="Model"/>
+            @* <partial name="_CreateReply" model="Model"/> *@
+            <partial name="_CreateReply" model="new Comment { ParentCommentId = Model.CommentId, PostId = Model.PostId }" />
         </div>
     </div>
+    <div class="bg-danger">Number of comments: @Model.CommentReplies?.Count</div>
     <div class="ps-3">
         @if (Model.CommentReplies != null)
         {
@@ -22,10 +24,3 @@
         }
     </div>
 </div>
-
-@*<partial name="_Comment" model="@comment"/>
-<a asp-controller="Comments"
-   asp-action="Create"
-   asp-route-id="@Model.CommentId">
-    Reply
-</a>*@
