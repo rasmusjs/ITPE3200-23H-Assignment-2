@@ -8,19 +8,15 @@
     {
         foreach (var comment in @Model.CommentReplies)
         {
-            if (comment.ParentCommentId != @Model.CommentId)
-            {
-                <partial name="_Comment" model="@comment"/>
-            }
-           
+            <partial name="_Comment" model="@comment"/>
         }
     }
     <span>Reply</span>
-     @*//<partial name="_Comment" model="@comment"/>
+
+    @*//<partial name="_Comment" model="@comment"/>
                 /*<a asp-controller="Comments"
                    asp-action="Create"
                    asp-route-id="@Model.CommentId">
                     Reply
                 </a>*/*@
-
 </div>
