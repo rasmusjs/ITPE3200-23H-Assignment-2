@@ -130,29 +130,22 @@ public class PostController : Controller
         post.DateLastEdited = DateTime.Now;
         post.UserId = 1;
 
+
         //Check https://stackoverflow.com/questions/62783700/asp-net-core-razor-pages-select-multiple-items-from-ienumerable-dropdownlist
         // for how to get the selected tags
+        var allTags = await _tags.GetAll();
+        post.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId))
+            .ToList(); // Correct way to get the selected tags???
 
 
-        /*//var Tags = Request.Form["Tags"];
-        if (post.Tags.Count > 0)
+        if (ModelState.IsValid)
         {
-            foreach (var tag in post.Tags)
-            {
-                tag.PostId = post.PostId;
-            }
-        }*/
-
-        /*if (ModelState.IsValid)
-        {*/
-        await _postRepository.Create(post);
-        return RedirectToAction(nameof(Index)); // nameof(Index) keep track of where the use came from
-
-        /*
+            await _postRepository.Create(post);
+            return RedirectToAction(nameof(Index)); // nameof(Index) keep track of where the use came from
         }
 
-        return View(post);
-        return RedirectToAction(nameof(Create));*/
+        //return View(post);
+        return RedirectToAction(nameof(Create));
     }
 
     [HttpGet]
