@@ -1,0 +1,19 @@
+@* This Model will be used as the ParentComment *@
+@model Comment
+
+<div class="border">
+    <form asp-controller="Post" asp-action="CreateReply">
+        @* This should set the ParentCommentId of the reply to Model.CommentId *@
+        <input type="hidden" asp-for="ParentCommentId"/>
+        @* This should set the PostId of the reply to Model.PostId *@
+        <input type="hidden" asp-for="PostId"/>
+
+        @* Content is currently inherited from the parent Comment (Model) but should be empty *@
+        <div class="form-group">
+            <label asp-for="Content">Reply:</label>
+            <textarea class="form-control" asp-for="Content" rows="2"></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit Reply</button>
+    </form>
+</div>
