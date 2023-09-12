@@ -10,6 +10,9 @@
         <span>@Model.Content</span>
         <span>Created @Model.DateCreated</span>
         @*<span>Last active @Model.DateLastEdited</span>*@
-        <partial name="_Comments" model="Model.Comments"/>
+        @if (Model.Comments != null)
+        {
+            <partial name="_Comments" model="Model.Comments"/>
+        }
     </div>
 </div>
