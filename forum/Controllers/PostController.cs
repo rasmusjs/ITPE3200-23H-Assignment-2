@@ -1,4 +1,5 @@
-﻿using forum.DAL;
+﻿using System.ComponentModel;
+using forum.DAL;
 using Microsoft.AspNetCore.Mvc;
 using forum.Models;
 using forum.ViewModels;
@@ -199,6 +200,25 @@ public class PostController : Controller
             return NotFound();
         }
 
+        return RedirectToAction(nameof(Index));
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> CreateReply(Comment replyComment)
+    {
+        // Writes all properties of replyComment
+        foreach(PropertyDescriptor descriptor in TypeDescriptor.GetProperties(replyComment))
+        {
+            string name = descriptor.Name;
+            object value = descriptor.GetValue(replyComment);
+            Console.WriteLine("{0}={1}", name, value);
+        }
+
+        /*
+        TODO:
+        Once the replyComment contains the proper information/content, store it in the database. 
+        */
+        
         return RedirectToAction(nameof(Index));
     }
 }
