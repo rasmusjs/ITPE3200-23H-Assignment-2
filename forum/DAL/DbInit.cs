@@ -193,7 +193,7 @@ public static class DbInit
             // Add replies to comments
             var reply1 = new Comment
             {
-                Content = "This is sooo right!",
+                Content = "This is sooo right!!!",
                 DateCreated = DateTime.Now,
                 PostId = 1,
                 ParentCommentId = 1 // Set the parent comment ID
@@ -214,6 +214,19 @@ public static class DbInit
             };
 
             context.Comments.AddRange(reply1, reply2, reply3);
+            context.SaveChanges();
+            
+            // Adds reply to "reply1".
+            // Gets stored in the database but does not seem to create a relation.
+            // Also does not work when trying to add a reply in the website
+            var reply1Reply1 = new Comment
+            {
+                Content = "Actually, this is very wrong!",
+                DateCreated = DateTime.Now,
+                PostId = 1,
+                ParentCommentId = 3 // Set the parent comment ID
+            };
+            context.Comments.AddRange(reply1Reply1);
             context.SaveChanges();
         }
     }
