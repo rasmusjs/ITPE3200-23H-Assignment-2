@@ -211,6 +211,11 @@ public class PostController : Controller
         TODO:
         Once the replyComment contains the proper information/content, store it in the database. 
         */
+
+        if (ModelState.IsValid)
+        {
+            await _commentRepository.Create(replyComment);
+        }
         
         return RedirectToAction(nameof(Index));
     }
