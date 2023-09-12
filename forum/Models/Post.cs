@@ -17,6 +17,7 @@ public class Post
     public int CategoryId { get; set; }
     public virtual Category? Category { get; set; }
 
+    public List<int>? TagIds { get; set; }
     // navigation property
     public virtual List<Tag>? Tags { get; set; }
 

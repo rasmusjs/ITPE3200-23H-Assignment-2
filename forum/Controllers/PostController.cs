@@ -16,7 +16,6 @@ public class PostController : Controller
 
     private readonly ILogger<PostController> _logger; // Ikke satt opp enda!
 
-
     public PostController(IForumRepository<Category> categoryRepository,
         IForumRepository<Tag> tagRepo, IForumRepository<Post> postRepository,
         IForumRepository<Comment> commentRepository,
