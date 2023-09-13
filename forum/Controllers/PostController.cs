@@ -219,4 +219,15 @@ public class PostController : Controller
         
         return RedirectToAction(nameof(Index));
     }
+    
+    [HttpPost]
+    public async Task<IActionResult> UpdateComment(Comment comment)
+    {
+        if (ModelState.IsValid)
+        {
+            await _commentRepository.Update(comment);
+        }
+        
+        return RedirectToAction(nameof(Index));
+    }
 }
