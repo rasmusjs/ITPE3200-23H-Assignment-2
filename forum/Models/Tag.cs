@@ -7,5 +7,5 @@ public class Tag
     public string? Name { get; set; }
 
     // navigation property
-    public List<Post>? Posts { get; set; }
+    public virtual List<Post>? Posts { get; set; }
 }
