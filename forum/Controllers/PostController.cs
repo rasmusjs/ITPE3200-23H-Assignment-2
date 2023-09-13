@@ -17,6 +17,8 @@ public class PostController : Controller
 
     private readonly ILogger<PostController> _logger; // Ikke satt opp enda!
 
+    int _lastPostId = 0;
+
     public PostController(IForumRepository<Category> categoryRepository,
         IForumRepository<Tag> tagRepo, IForumRepository<Post> postRepository,
         IForumRepository<Comment> commentRepository,
@@ -28,6 +30,7 @@ public class PostController : Controller
         _commentRepository = commentRepository;
         _logger = logger;
     }
+
 
     public IActionResult Refresh()
     {
@@ -70,13 +73,18 @@ public class PostController : Controller
     public async Task<IEnumerable<Post>?> GetAllPosts()
     {
         var posts = await _postRepository.GetAllPosts();
+
         if (posts == null)
         {
             _logger.LogError("[PostController] GetAllPosts failed while executing _itemRepository.GetAll()");
             return null;
         }
 
-        return posts;
+        // Get the last post id, not working!!
+        var allPosts = posts as Post[] ?? posts.ToArray();
+        _lastPostId = allPosts.Last().PostId;
+
+        return allPosts;
     }
 
     public async Task<IActionResult> Post(int id)
@@ -92,35 +100,11 @@ public class PostController : Controller
         return View(post);
     }
 
-
     [HttpGet]
     public async Task<IActionResult> Create()
     {
-        var categories = await _categoryRepository.GetAll();
-        var tags = await _tags.GetAll();
-        if (categories != null && tags != null)
-        {
-            var postCreateViewModel = new PostCreateViewModel
-            {
-                Post = new Post(),
-
-                CategorySelectList = categories.Select(category => new SelectListItem
-                {
-                    Value = category.CategoryId.ToString(),
-                    Text = category.Name
-                }).ToList(),
-
-                TagSelectList = tags.Select(tag => new SelectListItem
-                {
-                    Value = tag.TagId.ToString(),
-                    Text = tag.Name
-                }).ToList()
-            };
-
-            return View(postCreateViewModel);
-        }
-
-        return NotFound("Categories or tags not found, cannot create post");
+        var postCreateViewModel = await GetPostCreateViewModel();
+        return View(postCreateViewModel);
     }
 
     [HttpPost]
@@ -130,29 +114,50 @@ public class PostController : Controller
         post.DateLastEdited = DateTime.Now;
         post.UserId = 1;
 
-
-        //Check https://stackoverflow.com/questions/62783700/asp-net-core-razor-pages-select-multiple-items-from-ienumerable-dropdownlist
-        // for how to get the selected tags
         var allTags = await _tags.GetAll();
         if (allTags != null && post.TagsId != null)
-            post.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId))
-                .ToList(); // Correct way to get the selected tags???
-
+            post.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId)).ToList();
 
         if (ModelState.IsValid)
         {
             await _postRepository.Create(post);
-            /*
-            int id = await _postRepository.
-            */
 
-            return GoToPost(1);
+            Console.WriteLine("Last id " + _lastPostId);
+            return GoToPost(_lastPostId + 1);
         }
 
-
-        //return View(post);
-        return RedirectToAction(nameof(Create));
+        var postCreateViewModel = await GetPostCreateViewModel();
+        return View(postCreateViewModel);
     }
+
+    private async Task<PostCreateViewModel> GetPostCreateViewModel()
+    {
+        var categories = await _categoryRepository.GetAll();
+        var tags = await _tags.GetAll();
+
+        if (categories != null && tags != null)
+        {
+            var postCreateViewModel = new PostCreateViewModel
+            {
+                Post = new Post(),
+                CategorySelectList = categories.Select(category => new SelectListItem
+                {
+                    Value = category.CategoryId.ToString(),
+                    Text = category.Name
+                }).ToList(),
+                TagSelectList = tags.Select(tag => new SelectListItem
+                {
+                    Value = tag.TagId.ToString(),
+                    Text = tag.Name
+                }).ToList()
+            };
+
+            return postCreateViewModel;
+        }
+
+        throw new InvalidOperationException("Categories or tags not found, cannot create post");
+    }
+
 
     [HttpGet]
     public async Task<IActionResult> Update(int id)

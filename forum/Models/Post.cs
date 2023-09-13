@@ -1,11 +1,17 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace forum.Models;
 
 public class Post
 {
     public int PostId { get; set; }
+
+    [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ. \-]{2,64}",
+        ErrorMessage = "The Name must be numbers or letters and between 2 to 64 characters.")]
+    [Display(Name = "Post name")]
     public string Title { get; set; }
+
     public string Content { get; set; }
     public int Likes { get; set; } = 0;
     public DateTime DateCreated { get; set; }
