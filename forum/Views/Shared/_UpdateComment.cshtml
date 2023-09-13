@@ -6,6 +6,7 @@
     <div class="form-group">
         <label asp-for="Content">Content</label>
         <textarea class="form-control" asp-for="Content" rows="1"></textarea>
+	    <span asp-validation-for="Content" class="text-danger"></span>
     </div>
     
     <button type="submit" class="btn btn-primary">Edit reply</button>

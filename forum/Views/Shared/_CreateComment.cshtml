@@ -5,9 +5,10 @@
     <input type="hidden" asp-for="PostId"/>
 
     <div class="form-group">
-        <label asp-for="Content">Reply:</label>
-        <textarea class="form-control" asp-for="Content" rows="1"></textarea>
+	    <label asp-for="Content"></label><span class="text-danger">*</span>
+	    <input asp-for="Content" rows="1" class="form-control" />
+	    <span asp-validation-for="Content" class="text-danger"></span>
     </div>
     
-    <button type="submit" class="btn btn-primary">Submit Reply</button>
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
