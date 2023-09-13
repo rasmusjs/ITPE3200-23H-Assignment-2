@@ -2,20 +2,26 @@
 
 <div>
     <h3>@Model.CommentId</h3>
-    <span>@Model.Content</span>
+    <span>@Model.DateCreated</span>
+    <span>@Model.DateLastEdited</span>
+    <div>
+        <span>@Model.Content</span>
+        <details>
+            <summary>Edit</summary>
+            <div>
+                <partial name="_UpdateComment" model="Model" />
+            </div>
+        </details>
+    </div>
     <div>
         <button disabled>Like (not implemented)</button>
-        @*
-        <button>Reply</button>
-        *@
-        <div class="reply-form">
-            @*Create reply(comment) to comment*@
-            @*Passes down the Comment as Model so that the view can use its CommentId as ParentCommentId, and its PostId*@
-            @* <partial name="_CreateReply" model="Model"/> *@
-            <partial name="_CreateReply" model="new Comment { ParentCommentId = Model.CommentId, PostId = Model.PostId }" />
-        </div>
+        <details>
+            <summary>Reply</summary>
+            <div>
+                <partial name="_CreateReply" model="new Comment { ParentCommentId = Model.CommentId, PostId = Model.PostId }" />
+            </div>
+        </details>
     </div>
-    <div>Number of comments: @Model.CommentReplies?.Count</div>
     <div class="ps-3">
         @if (Model.CommentReplies != null)
         {
