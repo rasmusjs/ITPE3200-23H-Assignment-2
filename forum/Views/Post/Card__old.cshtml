@@ -1,0 +1,109 @@
+@model forum.ViewModels.PostsListViewModel
+@{
+    ViewData["Title"] = @Model.CurrentViewName + " View";
+}
+
+<h1>Posts (@Model.CurrentViewName View)</h1>
+<a href="/Post/Compact">Change to Compact View</a>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var post in Model.Posts)
+    {
+        <div class="col">
+            <div>
+                <h1>Post</h1>
+                <div>
+                    <div>PostId: @post.PostId</div>
+                    <div>Title: @post.Title</div>
+                    <div>Content: @post.Content</div>
+                    <div>Total likes: @post.Likes</div>
+                    <div>Created: @post.DateCreated</div>
+                    @if (post.DateLastEdited != null)
+                    {
+                        <div>Last active: @post.DateLastEdited</div>
+                    }
+                    @*
+                    <div>CategoryId: @post.CategoryId</div>
+                    *@
+                    <b>Category</b>
+                    <span class="badge rounded-pill bg-success">
+                        @if (post.Category != null)
+                        {
+                            @post.Category.Name
+                        }
+                    </span>
+                    @*<<div>Category.CategoryId: @post.Category.CategoryId</div>*@
+                    @*<div>Category.Name: @post.Category.Name</div>*@
+                    <div>
+                        @if (post.Tags != null)
+                        {
+                            <b>Tags</b>
+                            foreach (var tag in post.Tags)
+                            {
+                                @*
+                                <div>TagId: @tag.TagId</div>
+                                *@
+                                <span class="badge rounded-pill bg-primary">@tag.Name</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="badge rounded-pill bg-danger">No tags</span>
+                        }
+                    </div>
+
+                    <div>
+                        <a class="btn  btn-primary" asp-controller="Post"
+                           asp-action="LikePost"
+                           asp-route-id="@post.PostId">
+                            Like
+                        </a>
+                    </div>
+
+                    <br/>
+
+                    @*<h2>User</h2>
+                    <div>UserId: @post.UserId</div>
+                    <div>Post.User.Username: @post.User.Username</div>
+                    <div>Post.User.Email: @post.User.Email</div>
+                    <div>Post.User.Password: @post.User.Password</div>
+                    <div>Post.User.CreationDate: @post.User.CreationDate</div>
+                    <div>
+                        Posts:
+                        @if (post.User.Posts != null)
+                        {
+                            foreach (var userPost in post.User.Posts)
+                            {
+                                <div>post.PostId: @userPost.PostId</div>
+                            }
+                        }
+                    </div>*@
+                </div>
+
+                <br/>
+
+                <div>
+                    <a asp-controller="Post"
+                       asp-action="Update"
+                       asp-route-id="@post.PostId">
+                        Update
+                    </a>
+                </div>
+                <div>
+                    <a asp-controller="Post"
+                       asp-action="Delete"
+                       asp-route-id="@post.PostId">
+                        Delete
+                    </a>
+                </div>
+                <div>
+                    <a asp-controller="Post"
+                       asp-action="Post"
+                       asp-route-id="@post.PostId">
+                        Go to post
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
