@@ -2,8 +2,14 @@
 
 <div>
 	<div>
-		<span>@Model.Category</span>
-		<span>@Model.Tags</span>
+		<span>@Model.Category?.Name</span>
+		@if (Model.Tags != null)
+		{
+			foreach (var tag in Model.Tags)
+			{
+				<span>@tag.Name</span>
+			}	
+		}
 	</div>
 	<div>
 		<div>

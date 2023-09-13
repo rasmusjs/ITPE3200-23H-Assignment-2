@@ -4,16 +4,12 @@
 }
 
 <div>
-    <h1>@Model.PostId</h1>
-    <h2>@Model.Title</h2>
+    <partial name="_Post" model="Model"/>
     <div>
-        <span>@Model.Content</span>
-        <span>Created: @Model.DateCreated</span>
-        <span>Last edited: @Model.DateLastEdited</span>
         <details>
             <summary>Add comment</summary>
             <div>
-                <partial name="_CreateComment" model="new Comment { PostId = Model.PostId }" />
+                <partial name="_CreateComment" model="new Comment { PostId = Model.PostId }"/>
             </div>
         </details>
         @if (Model.Comments != null)

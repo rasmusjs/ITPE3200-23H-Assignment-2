@@ -240,7 +240,7 @@ public class PostController : Controller
             return NotFound();
         }
 
-        return RedirectToAction(nameof(Refresh));
+        return RedirectToAction("Card", "Post");
     }
 
     [HttpPost]

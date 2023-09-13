@@ -1,14 +1,12 @@
 @model Comment
 
-<form asp-controller="Post" asp-action="CreateComment" class="p-2 bg-warning">
-    <input type="hidden" asp-for="ParentCommentId"/>
-    <input type="hidden" asp-for="PostId"/>
-
-    <div class="form-group">
-	    <label asp-for="Content"></label><span class="text-danger">*</span>
-	    <input asp-for="Content" rows="1" class="form-control" />
-	    <span asp-validation-for="Content" class="text-danger"></span>
-    </div>
-    
-    <button type="submit" class="btn btn-primary">Submit</button>
+<form asp-controller="Post" asp-action="CreateComment">
+	<input type="hidden" asp-for="ParentCommentId"/>
+	<input type="hidden" asp-for="PostId"/>
+	<div>
+		<label asp-for="Content"></label><span>*</span>
+		<input asp-for="Content" rows="1"/>
+		<span asp-validation-for="Content"></span>
+	</div>
+	<button type="submit">Submit</button>
 </form>
