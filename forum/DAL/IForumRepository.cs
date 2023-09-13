@@ -6,10 +6,12 @@ public interface IForumRepository<TEntity>
 {
     Task<IEnumerable<TEntity>?> GetAll();
     Task<TEntity?> GetTById(int id);
+    Task<Post?> GetPostById(int id);
+
     Task<IEnumerable<Post>?> GetAllPosts();
     Task<IEnumerable<Comment>?> GetCommentsByPostId(int postId);
-    Task<bool> Create(TEntity post);
-    Task<bool> Update(TEntity post);
+    Task<bool> Create(TEntity entity);
+    Task<bool> Update(TEntity entity);
     Task<bool> Delete(int id);
 
 
