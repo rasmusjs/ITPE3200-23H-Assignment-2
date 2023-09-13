@@ -77,22 +77,12 @@ public class PostController : Controller
     public async Task<IActionResult> Post(int id)
     {
         var post = await _postRepository.GetTById(id);
-        var comments = await _commentRepository.GetCommentsByPostId(id);
+|
         if (post == null)
             return NotFound();
 
-        //post.Comments = (List<Comment>?)comments;
-
-
-        /*// Display comments and replies
-        foreach (var comment in comments)
-        {
-            Console.WriteLine($"Comment: {comment.Content}");
-            foreach (var reply in comment.CommentReplies)
-            {
-                Console.WriteLine($"  Reply: {reply.Content}");
-            }
-        }*/
+        //Retrieve comments for post
+        await _commentRepository.GetCommentsByPostId(id);
 
         return View(post);
     }
@@ -207,7 +197,6 @@ public class PostController : Controller
                 post.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId))
                     .ToList(); // Correct way to get the selected tags???
 
-
             await _postRepository.Update(post);
             return RedirectToAction(nameof(Index));
         }
@@ -275,7 +264,7 @@ public class PostController : Controller
     public async Task<IActionResult> LikeComment(Comment comment)
     {
         Console.WriteLine(comment.CommentId);
-        
+
         var commentFromDb = await _commentRepository.GetTById(comment.CommentId);
 
         if (commentFromDb == null)
