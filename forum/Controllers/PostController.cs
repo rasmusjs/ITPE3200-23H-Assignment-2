@@ -246,7 +246,8 @@ public class PostController : Controller
             comment.DateCreated = DateTime.Now;
             await _commentRepository.Create(comment);
         }
-
+        
+        /* Validation not working, fix later */
         return RedirectToAction(nameof(Refresh));
     }
 
@@ -267,6 +268,7 @@ public class PostController : Controller
             await _commentRepository.Update(commentFromDb);
         }
 
+        /* Validation not working, fix later */
         return RedirectToAction(nameof(Refresh));
     }
 
