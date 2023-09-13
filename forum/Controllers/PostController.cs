@@ -29,9 +29,14 @@ public class PostController : Controller
         _logger = logger;
     }
 
-    public IActionResult Index()
+    public IActionResult Refresh()
     {
-        return RedirectToAction("Card", "Post");
+        return Redirect(Request.Headers["Referer"].ToString());
+    }
+
+    public IActionResult GoToPost(int id)
+    {
+        return RedirectToAction("Post", "Post", new { id });
     }
 
     public async Task<IActionResult> Card()
@@ -137,7 +142,11 @@ public class PostController : Controller
         if (ModelState.IsValid)
         {
             await _postRepository.Create(post);
-            return RedirectToAction(nameof(Index)); // nameof(Index) keep track of where the use came from
+            /*
+            int id = await _postRepository.
+            */
+
+            return GoToPost(1);
         }
 
         //return View(post);
@@ -198,7 +207,7 @@ public class PostController : Controller
                     .ToList(); // Correct way to get the selected tags???
 
             await _postRepository.Update(post);
-            return RedirectToAction(nameof(Index));
+            return GoToPost(post.PostId);
         }
 
         return RedirectToAction(nameof(Create));
@@ -225,7 +234,7 @@ public class PostController : Controller
             return NotFound();
         }
 
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Refresh));
     }
 
     [HttpPost]
@@ -237,7 +246,7 @@ public class PostController : Controller
             await _commentRepository.Create(comment);
         }
 
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Refresh));
     }
 
     [HttpPost]
@@ -257,7 +266,7 @@ public class PostController : Controller
             await _commentRepository.Update(commentFromDb);
         }
 
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Refresh));
     }
 
 
@@ -275,7 +284,7 @@ public class PostController : Controller
 
         await _postRepository.Update(post);
 
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Refresh));
     }
 
     [HttpGet]
@@ -292,6 +301,7 @@ public class PostController : Controller
 
         await _commentRepository.Update(comment);
 
-        return RedirectToAction(nameof(Index));
+        //return RedirectToAction("Post", "Post", new { id = comment.PostId });
+        return RedirectToAction(nameof(Refresh));
     }
 }
