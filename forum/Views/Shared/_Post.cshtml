@@ -1,0 +1,57 @@
+@model Post
+
+<div>
+	<div>
+		<span>@Model.Category?.Name</span>
+		@if (Model.Tags != null)
+		{
+			foreach (var tag in Model.Tags)
+			{
+				<span>@tag.Name</span>
+			}	
+		}
+	</div>
+	<div>
+		<div>
+			Posted by @Model.User?.Username
+		</div>
+		<div>
+			@Model.DateCreated
+			@if (Model.DateLastEdited != null)
+			{
+				<span>[@Model.DateLastEdited]</span>
+			}
+		</div>
+	</div>
+	<div>
+		<h1>@Model.Title</h1>
+	</div>
+	<div>
+		@Model.Content
+	</div>
+	<div>
+		<span>@Model.Likes Likes</span>
+		<span>@Model.Comments?.Count Comments</span>
+	</div>
+	<div>
+        <a asp-controller="Post"
+           asp-action="Update"
+           asp-route-id="@Model.PostId">
+            Edit
+        </a>
+    </div>
+    <div>
+        <a asp-controller="Post"
+           asp-action="Delete"
+           asp-route-id="@Model.PostId">
+            Delete
+        </a>
+    </div>
+    <div>
+        <a asp-controller="Post"
+           asp-action="Post"
+           asp-route-id="@Model.PostId">
+            Go to post
+        </a>
+    </div>
+</div>
