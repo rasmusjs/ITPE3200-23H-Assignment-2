@@ -1,31 +1,34 @@
-@model Post
+@model forum.ViewModels.PostCreateViewModel
+
 @{
     ViewData["Title"] = "Update Post";
 }
 <h1>Update Post</h1>
 
 <form asp-action="Update">
-    <input type="hidden" asp-for="PostId"/>
+    <input type="hidden" asp-for="Post.PostId"/>
     <div class="form-group">
-        <label asp-for="Title"></label><span class="text-danger">*</span>
-        <input asp-for="Title" class="form-control"/>
-        <span asp-validation-for="Title" class="text-danger"></span>
+        <label asp-for="Post.Title"></label><span class="text-danger">*</span>
+        <input asp-for="Post.Title" class="form-control"/>
+        <span asp-validation-for="Post.Title" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Content"></label><span class="text-danger">*</span>
-        <input asp-for="Content" class="form-control"/>
-        <span asp-validation-for="Content" class="text-danger"></span>
+        <label asp-for="Post.Content"></label><span class="text-danger">*</span>
+        <input asp-for="Post.Content" class="form-control"/>
+        <span asp-validation-for="Post.Content" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Category"></label><span class="text-danger">*</span>
-        <input asp-for="Category" class="form-control"/>
-        <span asp-validation-for="Category" class="text-danger"></span>
+        <label asp-for="Post.Category"></label><span class="text-danger">*</span>
+        <select asp-for="Post.CategoryId" asp-items="Model.CategorySelectList" class="form-control"></select>
+        <span asp-validation-for="Post.CategoryId" class="text-danger"></span>
     </div>
-    @*<div class="form-group">
-        <label asp-for="Tags"></label><span class="text-danger">*</span>
-        <input asp-for="Tags" class="form-control"/>
-        <span asp-validation-for="Tags" class="text-danger"></span>
-    </div>*@
+
+    <div class="form-group">
+        <label asp-for="Post.Tags"></label><span class="text-danger">*</span>
+        <select multiple asp-for="Post.TagsId" asp-items="Model.TagSelectList" class="form-control"></select>
+        <span asp-validation-for="Post.TagsId" class="text-danger"></span>
+    </div>
+
 
     <button type="submit" class="btn btn-primary">Save</button>
     <a asp-action="Card" class="btn btn-secondary">Back to Card View</a>

@@ -103,24 +103,29 @@ public class PostController : Controller
     {
         var categories = await _categoryRepository.GetAll();
         var tags = await _tags.GetAll();
-        var postCreateViewModel = new PostCreateViewModel
+        if (categories != null && tags != null)
         {
-            Post = new Post(),
-
-            CategorySelectList = categories.Select(category => new SelectListItem
+            var postCreateViewModel = new PostCreateViewModel
             {
-                Value = category.CategoryId.ToString(),
-                Text = category.Name
-            }).ToList(),
+                Post = new Post(),
 
-            TagSelectList = tags.Select(tag => new SelectListItem
-            {
-                Value = tag.TagId.ToString(),
-                Text = tag.Name
-            }).ToList()
-        };
+                CategorySelectList = categories.Select(category => new SelectListItem
+                {
+                    Value = category.CategoryId.ToString(),
+                    Text = category.Name
+                }).ToList(),
 
-        return View(postCreateViewModel);
+                TagSelectList = tags.Select(tag => new SelectListItem
+                {
+                    Value = tag.TagId.ToString(),
+                    Text = tag.Name
+                }).ToList()
+            };
+
+            return View(postCreateViewModel);
+        }
+
+        return NotFound("Categories or tags not found, cannot create post");
     }
 
     [HttpPost]
@@ -152,13 +157,38 @@ public class PostController : Controller
     [HttpGet]
     public async Task<IActionResult> Update(int id)
     {
-        var post = await _postRepository.GetTById(id);
-        if (post == null)
+        var post = await _postRepository.GetPostById(id);
+
+        var categories = await _categoryRepository.GetAll();
+        var tags = await _tags.GetAll();
+
+        if (post != null)
         {
-            return NotFound();
+            var selectedTags = post.Tags;
+            if (categories != null && tags != null)
+            {
+                var postCreateViewModel = new PostCreateViewModel
+                {
+                    Post = post,
+                    CategorySelectList = categories.Select(category => new SelectListItem
+                    {
+                        Value = category.CategoryId.ToString(),
+                        Text = category.Name
+                    }).ToList(),
+
+                    TagSelectList = tags.Select(tag => new SelectListItem
+                    {
+                        Value = tag.TagId.ToString(),
+                        Text = tag.Name,
+                        Selected = selectedTags != null && selectedTags.Contains(tag)
+                    }).ToList()
+                };
+
+                return View(postCreateViewModel);
+            }
         }
 
-        return View(post);
+        return NotFound("Post not found, cannot update post");
     }
 
     [HttpPost]
@@ -166,11 +196,23 @@ public class PostController : Controller
     {
         if (ModelState.IsValid)
         {
+            post.DateLastEdited = DateTime.Now;
+            post.UserId = 1;
+
+
+            //Check https://stackoverflow.com/questions/62783700/asp-net-core-razor-pages-select-multiple-items-from-ienumerable-dropdownlist
+            // for how to get the selected tags
+            var allTags = await _tags.GetAll();
+            if (allTags != null && post.TagsId != null)
+                post.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId))
+                    .ToList(); // Correct way to get the selected tags???
+
+
             await _postRepository.Update(post);
             return RedirectToAction(nameof(Index));
         }
 
-        return View(post);
+        return RedirectToAction(nameof(Create));
     }
 
     [HttpGet]

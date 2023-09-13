@@ -31,6 +31,20 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
     }
 
 
+    public async Task<Post?> GetPostById(int id)
+    {
+        try
+        {
+            return await _db.Posts.Include(post => post.Tags).Include(post => post.Category)
+                .Where(post => post.PostId == id).FirstOrDefaultAsync();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"[{typeof(Post).Name} Repository] GetAll() failed, error message: {e.Message}");
+            return null;
+        }
+    }
+
     public async Task<IEnumerable<Post>?> GetAllPosts()
     {
         try
