@@ -197,25 +197,12 @@ public class PostController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateReply(Comment replyComment)
+    public async Task<IActionResult> CreateComment(Comment comment)
     {
-        // Writes all properties of replyComment
-        foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(replyComment))
-        {
-            string name = descriptor.Name;
-            object value = descriptor.GetValue(replyComment);
-            Console.WriteLine("{0}={1}", name, value);
-        }
-
-        /*
-        TODO:
-        Once the replyComment contains the proper information/content, store it in the database.
-        */
-
         if (ModelState.IsValid)
         {
-            replyComment.DateCreated = DateTime.Now;
-            await _commentRepository.Create(replyComment);
+            comment.DateCreated = DateTime.Now;
+            await _commentRepository.Create(comment);
         }
 
         return RedirectToAction(nameof(Index));
@@ -224,20 +211,38 @@ public class PostController : Controller
     [HttpPost]
     public async Task<IActionResult> UpdateComment(Comment comment)
     {
-        foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(comment))
-        {
-            string name = descriptor.Name;
-            object value = descriptor.GetValue(comment);
-            Console.WriteLine("{0}={1}", name, value);
-        }
+        var commentFromDb = await _commentRepository.GetTById(comment.CommentId);
 
+        if (commentFromDb == null)
+        {
+            return NotFound();
+        }
 
         if (ModelState.IsValid)
         {
-            comment.DateLastEdited = DateTime.Now;
-
-            await _commentRepository.Update(comment);
+            commentFromDb.DateLastEdited = DateTime.Now;
+            commentFromDb.Content = comment.Content;
+            await _commentRepository.Update(commentFromDb);
         }
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> LikeComment(Comment comment)
+    {
+        Console.WriteLine(comment.CommentId);
+        
+        var commentFromDb = await _commentRepository.GetTById(comment.CommentId);
+
+        if (commentFromDb == null)
+        {
+            return NotFound();
+        }
+
+        commentFromDb.Likes++;
+
+        await _commentRepository.Update(commentFromDb);
 
         return RedirectToAction(nameof(Index));
     }

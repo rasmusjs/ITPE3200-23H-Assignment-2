@@ -2,10 +2,15 @@
 
 <div>
     <h3>@Model.CommentId</h3>
-    <span>@Model.DateCreated</span>
-    <span>@Model.DateLastEdited</span>
+    <div>@Model.DateCreated</div>
+    <div>@Model.DateLastEdited</div>
+    <div>@Model.Likes</div>
     <div>
-        <span>@Model.Content</span>
+        <div>@Model.Content</div>
+        <form asp-controller="Post" asp-action="LikeComment">
+            <input type="hidden" asp-for="CommentId"/>
+            <button type="submit" class="btn btn-primary">Like</button>
+        </form>
         <details>
             <summary>Edit</summary>
             <div>
@@ -14,15 +19,14 @@
         </details>
     </div>
     <div>
-        <button disabled>Like (not implemented)</button>
         <details>
             <summary>Reply</summary>
             <div>
-                <partial name="_CreateReply" model="new Comment { ParentCommentId = Model.CommentId, PostId = Model.PostId }" />
+                <partial name="_CreateComment" model="new Comment { ParentCommentId = Model.CommentId, PostId = Model.PostId }" />
             </div>
         </details>
     </div>
-    <div class="ps-3">
+    <div class="ps-5">
         @if (Model.CommentReplies != null)
         {
             foreach (var comment in Model.CommentReplies)

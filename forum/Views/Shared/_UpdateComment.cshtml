@@ -1,9 +1,7 @@
 @model Comment
 
-<form asp-controller="Post" asp-action="UpdateComment" class="p-2 bg-info">
+<form asp-controller="Post" asp-action="UpdateComment"  class="p-2 bg-info">
     <input type="hidden" asp-for="CommentId"/>
-    <input type="hidden" asp-for="PostId"/>
-    <input type="hidden" asp-for="ParentCommentId"/>
 
     <div class="form-group">
         <label asp-for="Content">Content</label>
