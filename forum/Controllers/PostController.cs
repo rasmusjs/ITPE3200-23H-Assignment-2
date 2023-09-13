@@ -77,7 +77,7 @@ public class PostController : Controller
     public async Task<IActionResult> Post(int id)
     {
         var post = await _postRepository.GetTById(id);
-|
+
         if (post == null)
             return NotFound();
 
