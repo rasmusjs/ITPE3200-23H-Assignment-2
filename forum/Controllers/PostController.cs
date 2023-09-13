@@ -134,8 +134,9 @@ public class PostController : Controller
         //Check https://stackoverflow.com/questions/62783700/asp-net-core-razor-pages-select-multiple-items-from-ienumerable-dropdownlist
         // for how to get the selected tags
         var allTags = await _tags.GetAll();
-        post.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId))
-            .ToList(); // Correct way to get the selected tags???
+        if (allTags != null && post.TagsId != null)
+            post.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId))
+                .ToList(); // Correct way to get the selected tags???
 
 
         if (ModelState.IsValid)
