@@ -5,7 +5,7 @@ public class Comment
     public int CommentId { get; set; }
     public string Content { get; set; }
     public int Likes { get; set; } = 0;
-    public DateTime DateCreated { get; set; } = DateTime.Now;
+    public DateTime DateCreated { get; set; }
     public DateTime? DateLastEdited { get; set; }
 
 

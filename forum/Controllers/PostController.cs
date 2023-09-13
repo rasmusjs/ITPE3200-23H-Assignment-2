@@ -195,12 +195,12 @@ public class PostController : Controller
 
         return RedirectToAction(nameof(Index));
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> CreateReply(Comment replyComment)
     {
         // Writes all properties of replyComment
-        foreach(PropertyDescriptor descriptor in TypeDescriptor.GetProperties(replyComment))
+        foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(replyComment))
         {
             string name = descriptor.Name;
             object value = descriptor.GetValue(replyComment);
@@ -209,25 +209,36 @@ public class PostController : Controller
 
         /*
         TODO:
-        Once the replyComment contains the proper information/content, store it in the database. 
+        Once the replyComment contains the proper information/content, store it in the database.
         */
 
         if (ModelState.IsValid)
         {
+            replyComment.DateCreated = DateTime.Now;
             await _commentRepository.Create(replyComment);
         }
-        
+
         return RedirectToAction(nameof(Index));
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> UpdateComment(Comment comment)
     {
+        foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(comment))
+        {
+            string name = descriptor.Name;
+            object value = descriptor.GetValue(comment);
+            Console.WriteLine("{0}={1}", name, value);
+        }
+
+
         if (ModelState.IsValid)
         {
+            comment.DateLastEdited = DateTime.Now;
+
             await _commentRepository.Update(comment);
         }
-        
+
         return RedirectToAction(nameof(Index));
     }
 }

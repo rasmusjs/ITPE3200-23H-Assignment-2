@@ -53,7 +53,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         }
         catch (Exception e)
         {
-            _logger.LogError($"[{typeof(Comment).Name} Repository] GetAll() failed, error message: {e.Message}");
+            _logger.LogError($"[ForumRepository] GetCommentsByPostId() failed, error message: {e.Message}");
             return null;
         }
     }
@@ -67,7 +67,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         catch (Exception e)
         {
             _logger.LogError(
-                "[ForumRepository] entity FindAsync(id) failed when GetTEntityById for TEntityId {TEntityId:0000}, error message: {e}",
+                "[ForumRepository] entity GetTById(id) failed for TEntityId {TEntityId:0000}, error message: {e}",
                 id, e.Message);
             return null;
         }

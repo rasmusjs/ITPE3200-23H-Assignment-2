@@ -215,7 +215,7 @@ public static class DbInit
 
             context.Comments.AddRange(reply1, reply2, reply3);
             context.SaveChanges();
-            
+
             // Adds reply to "reply1".
             // Gets stored in the database but does not seem to create a relation.
             // Also does not work when trying to add a reply in the website
