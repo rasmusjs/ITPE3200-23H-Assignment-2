@@ -3,7 +3,7 @@ namespace forum.Models;
 public class Comment
 {
     public int CommentId { get; set; }
-    public string Content { get; set; }
+    public string Content { get; set; }  = string.Empty;
     public int Likes { get; set; } = 0;
     public DateTime DateCreated { get; set; }
     public DateTime? DateLastEdited { get; set; }
