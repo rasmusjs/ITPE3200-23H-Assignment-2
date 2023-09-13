@@ -20,9 +20,10 @@ builder.Services.AddScoped<IForumRepository<Tag>, ForumRepository<Tag>>();
 builder.Services.AddScoped<IForumRepository<Comment>, ForumRepository<Comment>>();
 
 
+/*
 var loggerConfiguration = new LoggerConfiguration()
-    .MinimumLevel.Information() // levels: Trace< Information < Warning < Erorr < Fatal
-    .WriteTo.File($"Logs/app_{DateTime.Now:yyyyMMdd_HHmmss}.log");
+    .MinimumLevel.Information() // levels: Trace< Information < Warning < Error < Fatal
+    .WriteTo.File($"Logs/app_{DateTime.Now:yyyy.MM.dd-HHmm_ss)}.log");
 
 loggerConfiguration.Filter.ByExcluding(e => e.Properties.TryGetValue("SourceContext", out var value) &&
                                             e.Level == LogEventLevel.Information &&
@@ -30,6 +31,8 @@ loggerConfiguration.Filter.ByExcluding(e => e.Properties.TryGetValue("SourceCont
 
 var logger = loggerConfiguration.CreateLogger();
 builder.Logging.AddSerilog(logger);
+*/
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
