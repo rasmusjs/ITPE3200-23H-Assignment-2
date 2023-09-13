@@ -1,6 +1,6 @@
 @model Comment
 
-<div>
+<div id="commentId-@Model.CommentId">
     <h3>@Model.CommentId</h3>
     <div>@Model.DateCreated</div>
     <div>@Model.DateLastEdited</div>
@@ -8,8 +8,8 @@
     <div>
         <div>@Model.Content</div>
         <a asp-controller="Post"
-                asp-action="LikeComment"
-                asp-route-id="@Model.CommentId">
+           asp-action="LikeComment"
+           asp-route-id="@Model.CommentId">
             Like
         </a>
         <details>

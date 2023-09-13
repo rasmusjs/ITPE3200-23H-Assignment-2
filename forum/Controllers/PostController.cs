@@ -251,9 +251,10 @@ public class PostController : Controller
             comment.DateCreated = DateTime.Now;
             await _commentRepository.Create(comment);
         }
-        
+
         /* Validation not working, fix later */
-        return RedirectToAction(nameof(Refresh));
+        return Redirect(
+            $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
     }
 
     [HttpPost]
@@ -274,7 +275,8 @@ public class PostController : Controller
         }
 
         /* Validation not working, fix later */
-        return RedirectToAction(nameof(Refresh));
+        return Redirect(
+            $"{Url.Action("Post", new { id = commentFromDb.PostId })}#commentId-{commentFromDb.CommentId}"); // Redirect to the post with the comment
     }
 
 
@@ -310,6 +312,7 @@ public class PostController : Controller
         await _commentRepository.Update(comment);
 
         //return RedirectToAction("Post", "Post", new { id = comment.PostId });
-        return RedirectToAction(nameof(Refresh));
+        return Redirect(
+            $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
     }
 }
