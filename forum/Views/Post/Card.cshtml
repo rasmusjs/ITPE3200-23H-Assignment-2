@@ -52,6 +52,14 @@
                         }
                     </div>
 
+                    <div>
+                        <a asp-controller="Post"
+                           asp-action="LikePost"
+                           asp-route-id="@post.PostId">
+                            Like
+                        </a>
+                    </div>
+
                     <br/>
 
                     @*<h2>User</h2>

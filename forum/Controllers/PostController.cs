@@ -260,21 +260,37 @@ public class PostController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    [HttpPost]
-    public async Task<IActionResult> LikeComment(Comment comment)
+
+    [HttpGet]
+    public async Task<IActionResult> LikePost(int id)
     {
-        Console.WriteLine(comment.CommentId);
+        var post = await _postRepository.GetTById(id);
 
-        var commentFromDb = await _commentRepository.GetTById(comment.CommentId);
-
-        if (commentFromDb == null)
+        if (post == null)
         {
             return NotFound();
         }
 
-        commentFromDb.Likes++;
+        post.Likes++;
 
-        await _commentRepository.Update(commentFromDb);
+        await _postRepository.Update(post);
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> LikeComment(int id)
+    {
+        var comment = await _commentRepository.GetTById(id);
+
+        if (comment == null)
+        {
+            return NotFound();
+        }
+
+        comment.Likes++;
+
+        await _commentRepository.Update(comment);
 
         return RedirectToAction(nameof(Index));
     }
