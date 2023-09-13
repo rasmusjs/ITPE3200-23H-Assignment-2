@@ -49,8 +49,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         try
         {
             return await _db.Comments.Include(comment => comment.CommentReplies)
-                .Where(comment => comment.PostId == postId)
-                .Where(comment => comment.ParentCommentId == null).ToListAsync();
+                .Where(comment => comment.PostId == postId).ToListAsync();
         }
         catch (Exception e)
         {
