@@ -149,6 +149,7 @@ public class PostController : Controller
             return GoToPost(1);
         }
 
+
         //return View(post);
         return RedirectToAction(nameof(Create));
     }
