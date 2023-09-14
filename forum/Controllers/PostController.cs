@@ -198,24 +198,29 @@ public class PostController : Controller
     [HttpPost]
     public async Task<IActionResult> Update(Post post)
     {
-        if (ModelState.IsValid)
-        {
-            post.DateLastEdited = DateTime.Now;
-            post.UserId = 1;
+        if (!ModelState.IsValid) return RedirectToAction(nameof(Create));
+
+        post.DateLastEdited = DateTime.Now;
+        post.UserId = 1;
 
 
-            //Check https://stackoverflow.com/questions/62783700/asp-net-core-razor-pages-select-multiple-items-from-ienumerable-dropdownlist
-            // for how to get the selected tags
-            var allTags = await _tags.GetAll();
-            if (allTags != null && post.TagsId != null)
-                post.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId))
-                    .ToList(); // Correct way to get the selected tags???
+        // Remove all the olds tags from post, this is done since I could not find a way to use CASCADE update in EF Core
+        if (!await _postRepository.RemoveAllPostTags(post.PostId))
+            return NotFound("Post not found, cannot update post");
 
-            await _postRepository.Update(post);
-            return GoToPost(post.PostId);
-        }
 
-        return RedirectToAction(nameof(Create));
+        //Check https://stackoverflow.com/questions/62783700/asp-net-core-razor-pages-select-multiple-items-from-ienumerable-dropdownlist
+        // for how to get the selected tags
+        var allTags = await _tags.GetAll();
+        if (allTags != null && post.TagsId != null)
+            post.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId))
+                .ToList(); // Correct way to get the selected tags???
+
+        // Update post
+        if (!await _postRepository.Update(post)) return NotFound("Post not found, cannot update post");
+
+
+        return GoToPost(post.PostId);
     }
 
     [HttpGet]

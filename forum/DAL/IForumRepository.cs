@@ -13,6 +13,7 @@ public interface IForumRepository<TEntity>
     Task<TEntity?> Create(TEntity entity);
     Task<bool> Update(TEntity entity);
     Task<bool> Delete(int id);
+    Task<bool> RemoveAllPostTags(int id);
 
 
     //https://dotnettutorials.net/lesson/generic-repository-pattern-csharp-mvc/

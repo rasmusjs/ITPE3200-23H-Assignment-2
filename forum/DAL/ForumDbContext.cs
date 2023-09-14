@@ -44,7 +44,7 @@ public class ForumDbContext : DbContext
             .HasForeignKey(c => c.ParentCommentId) // Foreign key to represent the parent-child relationship
             .IsRequired(false);*/
     }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseLazyLoadingProxies();

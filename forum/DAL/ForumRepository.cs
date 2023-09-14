@@ -143,4 +143,34 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
             return false;
         }
     }
+
+    public async Task<bool> RemoveAllPostTags(int id)
+    {
+        if (id < 0) // id is not valid (negative)
+            return false;
+
+        try
+        {
+            //https://learn.microsoft.com/en-us/ef/core/querying/sql-queries
+            // According to the documentation it's faster to do this than to select all the tags and then remove them one by one for updating
+            var executeSqlAsync =
+                await _db.Database.ExecuteSqlAsync(
+                    $"DELETE FROM PostTag WHERE PostsPostId = {id}");
+
+
+            if (executeSqlAsync == 0)
+            {
+                _logger.LogError("[ForumRepository] entity not found for the TEntityId {TEntityId:0000}", id);
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("[ForumRepository] deletion failed for the TEntityId {TEntityId:0000}, error message: {e}",
+                id, e.Message);
+            return false;
+        }
+    }
 }
