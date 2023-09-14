@@ -18,6 +18,7 @@
   <ItemGroup>
     <Folder Include="Logs\" />
     <Folder Include="Views\Home\" />
+    <Folder Include="wwwroot\css\" />
   </ItemGroup>
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Views\Item\Details.cshtml" />
