@@ -38,11 +38,6 @@ public class ForumDbContext : DbContext
             .WithOne(c => c.ParentComment)
             .HasForeignKey(c => c.ParentCommentId);
         //modelBuilder.Entity<Post>().HasOne(p => p.User).WithMany(u => u.Posts).HasForeignKey(p => p.UserId);
-        /*modelBuilder.Entity<Comment>()
-            .HasOne(c => c.CommentParent) // Comment can have one parent
-            .WithMany(c => c.CommentReplies) // Can have many children
-            .HasForeignKey(c => c.ParentCommentId) // Foreign key to represent the parent-child relationship
-            .IsRequired(false);*/
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -198,15 +198,18 @@ public class PostController : Controller
     [HttpPost]
     public async Task<IActionResult> Update(Post post)
     {
+        // Check if model is valid before updating
         if (!ModelState.IsValid) return RedirectToAction(nameof(Create));
-
-        post.DateLastEdited = DateTime.Now;
-        post.UserId = 1;
 
 
         // Remove all the olds tags from post, this is done since I could not find a way to use CASCADE update in EF Core
         if (!await _postRepository.RemoveAllPostTags(post.PostId))
             return NotFound("Post not found, cannot update post");
+
+        /*var postFromDb = await _postRepository.GetTById(post.PostId);
+        post.UserId = postFromDb.UserId;
+        post.DateCreated = postFromDb.DateCreated;
+        post.DateLastEdited = DateTime.Now;*/
 
 
         //Check https://stackoverflow.com/questions/62783700/asp-net-core-razor-pages-select-multiple-items-from-ienumerable-dropdownlist
