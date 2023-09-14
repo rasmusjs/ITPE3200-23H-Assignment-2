@@ -17,7 +17,6 @@ public class PostController : Controller
 
     private readonly ILogger<PostController> _logger; // Ikke satt opp enda!
 
-    int _lastPostId = 0;
 
     public PostController(IForumRepository<Category> categoryRepository,
         IForumRepository<Tag> tagRepo, IForumRepository<Post> postRepository,
@@ -80,11 +79,7 @@ public class PostController : Controller
             return null;
         }
 
-        // Get the last post id, not working!!
-        var allPosts = posts as Post[] ?? posts.ToArray();
-        _lastPostId = allPosts.Last().PostId;
-
-        return allPosts;
+        return posts;
     }
 
     public async Task<IActionResult> Post(int id)
@@ -120,10 +115,14 @@ public class PostController : Controller
 
         if (ModelState.IsValid)
         {
-            await _postRepository.Create(post);
+            var newPost = await _postRepository.Create(post);
 
-            Console.WriteLine("Last id " + _lastPostId);
-            return GoToPost(_lastPostId + 1);
+            if (newPost == null)
+            {
+                return NotFound("Post not created");
+            }
+
+            return GoToPost(newPost.PostId);
         }
 
         var postCreateViewModel = await GetPostCreateViewModel();
@@ -249,12 +248,18 @@ public class PostController : Controller
         if (ModelState.IsValid)
         {
             comment.DateCreated = DateTime.Now;
-            await _commentRepository.Create(comment);
+            var newComment = await _commentRepository.Create(comment);
+            if (newComment == null)
+            {
+                return NotFound("Comment not created");
+            }
+
+            /* Validation not working, fix later */
+            return Redirect(
+                $"{Url.Action("Post", new { id = newComment.PostId })}#commentId-{newComment.CommentId}"); // Redirect to the post with the comment
         }
 
-        /* Validation not working, fix later */
-        return Redirect(
-            $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
+        return NotFound("Comment not created, comment invalid");
     }
 
     [HttpPost]

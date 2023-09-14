@@ -87,20 +87,20 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         }
     }
 
-    public async Task<bool> Create(TEntity entity)
+    public async Task<TEntity?> Create(TEntity entity)
     {
         try
         {
             _db.Set<TEntity>().Add(entity);
             await _db.SaveChangesAsync();
-            return true;
+            return entity;
         }
         catch (Exception e)
         {
             _logger.LogError("[ForumRepository] entity creation failed for entity {@entity}, error message: {e}",
                 entity,
                 e.Message);
-            return false;
+            return null;
         }
     }
 
