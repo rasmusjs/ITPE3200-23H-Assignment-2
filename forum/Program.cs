@@ -19,6 +19,8 @@ builder.Services.AddScoped<IForumRepository<Category>, ForumRepository<Category>
 builder.Services.AddScoped<IForumRepository<Tag>, ForumRepository<Tag>>();
 builder.Services.AddScoped<IForumRepository<Comment>, ForumRepository<Comment>>();
 
+builder.Services.AddSession();
+
 
 /*
 var loggerConfiguration = new LoggerConfiguration()
@@ -46,7 +48,7 @@ else
 }
 
 app.UseStaticFiles(); // for adding middleware
-
+app.UseSession();
 app.MapDefaultControllerRoute();
 
 app.Run();

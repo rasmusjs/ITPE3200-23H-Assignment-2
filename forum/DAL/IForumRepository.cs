@@ -10,7 +10,7 @@ public interface IForumRepository<TEntity>
 
     Task<IEnumerable<Post>?> GetAllPosts();
     Task<IEnumerable<Comment>?> GetCommentsByPostId(int postId);
-    Task<bool> Create(TEntity entity);
+    Task<TEntity?> Create(TEntity entity);
     Task<bool> Update(TEntity entity);
     Task<bool> Delete(int id);
 
