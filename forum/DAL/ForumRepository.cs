@@ -30,6 +30,33 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         }
     }
 
+    public async Task<IEnumerable<Post>?> GetAllPostsByTerm(string term)
+    {
+        try
+        {
+            // Make the search term lowercase
+            term = term.ToLower();
+
+            // Search in title, content, tags and comments, might be costly
+            var result = await _db.Posts
+                .Include(post => post.Tags)
+                .Include(post => post.Category)
+                .Include(post => post.Comments)
+                .Where(post => ((post.Title.ToLower().Contains(term) || post.Content.ToLower().Contains(term)) ||
+                                post.Tags!.Any(tag => tag.Name!.ToLower().Contains(term)) ||
+                                post.Comments!.Any(comment => comment.Content.ToLower().Contains(term)))
+                )
+                .ToListAsync();
+
+            return result;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"[{typeof(TEntity).Name} Repository] GetAll() failed, error message: {e.Message}");
+            return null;
+        }
+    }
+
 
     public async Task<Post?> GetPostById(int id)
     {

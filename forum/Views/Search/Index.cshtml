@@ -1,0 +1,13 @@
+@model forum.ViewModels.PostsListViewModel
+@{
+    ViewData["Title"] = "Search";
+}
+
+
+<form method="get" asp-action="Search">
+    <div class="form-group">
+        <label for="term">Search Term:</label>
+        <input type="text" id="term" name="term" placeholder="Enter a search term"/>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
