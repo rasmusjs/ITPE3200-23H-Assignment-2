@@ -42,9 +42,11 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
                 .Include(post => post.Tags)
                 .Include(post => post.Category)
                 .Include(post => post.Comments)
-                .Where(post => ((post.Title.ToLower().Contains(term) || post.Content.ToLower().Contains(term)) ||
-                                post.Tags!.Any(tag => tag.Name!.ToLower().Contains(term)) ||
-                                post.Comments!.Any(comment => comment.Content.ToLower().Contains(term)))
+                .Where(post =>
+                    ((post.Title.ToLower().Contains(term) || post.Content.ToLower().Contains(term)) ||
+                     post.Category!.Name.ToLower().Contains(term) ||
+                     post.Tags!.Any(tag => tag.Name!.ToLower().Contains(term)) ||
+                     post.Comments!.Any(comment => comment.Content.ToLower().Contains(term)))
                 )
                 .ToListAsync();
 

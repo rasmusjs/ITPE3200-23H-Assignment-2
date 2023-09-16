@@ -1,9 +1,15 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace forum.Models;
 
 public class Comment
 {
     public int CommentId { get; set; }
-    public string Content { get; set; }  = string.Empty;
+
+    [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ. \-]{2,512}",
+        ErrorMessage = "The comment can contain numbers or letters and be upto 512 characters.")]
+    public string Content { get; set; } = string.Empty;
+
     public int Likes { get; set; } = 0;
     public DateTime DateCreated { get; set; }
     public DateTime? DateLastEdited { get; set; }

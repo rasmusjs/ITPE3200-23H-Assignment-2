@@ -46,7 +46,7 @@ public class SearchController : Controller
     public async Task<IActionResult> Search(string term)
     {
         if (string.IsNullOrWhiteSpace(term)) return Index(); // TODO: Redirect to error page
-        if (term.Length < 3) return Index(); // TODO: Redirect to error page
+        if (term.Length < 2) return Index(); // TODO: Redirect to error page
 
 
         var posts = await _postRepository.GetAllPostsByTerm(term);

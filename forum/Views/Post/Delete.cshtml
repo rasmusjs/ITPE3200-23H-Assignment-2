@@ -19,19 +19,19 @@
         <dd>@Model.Category?.Name</dd>
 
         <dt>Tags</dt>
-	    <dt>
+        <dt>
             @if (Model.Tags != null)
             {
                 foreach (var tag in Model.Tags)
                 {
-        	        <span>@tag.Name</span>
-                }	
+                    <span>@tag.Name</span>
+                }
             }
-	    </dt>
+        </dt>
     </dl>
 
     <form asp-action="DeleteConfirmed" asp-route-id="@Model.PostId">
         <button type="submit">Delete</button>
-        <a asp-action="Card">Cancel</a>
     </form>
+    <a href='javascript:history.go(-1)'>Cancel</a>
 </div>

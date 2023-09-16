@@ -43,29 +43,34 @@ public class PostController : Controller
 
     public async Task<IActionResult> Card()
     {
+        //Get all posts
         var posts = await GetAllPosts();
 
+        //If no posts found return NotFound
         if (posts == null)
         {
-            _logger.LogError("[ItemController] Item list not found while executing _itemRepository.GetAll()");
             return NotFound("Item list not found");
         }
 
-        var postListViewModel = new PostsListViewModel(posts, "Card");
-        return View(postListViewModel);
+        //Update session variable, used for determining which view to use
+        HttpContext.Session.SetString("viewModel", "Card");
+        return View(new PostsListViewModel(posts, "Card"));
     }
 
     public async Task<IActionResult> Compact()
     {
+        //Get all posts
         var posts = await GetAllPosts();
+
+        //If no posts found return NotFound
         if (posts == null)
         {
-            _logger.LogError("[ItemController] Item list not found while executing _itemRepository.GetAll()");
             return NotFound("Item list not found");
         }
 
-        var postListViewModel = new PostsListViewModel(posts, "Compact");
-        return View(postListViewModel);
+        //Update session variable, used for determining which view to use
+        HttpContext.Session.SetString("viewModel", "Compact");
+        return View(new PostsListViewModel(posts, "Compact"));
     }
 
 
@@ -86,8 +91,7 @@ public class PostController : Controller
     {
         var post = await _postRepository.GetTById(id);
 
-        if (post == null)
-            return NotFound();
+        if (post == null) return NotFound();
 
         //Retrieve comments for post
         await _commentRepository.GetCommentsByPostId(id);
@@ -98,8 +102,8 @@ public class PostController : Controller
     [HttpGet]
     public async Task<IActionResult> Create()
     {
-        var postCreateViewModel = await GetPostCreateViewModel();
-        return View(postCreateViewModel);
+        var postViewModel = await GetPostViewModel();
+        return View(postViewModel);
     }
 
     [HttpPost]
@@ -117,44 +121,41 @@ public class PostController : Controller
         {
             var newPost = await _postRepository.Create(post);
 
-            if (newPost == null)
-            {
-                return NotFound("Post not created");
-            }
+            if (newPost == null) return NotFound("Post not created");
+
 
             return GoToPost(newPost.PostId);
         }
 
-        var postCreateViewModel = await GetPostCreateViewModel();
-        return View(postCreateViewModel);
+        var postViewModel = await GetPostViewModel();
+        return View(postViewModel);
     }
 
-    private async Task<PostCreateViewModel> GetPostCreateViewModel()
+    private async Task<PostViewModel> GetPostViewModel()
     {
         var categories = await _categoryRepository.GetAll();
         var tags = await _tags.GetAll();
 
-        if (categories != null && tags != null)
+        if (categories == null || tags == null)
+            throw new InvalidOperationException("Categories or tags not found, cannot create post");
+
+
+        var postViewModel = new PostViewModel
         {
-            var postCreateViewModel = new PostCreateViewModel
+            Post = new Post(),
+            CategorySelectList = categories.Select(category => new SelectListItem
             {
-                Post = new Post(),
-                CategorySelectList = categories.Select(category => new SelectListItem
-                {
-                    Value = category.CategoryId.ToString(),
-                    Text = category.Name
-                }).ToList(),
-                TagSelectList = tags.Select(tag => new SelectListItem
-                {
-                    Value = tag.TagId.ToString(),
-                    Text = tag.Name
-                }).ToList()
-            };
+                Value = category.CategoryId.ToString(),
+                Text = category.Name
+            }).ToList(),
+            TagSelectList = tags.Select(tag => new SelectListItem
+            {
+                Value = tag.TagId.ToString(),
+                Text = tag.Name
+            }).ToList()
+        };
 
-            return postCreateViewModel;
-        }
-
-        throw new InvalidOperationException("Categories or tags not found, cannot create post");
+        return postViewModel;
     }
 
 
@@ -166,40 +167,38 @@ public class PostController : Controller
         var categories = await _categoryRepository.GetAll();
         var tags = await _tags.GetAll();
 
-        if (post != null)
+        if (post == null) return NotFound("Post not found, cannot update post");
+
+
+        var selectedTags = post.Tags;
+        if (categories == null || tags == null) return NotFound("Post not found, cannot update post");
+
+
+        var postViewModel = new PostViewModel
         {
-            var selectedTags = post.Tags;
-            if (categories != null && tags != null)
+            Post = post,
+            CategorySelectList = categories.Select(category => new SelectListItem
             {
-                var postCreateViewModel = new PostCreateViewModel
-                {
-                    Post = post,
-                    CategorySelectList = categories.Select(category => new SelectListItem
-                    {
-                        Value = category.CategoryId.ToString(),
-                        Text = category.Name
-                    }).ToList(),
+                Value = category.CategoryId.ToString(),
+                Text = category.Name
+            }).ToList(),
 
-                    TagSelectList = tags.Select(tag => new SelectListItem
-                    {
-                        Value = tag.TagId.ToString(),
-                        Text = tag.Name,
-                        Selected = selectedTags != null && selectedTags.Contains(tag)
-                    }).ToList()
-                };
+            TagSelectList = tags.Select(tag => new SelectListItem
+            {
+                Value = tag.TagId.ToString(),
+                Text = tag.Name,
+                Selected = selectedTags != null && selectedTags.Contains(tag)
+            }).ToList()
+        };
 
-                return View(postCreateViewModel);
-            }
-        }
-
-        return NotFound("Post not found, cannot update post");
+        return View(postViewModel);
     }
 
     [HttpPost]
     public async Task<IActionResult> Update(Post post)
     {
-        // Check if model is valid before updating
-        if (!ModelState.IsValid) return RedirectToAction(nameof(Create));
+        // Check if model is valid before updating #TODO: Fix this
+        if (!ModelState.IsValid) return RedirectToAction(nameof(Update));
 
 
         // Remove all the olds tags from post, this is done since I could not find a way to use CASCADE update in EF Core
@@ -230,44 +229,33 @@ public class PostController : Controller
     public async Task<IActionResult> Delete(int id)
     {
         var post = await _postRepository.GetTById(id);
-        if (post == null)
-        {
-            return NotFound();
-        }
-
+        if (post == null) return NotFound();
         return View(post);
     }
 
     [HttpPost]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        bool post = await _postRepository.Delete(id);
-        if (post == false)
-        {
-            return NotFound();
-        }
+        bool post = await _postRepository.Delete(id); // Delete post
+        if (post == false) return NotFound(); // If post not found, return NotFound
 
-        return RedirectToAction("Card", "Post");
+        string viewModel = HttpContext.Session.GetString("viewModel") ?? "Card"; // Get the current view model from session
+        return RedirectToAction(viewModel, "Post"); // Redirect to the post list
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateComment(Comment comment)
     {
-        if (ModelState.IsValid)
-        {
-            comment.DateCreated = DateTime.Now;
-            var newComment = await _commentRepository.Create(comment);
-            if (newComment == null)
-            {
-                return NotFound("Comment not created");
-            }
+        if (!ModelState.IsValid) return NotFound("Comment not created, comment invalid");
 
-            /* Validation not working, fix later */
-            return Redirect(
-                $"{Url.Action("Post", new { id = newComment.PostId })}#commentId-{newComment.CommentId}"); // Redirect to the post with the comment
-        }
+        comment.DateCreated = DateTime.Now;
+        var newComment = await _commentRepository.Create(comment);
+        if (newComment == null) return NotFound("Comment not created");
 
-        return NotFound("Comment not created, comment invalid");
+
+        /* Validation not working, fix later */
+        return Redirect(
+            $"{Url.Action("Post", new { id = newComment.PostId })}#commentId-{newComment.CommentId}"); // Redirect to the post with the comment
     }
 
     [HttpPost]
@@ -275,17 +263,15 @@ public class PostController : Controller
     {
         var commentFromDb = await _commentRepository.GetTById(comment.CommentId);
 
-        if (commentFromDb == null)
-        {
-            return NotFound();
-        }
+        if (commentFromDb == null) return NotFound();
 
-        if (ModelState.IsValid)
-        {
-            commentFromDb.DateLastEdited = DateTime.Now;
-            commentFromDb.Content = comment.Content;
-            await _commentRepository.Update(commentFromDb);
-        }
+
+        if (!ModelState.IsValid) return NotFound("Comment not updated, comment invalid");
+
+        commentFromDb.DateLastEdited = DateTime.Now;
+        commentFromDb.Content = comment.Content;
+        await _commentRepository.Update(commentFromDb);
+
 
         /* Validation not working, fix later */
         return Redirect(
@@ -298,10 +284,7 @@ public class PostController : Controller
     {
         var post = await _postRepository.GetTById(id);
 
-        if (post == null)
-        {
-            return NotFound();
-        }
+        if (post == null) return NotFound();
 
         post.Likes++;
 
@@ -315,10 +298,8 @@ public class PostController : Controller
     {
         var comment = await _commentRepository.GetTById(id);
 
-        if (comment == null)
-        {
-            return NotFound();
-        }
+        if (comment == null) return NotFound();
+
 
         comment.Likes++;
 
