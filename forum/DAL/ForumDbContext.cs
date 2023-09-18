@@ -2,6 +2,7 @@ using forum.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+
 namespace forum.DAL;
 
 // The ORM (Object-Relational Mapper) for the application
@@ -25,6 +26,9 @@ public class ForumDbContext : IdentityDbContext
     // Configuring the relationships and schemas for the entities in the database
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //Fixes
+        //Unhandled exception. System.InvalidOperationException: The entity type 'IdentityUserLogin<string>' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.
+        //Source: https://stackoverflow.com/questions/39576176/is-base-onmodelcreatingmodelbuilder-necessary
         base.OnModelCreating(modelBuilder);
 
         // Configuring the many to many relationship between tags and posts
