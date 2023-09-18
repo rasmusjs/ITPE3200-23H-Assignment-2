@@ -3,6 +3,7 @@ using forum.Models;
 
 namespace forum.DAL;
 
+// Database initializer - Seeds the database with default content if there are no content in DB
 public static class DbInit
 {
     public static void Seed(IApplicationBuilder app)
