@@ -1,29 +1,45 @@
+using forum.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace forum.Models;
+namespace forum.DAL;
 
-public class ForumDbContext : DbContext
+public class ForumDbContext : IdentityDbContext
 {
     public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
     {
-        //ChangeTracker.LazyLoadingEnabled = true;
         //Database.EnsureCreated();
     }
 
-    public DbSet<User> Users { get; set; }
+    //public DbSet<User> Users { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<Post> Posts { get; set; }
+
+    //public DbSet<PostTag> PostTags { get; set; }
     public DbSet<Comment> Comments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        //https://learn.microsoft.com/en-us/ef/core/modeling/relationships/many-to-many
-        // Link Posts and Tags using the help table PostTag
+        base.OnModelCreating(modelBuilder);
+
+        //modelBuilder.Entity<PostTag>().HasKey(pt => new { pt.PostId, pt.TagId });
+
+
         modelBuilder.Entity<Post>()
             .HasMany(p => p.Tags)
             .WithMany(t => t.Posts)
             .UsingEntity(j => j.ToTable("PostTag"));
+
+
+        //https://learn.microsoft.com/en-us/ef/core/modeling/relationships/many-to-many
+        // Link Posts and Tags using the help table PostTag
+
+        modelBuilder.Entity<Post>()
+            .HasMany(p => p.Tags)
+            .WithMany(t => t.Posts)
+            .UsingEntity(j => j.ToTable("PostTag"));
+
 
         // Link Posts with Categories
         modelBuilder.Entity<Post>().HasOne(p => p.Category).WithMany().HasForeignKey(p => p.CategoryId);
