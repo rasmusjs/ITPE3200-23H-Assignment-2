@@ -8,8 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace forum.Controllers;
 
+// Controller for the search function
 public class SearchController : Controller
 {
+    // Connect the controller to the different models
     private readonly IForumRepository<Post> _postRepository;
     private readonly IForumRepository<Category> _categoryRepository;
     private readonly IForumRepository<Tag> _tags;
@@ -17,7 +19,7 @@ public class SearchController : Controller
 
     private readonly ILogger<PostController> _logger; // Ikke satt opp enda!
 
-
+    // Constructor for Dependency Injection to the Data Access Layer from the different repositories
     public SearchController(IForumRepository<Category> categoryRepository,
         IForumRepository<Tag> tagRepo, IForumRepository<Post> postRepository,
         IForumRepository<Comment> commentRepository,
@@ -30,25 +32,28 @@ public class SearchController : Controller
         _logger = logger;
     }
 
-
+    // Function to refresh
+    // NOT USED?????
     public IActionResult Refresh()
     {
         return Redirect(Request.Headers["Referer"].ToString());
     }
-
+    
+    // Function to go to post based on id
     public IActionResult GoToPost(int id)
     {
         return RedirectToAction("Post", "Post", new { id });
     }
 
-
+    // Get request to search based on a provided search term
     [HttpGet]
     public async Task<IActionResult> Search(string term)
     {
+        // Error handling for the search term
         if (string.IsNullOrWhiteSpace(term)) return Index(); // TODO: Redirect to error page
         if (term.Length < 2) return Index(); // TODO: Redirect to error page
 
-
+        //
         var posts = await _postRepository.GetAllPostsByTerm(term);
         if (posts == null)
         {
