@@ -16,7 +16,6 @@ public interface IForumRepository<TEntity>
     Task<bool> Delete(int id);
     Task<bool> RemoveAllPostTags(int id);
 
-
-    //https://dotnettutorials.net/lesson/generic-repository-pattern-csharp-mvc/
-    //https://learn.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application#implement-a-generic-repository-and-a-unit-of-work-class
+    //Source: https://dotnettutorials.net/lesson/generic-repository-pattern-csharp-mvc/
+    //Source: https://learn.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application#implement-a-generic-repository-and-a-unit-of-work-class
 }
