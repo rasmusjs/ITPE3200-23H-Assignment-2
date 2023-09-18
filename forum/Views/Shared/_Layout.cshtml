@@ -39,6 +39,7 @@
                 </ul>
                 <div>
                     My profile
+                    <partial name="_LoginPartial"/>
                 </div>
             </div>
         </div>
@@ -47,6 +48,7 @@
 <div class="container">
     <main role="main" class="py-4">
         @RenderBody()
+        @RenderSection("scripts", required: false)
     </main>
 </div>
 </body>

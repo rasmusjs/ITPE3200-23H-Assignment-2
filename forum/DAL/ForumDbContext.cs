@@ -1,7 +1,7 @@
 using forum.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.EntityFrameworkCore.Design;
 namespace forum.DAL;
 
 // The ORM (Object-Relational Mapper) for the application
@@ -43,6 +43,7 @@ public class ForumDbContext : IdentityDbContext
             .HasMany(c => c.CommentReplies)
             .WithOne(c => c.ParentComment)
             .HasForeignKey(c => c.ParentCommentId);
+        //modelBuilder.Entity<Post>().HasOne(p => p.User).WithMany(u => u.Posts).HasForeignKey(p => p.UserId);
     }
 
     // Enable Lazy Loading for loading data when it is needed

@@ -10,6 +10,7 @@ public static class DbInit
     {
         using var serviceScope = app.ApplicationServices.CreateScope();
         ForumDbContext context = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
+
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
 
