@@ -6,9 +6,9 @@
 <h1>Posts (@Model.CurrentViewName View)</h1>
 <a href="/Post/Compact">Change to Compact View</a>
 
-<div class="d-flex flex-column gap-4">
+<div>
     @foreach (var post in Model.Posts)
     {
-        <partial name="_Post" model="post"/>
+        <partial name="_PostCard" model="post"/>
     }
 </div>
