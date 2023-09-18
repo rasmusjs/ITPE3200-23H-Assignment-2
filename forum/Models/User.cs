@@ -1,7 +1,9 @@
 namespace forum.Models;
 
+// Model for the User class
 public class User
 {
+    // Getters and setters for the User data
     public int UserId { get; set; }
     public string Username { get; set; }
     public string Email { get; set; }
