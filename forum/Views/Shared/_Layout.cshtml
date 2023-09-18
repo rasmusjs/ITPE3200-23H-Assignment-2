@@ -4,7 +4,10 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - BracketBros</title>
-    <link rel="stylesheet" href="~/css/site.css">
+    <link href="~/lib/fontawesome/css/fontawesome.css" rel="stylesheet">
+    <link href="~/lib/fontawesome/css/brands.css" rel="stylesheet">
+    <link href="~/lib/fontawesome/css/solid.css" rel="stylesheet">
+    <link href="~/css/site.css" rel="stylesheet">
     <script src="~/js/site.js"></script>
     <script src="~/lib/jquery/jquery.js"></script>
     <script src="~/lib/jquery-validate/jquery.validate.js"></script>
@@ -13,34 +16,30 @@
 <body>
 <header>
     <nav>
-        <div>
-            <a asp-area="" asp-controller="Home" asp-action="Index">
-                <img src="/images/code-solid.svg" alt="" width="24">
-                <span>BracketBros</span>
-            </a>
-            <button>
-                <span></span>
-            </button>
-            <div>
-                <ul>
-                    <li>
-                        <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li>
-                        <a asp-area="" asp-controller="Post" asp-action="Card">Posts</a>
-                    </li>
-                    <li>
-                        <a asp-area="" asp-controller="Search" asp-action="Index">Search</a>
-                    </li>
-                    <li>
-                        <a asp-area="" asp-controller="Post" asp-action="Create">Create Post</a>
-                    </li>
-                </ul>
-                <div>
-                    My profile
-                </div>
-            </div>
-        </div>
+        <a asp-area="" asp-controller="Home" asp-action="Index" id="brand">
+            <i class="fa-solid fa-laptop-code"></i>
+            <span>BracketBros</span>
+        </a>
+        <ul>
+            <li>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="@IsActive("Home", "Index")">Home</a>
+            </li>
+            <li>
+                <a asp-area="" asp-controller="Post" asp-action="Card" class="@IsActive("Post", "Card")">Posts</a>
+            </li>
+            <li>
+                <a asp-area="" asp-controller="Search" asp-action="Index" class="@IsActive("Search", "Index")">Search</a>
+            </li>
+            <li>
+                <a asp-area="" asp-controller="Post" asp-action="Create" class="@IsActive("Post", "Create")">Create Post</a>
+            </li>
+        </ul>
+        <button id="profile-btn">
+            <i class="fa-solid fa-user"></i>
+        </button>
+        <button id="burger-btn">
+            <i class="fa-solid fa-bars"></i>
+        </button>
     </nav>
 </header>
 <div>
@@ -50,3 +49,13 @@
 </div>
 </body>
 </html>
+
+@functions {
+    public string IsActive(string controller, string action)
+    {
+        var currentController = ViewContext.RouteData.Values["controller"] as string;
+        var currentAction = ViewContext.RouteData.Values["action"] as string;
+
+        return controller == currentController && action == currentAction ? "active" : "";
+    }
+}
