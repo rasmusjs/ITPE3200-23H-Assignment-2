@@ -24,31 +24,33 @@
             <i class="fa-solid fa-bars"></i>
             <i class="fa-solid fa-xmark"></i>
         </button>
-        <ul id="nav-link-list">
-            <li>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="@IsActive("Home", "Index")">Home</a>
-            </li>
-            <li>
-                <a asp-area="" asp-controller="Post" asp-action="Card" class="@IsActive("Post", "Card")">Posts</a>
-            </li>
-            <li>
-                <a asp-area="" asp-controller="Search" asp-action="Index" class="@IsActive("Search", "Index")">Search</a>
-            </li>
-            <li>
-                <a asp-area="" asp-controller="Post" asp-action="Create" class="@IsActive("Post", "Create")">Create Post</a>
-            </li>
-        </ul>
-        <div id="nav-login-container">
-            <partial name="_LoginPartial"/>
+        <div id="nav-links-container">
+            <ul>
+                <li>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="@IsActive("Home", "Index") nav-btn-text">Home</a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Post" asp-action="Card" class="@IsActive("Post", "Card") nav-btn-text">Posts</a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Search" asp-action="Index" class="@IsActive("Search", "Index") nav-btn-text">Search</a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Post" asp-action="Create" class="@IsActive("Post", "Create") nav-btn-text">Create Post</a>
+                </li>
+            </ul>
+            <div id="nav-login-container">
+                <partial name="_LoginPartial"/>
+            </div>
         </div>
     </nav>
 </header>
-<div>
-    <main>
+<main>
+    <div id="main-inner-container">
         @RenderBody()
         @RenderSection("scripts", required: false)
-    </main>
-</div>
+    </div>
+</main>
 </body>
 </html>
 
