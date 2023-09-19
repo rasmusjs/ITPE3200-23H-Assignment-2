@@ -53,6 +53,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>()
 //.AddEntityFrameworkStores<ItemDbContext>()
 //.AddDefaultTokenProviders();
 
+//Taken from lecture, see https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration?view=aspnetcore-7.0 for more info
+
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
 
@@ -101,6 +103,8 @@ app.UseSession();
 //    options.IdleTimeout = TimeSpan.FromSeconds(1800); // 30 minutes
 //    options.Cookie.IsEssential = true;
 //}); 
+
+//Taken from lecture, see https://learn.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-7.0&viewFallbackFrom=aspnetcore-3.0 for more info
 
 app.UseAuthentication();
 app.UseAuthorization();
