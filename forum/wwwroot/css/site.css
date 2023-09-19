@@ -197,7 +197,7 @@ main {
     width: 100%;
     
     #main-inner-container {
-        max-width: 848px;
+        max-width: 1048px;
         margin: 0 auto;
         padding: 48px 24px 24px 24px;
         background: red;
