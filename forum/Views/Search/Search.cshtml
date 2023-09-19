@@ -5,10 +5,10 @@
 
 
 <form method="get" asp-action="Search">
-    <div class="form-group">
+    <div>
         <label for="term">Search Term:</label>
         <input type="text" id="term" name="term" placeholder="Enter a search term"/>
-        <button type="submit" class="btn btn-primary">Search</button>
+        <button type="submit">Search</button>
     </div>
 </form>
 
@@ -19,7 +19,7 @@
     {
         @foreach (var post in Model.Posts)
         {
-            <partial name="_Post" model="post"/>
+            <partial name="_PostCard" model="post"/>
         }
     }
     else

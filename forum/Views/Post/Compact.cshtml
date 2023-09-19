@@ -4,28 +4,3 @@
 }
 <h1>Posts (@Model.CurrentViewName View)</h1>
 <a href="/Post/Card">Change to Card View</a>
-@*<div class="container">
-    <table class='table table-striped'>
-        @foreach (var post in Model.Posts)
-        {
-            <tr>
-                <td>
-                    <div>
-                        <h2>@post.Title</h2>
-                        <div>
-                            <span>@post.PostId</span>
-                            <span>@post.Content</span>
-                            <span>@post.DateCreated</span>
-                            $1$<span>@post.DateLastEdited</span>#1#
-                            <a asp-controller="Post"
-                               asp-action="Post"
-                               asp-route-id="@post.PostId">
-                                Go to post
-                            </a>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        }
-    </table>
-</div>*@

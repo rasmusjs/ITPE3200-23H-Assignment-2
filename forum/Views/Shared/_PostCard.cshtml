@@ -1,0 +1,71 @@
+@model Post
+
+<div>
+    <div>
+        <div>
+            <a asp-controller="Search"
+               asp-action="Search"
+               asp-route-term="@Model.Category?.Name">
+                @Model.Category?.Name
+            </a>
+
+            @if (Model.Tags != null)
+            {
+                foreach (var tag in Model.Tags)
+                {
+                    <a asp-controller="Search"
+                       asp-action="Search"
+                       asp-route-term="@tag.Name">
+                        @tag.Name
+                    </a>
+                }
+            }
+        </div>
+        <div>
+            Posted by <span>@Model.User?.Username</span>
+            <span>@Model.DateCreated.ToShortDateString() @Model.DateCreated.ToShortTimeString()</span>
+            @if (Model.DateLastEdited != null)
+            {
+                <span>Last edited: @Model.DateLastEdited?.ToShortDateString() @Model.DateLastEdited?.ToShortTimeString()</span>
+            }
+        </div>
+    </div>
+
+    <div>
+        <h1>@Model.Title</h1>
+        <div>@Model.Content</div>
+
+    </div>
+
+    <div>
+        <div>
+            <a asp-controller="Post"
+               asp-action="LikePost"
+               asp-route-id="@Model.PostId">
+                @Model.Likes Likes
+            </a>
+            <a asp-controller="Post"
+               asp-action="Post"
+               asp-route-id="@Model.PostId">
+                @Model.Comments?.Count Comments
+            </a>
+        </div>
+        <div>
+            <a asp-controller="Post"
+               asp-action="Update"
+               asp-route-id="@Model.PostId">
+                Edit
+            </a>
+            <a asp-controller="Post"
+               asp-action="Delete"
+               asp-route-id="@Model.PostId">
+                Delete
+            </a>
+            <a asp-controller="Post"
+               asp-action="Post"
+               asp-route-id="@Model.PostId">
+                Go to post
+            </a>
+        </div>
+    </div>
+</div>
