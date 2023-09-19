@@ -15,37 +15,6 @@
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand d-flex gap-2" asp-area="" asp-controller="Home" asp-action="Index">
-            <img src="/images/code-solid.svg" alt="" width="24" class="d-inline-block align-text-top">
-            <span>BracketBros</span>
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="Post" asp-action="Card">Posts</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="Search" asp-action="Index">Search</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link" asp-area="" asp-controller="Post" asp-action="Create">Create Post</a>
-                </li>
-            </ul>
-            <div>
-                My profile
-                <partial name="_LoginPartial"/>
-            </div>
-        </div>
-    </div>
-    </nav>
     <nav>
         <a asp-area="" asp-controller="Home" asp-action="Index" id="brand">
             <i class="fa-solid fa-laptop-code"></i>
@@ -69,9 +38,9 @@
                 <a asp-area="" asp-controller="Post" asp-action="Create" class="@IsActive("Post", "Create")">Create Post</a>
             </li>
         </ul>
-        <button id="profile-btn">
-            <i class="fa-solid fa-user"></i>
-        </button>
+        <div id="nav-login-container">
+            <partial name="_LoginPartial"/>
+        </div>
     </nav>
 </header>
 <div>

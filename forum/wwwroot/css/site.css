@@ -144,12 +144,16 @@ nav {
         }
     }
     
-    #profile-btn {
+    /*#profile-btn {
         display: flex;
-
+    
         @media screen and (max-width: 650px) {
             display: none;
         }
+    }*/
+    
+    #nav-login-container {
+        margin-left: auto;
     }
     
     #burger-btn {
