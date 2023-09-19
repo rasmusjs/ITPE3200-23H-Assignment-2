@@ -3,12 +3,18 @@
     ViewData["Title"] = @Model.CurrentViewName + " View";
 }
 
-<h1>Posts (@Model.CurrentViewName View)</h1>
-<a href="/Post/Compact">Change to Compact View</a>
-
-<div>
-    @foreach (var post in Model.Posts)
-    {
-        <partial name="_PostCard" model="post"/>
-    }
+<div id="post-card">
+    <div class="left">
+        <h1 class="main-title">Posts (@Model.CurrentViewName View)</h1>
+        <a class="change-view-link" href="/Post/Compact">Change to Compact View</a>
+        <div class="posts">
+            @foreach (var post in Model.Posts)
+            {
+                <partial name="_PostCard" model="post"/>
+            }
+        </div>
+    </div>
+    <div class="right">
+        filter
+    </div>
 </div>

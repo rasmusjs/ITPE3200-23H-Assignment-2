@@ -44,12 +44,15 @@ html {
 }
 
 nav {
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
     display: flex;
     flex-direction: row;
     gap: 24px;
     align-items: center;
     height: var(--nav-height);
+    width: 100%;
     background-color: var(--fg-1);
     padding: 0 12px 0 24px;
     z-index: 1000;
@@ -195,12 +198,12 @@ nav {
 
 main {
     width: 100%;
+    padding-top: var(--nav-height);
     
     #main-inner-container {
         max-width: 1048px;
         margin: 0 auto;
         padding: 48px 24px 24px 24px;
-        background: red;
     }
 }
 
