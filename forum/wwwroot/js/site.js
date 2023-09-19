@@ -1,9 +1,10 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
+﻿document.addEventListener('DOMContentLoaded', function() {
+    console.log("loaded");
     const burgerBtn = document.getElementById("burger-btn");
-    const ul = document.getElementById("nav-link-list");
-
-    burgerBtn.addEventListener("click", function () {
-        ul.classList.toggle("open");
+    const navLinkList = document.getElementById("nav-link-list");
+    
+    burgerBtn.addEventListener("click", () => {
         burgerBtn.classList.toggle("active");
-    });
-});
+        navLinkList.classList.toggle("active");
+    })
+})
