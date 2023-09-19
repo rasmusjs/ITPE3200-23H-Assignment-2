@@ -1,0 +1,136 @@
+.shared-postCard {
+    display: flex;
+    flex-direction: column;
+    padding: 2px;
+    border: 1px solid var(--fg-2);
+    border-radius: 6px;
+    background-color: var(--fg-2);
+    transition: var(--tr-default);
+    
+    &:hover {
+        border-color: var(--fg-3);
+    }
+    
+    & .top {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 16px 16px 0;
+        border-radius: 6px 6px 0 0;
+        background-color: var(--fg-1);
+
+        & .chips {
+            display: flex;
+            flex-direction: row;
+            gap: 4px;
+            
+            & a {
+                text-decoration: none;
+                height: min-content;
+                padding: 6px 12px;
+                border-radius: 48px;
+                color: var(--txt-2);
+                background-color: var(--fg-2);
+                transition: var(--tr-default);
+                
+                &:hover {
+                    background-color: var(--fg-3);
+                }
+            }
+        }
+        
+        & .creation-info {
+            color: var(--txt-2);
+            font-size: var(--fs-s);
+            text-align: right;
+            
+            & * {
+                font-size: var(--fs-s);
+                color: var(--txt-2);
+            }
+            
+            & .user {
+                font-weight: bold;
+            }
+            
+            & .last-edited {
+                display: block;
+                font-style: italic;
+            }
+        }
+    }
+    
+    & .content {
+        padding: 20px;
+        background-color: var(--fg-1);
+        border-radius: 0 0 6px 6px;
+
+        & h1 {
+            font-size: var(--fs-2xl);
+            margin-bottom: 8px;
+        }
+    }
+    
+    & .bottom {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 8px;
+        
+        & * {
+            font-size: var(--fs-s);
+            font-weight: bold;
+        }
+        
+        > div {
+            display: flex;
+            flex-direction: row;
+            gap: 4px;
+            
+            & a {
+                text-decoration: none;
+                border-radius: 6px;
+                padding: 8px 12px;
+                color: var(--txt-2);
+                transition: var(--tr-default);
+
+                & i {
+                    font-size: var(--fs-default);
+                    color: var(--txt-2);
+                    margin-right: 6px;
+                    transition: var(--tr-default);
+                }
+                
+                &:hover {
+                    color: var(--txt-1);
+                    
+                    & i {
+                        transform: scale(1.125);
+                    }
+                }
+                
+                
+            }
+            
+            &.likes-comments {
+                & a {
+                    background-color: transparent;
+                    
+                    &:hover {
+                        background-color: var(--fg-1);
+                    }
+                }
+            }
+
+            &.links {
+                & a {
+                    background-color: var(--fg-1);
+
+                    &:hover {
+                        background-color: var(--fg-3);
+                    }
+                }
+            }
+        }
+    }
+}

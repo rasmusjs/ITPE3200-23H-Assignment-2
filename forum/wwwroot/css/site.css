@@ -5,7 +5,7 @@
     --ff-default: 'Roboto', sans-serif;
     --ff-mono: 'Roboto Mono', monospace;
     /* Font sizes */
-    --fs-s: 12px;
+    --fs-s: 13px;
     --fs-default: 14px;
     --fs-l: 18px;
     --fs-xl: 22px;
@@ -24,6 +24,8 @@
     --fg-2: #3c3c3c;
     --fg-3: #565656;
     --txt-1: #eeeeee;
+    --txt-2: #bbbbbb;
+    --txt-3: #a9a9a9;
     /* Transitions */
     --tr-default: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
     /* Navbar */
