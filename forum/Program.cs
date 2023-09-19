@@ -49,6 +49,7 @@ else
 
 app.UseStaticFiles(); // for adding middleware
 app.UseSession();
+app.UseAuthentication();
 app.MapDefaultControllerRoute();
 
 app.Run();

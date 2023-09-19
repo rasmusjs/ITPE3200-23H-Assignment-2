@@ -3,6 +3,7 @@ using forum.Models;
 
 namespace forum.DAL;
 
+// Database initializer - Seeds the database with default content if there are no content in DB
 public static class DbInit
 {
     public static void Seed(IApplicationBuilder app)
@@ -230,64 +231,4 @@ public static class DbInit
             context.SaveChanges();
         }
     }
-    /*if (!context.Comments.Any())
-    {
-        var commentsList = new List<Comment>()
-        {
-            new()
-            {
-                CommentId = 1,
-                Content = "This is a great post!",
-                Likes = 10,
-                DateCreated = DateTime.Now.AddHours(-1),
-                PostId = 1,
-                UserId = 2,
-            },
-
-            new()
-            {
-                CommentId = 2,
-                Content = "I agree with you!",
-                Likes = 5,
-                DateCreated = DateTime.Now.AddMinutes(-30),
-                PostId = 1,
-                UserId = 3,
-            },
-
-            new()
-
-            {
-                CommentId = 3,
-                Content = "Thanks for sharing!",
-                Likes = 3,
-                DateCreated = DateTime.Now.AddMinutes(-15),
-                PostId = 1,
-                UserId = 4,
-            },
-
-            new()
-
-            {
-                CommentId = 4,
-                Content = "I have a question...",
-                DateCreated = DateTime.Now.AddMinutes(-10),
-                PostId = 1,
-                UserId = 5,
-                ParentCommentId = 1,
-            },
-
-            new()
-
-            {
-                CommentId = 5,
-                Content = "Sure, what's your question?",
-                DateCreated = DateTime.Now.AddMinutes(-5),
-                PostId = 1,
-                UserId = 2,
-                ParentCommentId = 1,
-            }
-        };
-        context.AddRange(commentsList);
-        context.SaveChanges();
-    }*/
 }
