@@ -93,6 +93,7 @@ nav {
     width: 100%;
     background-color: var(--fg-1);
     padding: 0 12px 0 24px;
+    box-shadow: 0 0 4px 2px var(--bg-1);
     z-index: 1000;
 
     #brand {

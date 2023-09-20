@@ -1,18 +1,18 @@
 #post-card {
     display: flex;
-    flex-direction: row;
-    gap: 16px;
-    
-    & .left {
+    flex-direction: column;
+    gap: 24px;
+        
+    & .main-header {
         display: flex;
-        flex-direction: column;
-        gap: 16px;
-        flex-grow: 1;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
         
-        & .main-title {
-            font-size: var(--fs-2xl);
+        & .title {
+            margin: 0 !important;
         }
-        
+
         & .change-view-link {
             text-decoration: none;
             width: min-content;
@@ -26,20 +26,20 @@
                 margin-right: 16px;
                 transition: var(--tr-default);
             }
-            
+
             &:hover {
                 background-color: var(--fg-3);
-                
+
                 & i {
                     transform: scale(1.125);
                 }
-            }            
+            }
         }
+    }
         
-        & .posts {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
+    & .posts {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
     }
 }
