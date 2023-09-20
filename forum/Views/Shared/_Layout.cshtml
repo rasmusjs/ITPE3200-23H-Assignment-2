@@ -10,6 +10,7 @@
     <link href="~/lib/fontawesome/css/solid.css" rel="stylesheet">
     <link href="~/css/site.css" rel="stylesheet">
     <link href="~/css/post-card.css" rel="stylesheet">
+    <link href="~/css/post-compactcss.css.css" rel="stylesheet">
     <link href="~/css/shared-postCard.css" rel="stylesheet">
     <script src="~/js/site.js"></script>
     <script src="~/lib/jquery/jquery.js"></script>
@@ -33,7 +34,7 @@
                     <a asp-area="" asp-controller="Home" asp-action="Index" class="@IsActive("Home", "Index") nav-btn-text">Home</a>
                 </li>
                 <li>
-                    <a asp-area="" asp-controller="Post" asp-action="Card" class="@IsActive("Post", "Card") nav-btn-text">Posts</a>
+                    <a asp-area="" asp-controller="Post" asp-action="Card" class="@IsActive("Post", "Card") or @IsActive("Post", "Compact") nav-btn-text">Posts</a>
                 </li>
                 <li>
                     <a asp-area="" asp-controller="Search" asp-action="Index" class="@IsActive("Search", "Index") nav-btn-text">Search</a>

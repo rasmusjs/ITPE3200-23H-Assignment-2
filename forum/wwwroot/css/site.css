@@ -240,7 +240,7 @@ main {
     padding-top: var(--nav-height);
     
     #main-inner-container {
-        max-width: 1048px;
+        max-width: 948px;
         margin: 0 auto;
         padding: 48px 24px 24px 24px;
     }

@@ -1,0 +1,111 @@
+@model Post
+@using Markdig;
+
+<div class="shared-postCard">
+    <div class="top">
+        <div class="chips">
+            <a asp-controller="Search"
+               asp-action="Search"
+               asp-route-term="@Model.Category?.Name"
+               class="category">
+                @Model.Category?.Name
+            </a>
+
+            @if (Model.Tags != null)
+            {
+                foreach (var tag in Model.Tags)
+                {
+                    <a asp-controller="Search"
+                       asp-action="Search"
+                       asp-route-term="@tag.Name"
+                       class="tag">
+                        @tag.Name
+                    </a>
+                }
+            }
+        </div>
+        <div class="creation-info">
+            Posted by <span class="user">@Model.User?.Username</span> @CalculateTimeAgo(Model.DateCreated)
+            @if (Model.DateLastEdited != null)
+            {
+                <span class="last-edited">Last edited @CalculateTimeAgo(Model.DateLastEdited.Value)</span>
+            }
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="title">@Model.Title</div>
+        <div>
+            @Html.Raw(Markdown.ToHtml(Model.Content))
+        </div>
+    </div>
+
+    <div class="bottom">
+        <div class="likes-comments">
+            <a asp-controller="Post"
+               asp-action="LikePost"
+               asp-route-id="@Model.PostId">
+                <i class="fa-solid fa-thumbs-up"></i>@Model.Likes likes
+            </a>
+            <a asp-controller="Post"
+               asp-action="Post"
+               asp-route-id="@Model.PostId">
+                <i class="fa-solid fa-comment"></i>@Model.Comments?.Count comments
+            </a>
+        </div>
+        <div class="links">
+            <a asp-controller="Post"
+               asp-action="Update"
+               asp-route-id="@Model.PostId">
+                Edit
+            </a>
+            <a asp-controller="Post"
+               asp-action="Delete"
+               asp-route-id="@Model.PostId">
+                Delete
+            </a>
+            <a asp-controller="Post"
+               asp-action="Post"
+               asp-route-id="@Model.PostId">
+                Go to post
+            </a>
+        </div>
+    </div>
+</div>
+
+@functions {
+    static string CalculateTimeAgo(DateTime date)
+    {
+        TimeSpan timeDifference = DateTime.Now - date;
+
+        if (timeDifference.TotalMinutes < 1)
+        {
+            return "just now";
+        }
+        else if (timeDifference.TotalMinutes < 60)
+        {
+            int minutesAgo = (int)timeDifference.TotalMinutes;
+            return $"{minutesAgo} {(minutesAgo == 1 ? "minute" : "minutes")} ago";
+        }
+        else if (timeDifference.TotalHours < 24)
+        {
+            int hoursAgo = (int)timeDifference.TotalHours;
+            return $"{hoursAgo} {(hoursAgo == 1 ? "hour" : "hours")} ago";
+        }
+        else if (timeDifference.TotalDays < 30)
+        {
+            int daysAgo = (int)timeDifference.TotalDays;
+            return $"{daysAgo} {(daysAgo == 1 ? "day" : "days")} ago";
+        }
+        else if (timeDifference.TotalDays < 365)
+        {
+            int monthsAgo = (int)(timeDifference.TotalDays / 30);
+            return $"{monthsAgo} {(monthsAgo == 1 ? "month" : "months")} ago";
+        }
+        else
+        {
+            int yearsAgo = (int)(timeDifference.TotalDays / 365);
+            return $"{yearsAgo} {(yearsAgo == 1 ? "year" : "years")} ago";
+        }
+    }
+}
