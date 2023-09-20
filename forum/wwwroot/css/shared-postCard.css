@@ -1,15 +1,10 @@
 .shared-postCard {
     display: flex;
     flex-direction: column;
-    padding: 2px;
-    border: 1px solid var(--fg-2);
+    padding: 4px;
     border-radius: 6px;
     background-color: var(--fg-2);
     transition: var(--tr-default);
-    
-    &:hover {
-        border-color: var(--fg-3);
-    }
     
     & .top {
         display: flex;
@@ -33,7 +28,7 @@
             & a {
                 text-decoration: none;
                 height: min-content;
-                padding: 6px 10px;
+                padding: 8px 12px;
                 border-radius: 48px;
                 background-color: var(--fg-2);
                 transition: var(--tr-default);
@@ -59,14 +54,9 @@
     }
     
     & .content {
-        padding: 24px 24px 16px 24px;
+        padding: 8px 16px 16px;
         background-color: var(--fg-1);
         border-radius: 0 0 6px 6px;
-
-        & h1 {
-            font-size: var(--fs-2xl);
-            margin-bottom: 16px;
-        }
         
         & div {
             position: relative;
@@ -80,24 +70,7 @@
                 left: 0;
                 height: 100px;
                 width: 100%;
-                background: linear-gradient(to bottom, transparent 0%, var(--fg-1) calc(100% - 16px));
-            }
-            
-            & h2 {
-                font-size: var(--fs-xl);
-                margin: 8px 0 6px 0;
-            }
-            & h3 {
-                font-size: var(--fs-l);
-                margin: 8px 0 6px 0;
-            }
-            & h4 {
-                font-size: var(--fs-default);
-                font-weight: bold;
-                margin: 6px 0;
-            }
-            & p {
-                margin: 6px 0;
+                background: linear-gradient(to bottom, transparent 0%, 30%, var(--fg-1) calc(100% - 4px));
             }
         }
     }
@@ -106,7 +79,8 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        padding: 8px;
+        margin-top: 4px;
+        padding: 4px;
         
         & * {
             font-size: var(--fs-s);

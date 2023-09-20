@@ -5,11 +5,12 @@
     --ff-default: 'Roboto', sans-serif;
     --ff-mono: 'Roboto Mono', monospace;
     /* Font sizes */
-    --fs-s: 13px;
+    --fs-s: 12px;
     --fs-default: 14px;
-    --fs-l: 18px;
-    --fs-xl: 22px;
-    --fs-2xl: 28px;
+    --fs-l: 16px;
+    --fs-xl: 18px;
+    --fs-2xl: 20px;
+    --fs-3xl: 28px;
     /* Theme */
     --primary: #9FBFA7;
     --secondary: #5856e1;
@@ -43,6 +44,41 @@
 
 html {
     background-color: var(--bg-1);
+}
+
+.title {
+    font-size: var(--fs-3xl);
+    font-weight: bold;
+    margin: 14px 0;
+}
+h1 {
+    font-size: var(--fs-2xl);
+    margin: 12px 0 8px 0;
+}
+h2 {
+    font-size: var(--fs-xl);
+    margin: 10px 0 6px 0;
+}
+h3 {
+    font-size: var(--fs-l);
+    font-weight: bold;
+    margin: 8px 0 6px 0;
+}
+h4 {
+    font-size: var(--fs-l);
+    margin: 6px 0;
+}
+h5 {
+    font-weight: bold;
+    margin: 6px 0;
+}
+h6 {
+    font-weight: bold;
+    opacity: 75%;
+    margin: 6px 0;
+}
+p {
+    margin: 6px 0;
 }
 
 nav {
