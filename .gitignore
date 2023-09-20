@@ -451,4 +451,7 @@ $RECYCLE.BIN/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
-!.vscode/extensions.json
+!.vscode/extensions.jsor
+
+ForumDatabase.db-shm
+ForumDatabase.db-wal`
