@@ -44,6 +44,7 @@ public class ForumDbContext : IdentityDbContext
         // Configuring the one-to-many relationship between Posts and Categories
         modelBuilder.Entity<Post>().HasOne(p => p.Category).WithMany().HasForeignKey(p => p.CategoryId);
 
+        // Configuring the one-to-many relationship between User and Posts
         modelBuilder.Entity<Post>().HasOne(p => p.User).WithMany(u => u.Posts).HasForeignKey(p => p.UserId);
 
 
@@ -52,7 +53,9 @@ public class ForumDbContext : IdentityDbContext
             .HasMany(c => c.CommentReplies)
             .WithOne(c => c.ParentComment)
             .HasForeignKey(c => c.ParentCommentId);
-        //modelBuilder.Entity<Post>().HasOne(p => p.User).WithMany(u => u.Posts).HasForeignKey(p => p.UserId);
+
+        // Configuring the one-to-many relationship between User and Comments
+        modelBuilder.Entity<Comment>().HasOne(p => p.User).WithMany(u => u.Comments).HasForeignKey(p => p.UserId);
 
         //Fixes
         //Unhandled exception. System.InvalidOperationException: The entity type 'IdentityUserLogin<string>' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.

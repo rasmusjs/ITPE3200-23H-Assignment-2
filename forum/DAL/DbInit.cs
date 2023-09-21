@@ -72,17 +72,17 @@ public static class DbInit
             {
                 new()
                 {
-                    UserName2 = "user123",
+                    UserName = "user123",
                     CreationDate = DateTime.Now
                 },
                 new()
                 {
-                    UserName2 = "johndoe",
+                    UserName = "johndoe",
                     CreationDate = DateTime.Now
                 },
                 new()
                 {
-                    UserName2 = "alice",
+                    UserName = "alice",
                     CreationDate = DateTime.Now
                 }
             };
@@ -90,8 +90,9 @@ public static class DbInit
             context.AddRange(usersList);
             context.SaveChanges();
             Console.WriteLine("Temp users added");
-        }
+        }*/
 
+        /*
         if (!context.Posts.Any())
         {
             var postsList = new List<Post>()
