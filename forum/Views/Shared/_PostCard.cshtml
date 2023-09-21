@@ -25,7 +25,7 @@
             }
         </div>
         <div class="creation-info">
-            Posted by <span class="user">@Model.User?.Username</span> @CalculateTimeAgo(Model.DateCreated)
+            Posted by <span class="user">@Model.User?.UserName</span> @CalculateTimeAgo(Model.DateCreated)
             @if (Model.DateLastEdited != null)
             {
                 <span class="last-edited">Last edited @CalculateTimeAgo(Model.DateLastEdited.Value)</span>
@@ -74,6 +74,7 @@
 </div>
 
 @functions {
+
     static string CalculateTimeAgo(DateTime date)
     {
         TimeSpan timeDifference = DateTime.Now - date;
@@ -108,4 +109,5 @@
             return $"{yearsAgo} {(yearsAgo == 1 ? "year" : "years")} ago";
         }
     }
+
 }

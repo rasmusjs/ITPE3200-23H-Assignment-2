@@ -50,7 +50,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
         // User settings
         options.User.RequireUniqueEmail = true;
     })
-    .AddEntityFrameworkStores<ForumDbContext>().AddDefaultUI() // Need to add this for the login page to work https://itecnote.com/tecnote/r-unable-to-resolve-service-for-type-iemailsender-while-attempting-to-activate-registermodel/
+    .AddEntityFrameworkStores<ForumDbContext>()
+    .AddDefaultUI() // Need to add this for the login page to work https://itecnote.com/tecnote/r-unable-to-resolve-service-for-type-iemailsender-while-attempting-to-activate-registermodel/
     .AddDefaultTokenProviders();
 
 //Taken from lecture, see https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration?view=aspnetcore-7.0 for more info
@@ -78,6 +79,19 @@ var logger = loggerConfiguration.CreateLogger();
 builder.Logging.AddSerilog(logger);
 */
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    // Cookie settings
+    options.Cookie.Name = "BracketBros.Session";
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // 30 minutes
+
+    options.LoginPath = "/Identity/Account/Login";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+    options.SlidingExpiration = true;
+});
+//From https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-7.0&tabs=visual-studio
+
 
 var app = builder.Build();
 
@@ -94,7 +108,8 @@ else
 app.UseStaticFiles(); // for adding middleware
 app.UseSession();
 
-builder.Services.AddDistributedMemoryCache();
+//builder.Services.AddDistributedMemoryCache();
+
 
 /*
 builder.Services.AddSession(options =>
