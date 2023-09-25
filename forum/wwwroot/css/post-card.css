@@ -18,6 +18,7 @@
             width: min-content;
             border-radius: 6px;
             padding: 12px 18px;
+            color: var(--txt-1);
             background-color: var(--fg-2);
             white-space: nowrap;
             transition: var(--tr-default);

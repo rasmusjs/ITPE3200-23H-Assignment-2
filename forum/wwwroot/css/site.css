@@ -81,6 +81,10 @@ p {
     margin: 6px 0;
 }
 
+a {
+    color: var(--info);
+}
+
 input, select, button {
     padding: 8px 12px;
     border: none;
@@ -203,6 +207,7 @@ nav {
         padding: 8px 12px;
         border: none;
         border-radius: 4px;
+        color: var(--txt-1);
         background-color: var(--fg-1);
         cursor: pointer;
         transition: var(--tr-default);
