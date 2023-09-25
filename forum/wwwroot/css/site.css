@@ -85,10 +85,12 @@ a {
     color: var(--info);
 }
 
-input, select, button {
+input, select, button, .input {
     padding: 8px 12px;
     border: none;
     border-radius: 4px;
+    text-decoration: none;
+    color: var(--txt-1);
     background-color: var(--fg-1);
     transition: var(--tr-default);
     

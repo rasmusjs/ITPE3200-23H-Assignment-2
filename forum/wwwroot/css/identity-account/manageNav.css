@@ -1,0 +1,34 @@
+.manage-nav {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 4px;
+    padding: 4px;
+    border-radius: 0 0 4px 4px;
+    background-color: var(--fg-1);
+    
+    & a {
+        font-size: var(--fs-s);
+
+        & i {
+            margin-right: 16px;
+            color: var(--txt-2);
+            transition: var(--tr-default);
+        }
+        
+        &.active {
+            background-color: var(--fg-2);
+        }
+        
+        &:hover {
+            background-color: var(--fg-3);
+        }
+        
+        &.active,
+        &:hover {
+            & i {
+                color: var(--txt-1);
+            }
+        }
+    }
+}
