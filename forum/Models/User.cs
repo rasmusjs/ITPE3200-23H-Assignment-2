@@ -1,18 +1,18 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace forum.Models;
 
 // Model for the User class
-public class User
+public class User : IdentityUser
 {
-    // Getters and setters for the User data
-    public int UserId { get; set; }
-    public string Username { get; set; }
-    public string Email { get; set; }
-    public string Password { get; set; }
-    public DateTime CreationDate { get; set; }
+    public string UserName { get; set; }
+    public DateTime CreationDate { get; set; } = DateTime.Now;
+
     // navigation property
     public virtual List<Post>? Posts { get; set; }
+
     // navigation property
-    //public List<Comment>? Comments { get; set; }
+    public virtual List<Comment>? Comments { get; set; }
     // navigation property
     //public List<Post>? LikedPosts { get; set; }
     // navigation property

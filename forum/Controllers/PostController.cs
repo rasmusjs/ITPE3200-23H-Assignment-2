@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel;
+using System.Security.Claims;
 using forum.DAL;
 using Microsoft.AspNetCore.Mvc;
 using forum.Models;
 using forum.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace forum.Controllers;
 
@@ -30,8 +33,19 @@ public class PostController : Controller
         _commentRepository = commentRepository;
         _logger = logger;
     }
-    
-   // Method to refresh the post when user presses the like button
+
+    [HttpGet]
+    [Authorize]
+    public string GetUserId()
+    {
+        //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
+        var userId =
+            User.FindFirstValue(ClaimTypes
+                .NameIdentifier);
+        return userId;
+    }
+
+    // Method to refresh the post when user presses the like button
     public IActionResult Refresh()
     {
         return Redirect(Request.Headers["Referer"].ToString());
@@ -76,7 +90,7 @@ public class PostController : Controller
         HttpContext.Session.SetString("viewModel", "Compact");
         return View(new PostsListViewModel(posts, "Compact"));
     }
-    
+
     // Method for fetching all posts. Used by Card() and Compact()
     public async Task<IEnumerable<Post>?> GetAllPosts()
     {
@@ -110,6 +124,7 @@ public class PostController : Controller
 
     // Get request for giving the user the view for creating a post 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Create()
     {
         var postViewModel = await GetPostViewModel();
@@ -118,12 +133,13 @@ public class PostController : Controller
 
     // Post request for publishing a post
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Create(Post post)
     {
         // Initial values for the post
         post.DateCreated = DateTime.Now;
         post.DateLastEdited = DateTime.Now;
-        post.UserId = 1;
+        post.UserId = GetUserId();
 
         // Assigning tags to the post
         var allTags = await _tags.GetAll();
@@ -181,6 +197,7 @@ public class PostController : Controller
 
     // Get request for updating posts based on id
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Update(int id)
     {
         // Fetching the post based on id
@@ -222,6 +239,7 @@ public class PostController : Controller
 
     // Post request for sending the post update
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Update(Post post)
     {
         // Check if model is valid before updating #TODO: Fix this
@@ -253,29 +271,39 @@ public class PostController : Controller
 
     // Get request for deleting a post
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Delete(int id)
     {
         // Fetch the post to be deleted by id. Returns error if not found.
         var post = await _postRepository.GetTById(id);
         if (post == null) return NotFound();
-        return View(post);
+
+        if (post.UserId == GetUserId())
+        {
+            return View(post); // Checks if the user is the owner of the post
+        }
+
+        // If the user is not the owner of the post, return to the post
+        return RedirectToAction("Post", "Post", new { id });
     }
 
     // Post request for deleting post and confirming for the user
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         // Delete post. If post not found, return NotFound
-        bool post = await _postRepository.Delete(id); 
+        bool post = await _postRepository.Delete(id);
         if (post == false) return NotFound();
-        
+
         // Get the current view model from session. Returns card view by default
-        string viewModel = HttpContext.Session.GetString("viewModel") ?? "Card"; 
+        string viewModel = HttpContext.Session.GetString("viewModel") ?? "Card";
         return RedirectToAction(viewModel, "Post"); // Redirect to the post list
     }
 
     // Post request for creating a comment
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> CreateComment(Comment comment)
     {
         // Error handling to check if the model is correct
@@ -283,6 +311,7 @@ public class PostController : Controller
 
         // Sets current time to comment and creates comment. Returns NotFound with message if there is no comment
         comment.DateCreated = DateTime.Now;
+        comment.UserId = GetUserId();
         var newComment = await _commentRepository.Create(comment);
         if (newComment == null) return NotFound("Comment not created");
 
@@ -293,6 +322,7 @@ public class PostController : Controller
 
     // Post request for updating a comment
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> UpdateComment(Comment comment)
     {
         // Fetch the comment from database, based on id
@@ -316,6 +346,7 @@ public class PostController : Controller
 
     // Get request for adding likes to a post
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> LikePost(int id)
     {
         // Fetches post based on id.
@@ -336,6 +367,7 @@ public class PostController : Controller
 
     // Get request for adding likes to a comment
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> LikeComment(int id)
     {
         // Fetches comment based on id

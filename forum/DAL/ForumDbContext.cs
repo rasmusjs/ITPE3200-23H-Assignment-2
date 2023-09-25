@@ -1,4 +1,5 @@
 using forum.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -15,7 +16,9 @@ public class ForumDbContext : IdentityDbContext
     }
 
     // Getter and setters for the models
-    //public DbSet<User> Users { get; set; }
+    // public DbSet<User> CustomUsers { get; set; }
+
+    public DbSet<User> CustomUsers { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<Post> Posts { get; set; }
@@ -26,10 +29,9 @@ public class ForumDbContext : IdentityDbContext
     // Configuring the relationships and schemas for the entities in the database
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        //Fixes
-        //Unhandled exception. System.InvalidOperationException: The entity type 'IdentityUserLogin<string>' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.
-        //Source: https://stackoverflow.com/questions/39576176/is-base-onmodelcreatingmodelbuilder-necessary
-        base.OnModelCreating(modelBuilder);
+        /*
+        modelBuilder.Entity<Post>().HasOne(p => p.User).WithMany(u => u.Posts).HasForeignKey(p => p.UserId);
+        */
 
         // Configuring the many to many relationship between tags and posts
         // Source: https://learn.microsoft.com/en-us/ef/core/modeling/relationships/many-to-many
@@ -42,12 +44,23 @@ public class ForumDbContext : IdentityDbContext
         // Configuring the one-to-many relationship between Posts and Categories
         modelBuilder.Entity<Post>().HasOne(p => p.Category).WithMany().HasForeignKey(p => p.CategoryId);
 
+        // Configuring the one-to-many relationship between User and Posts
+        modelBuilder.Entity<Post>().HasOne(p => p.User).WithMany(u => u.Posts).HasForeignKey(p => p.UserId);
+
+
         // Configuring the self-referencing relationship for Comments (For replies to comments)
         modelBuilder.Entity<Comment>()
             .HasMany(c => c.CommentReplies)
             .WithOne(c => c.ParentComment)
             .HasForeignKey(c => c.ParentCommentId);
-        //modelBuilder.Entity<Post>().HasOne(p => p.User).WithMany(u => u.Posts).HasForeignKey(p => p.UserId);
+
+        // Configuring the one-to-many relationship between User and Comments
+        modelBuilder.Entity<Comment>().HasOne(p => p.User).WithMany(u => u.Comments).HasForeignKey(p => p.UserId);
+
+        //Fixes
+        //Unhandled exception. System.InvalidOperationException: The entity type 'IdentityUserLogin<string>' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.
+        //Source: https://stackoverflow.com/questions/39576176/is-base-onmodelcreatingmodelbuilder-necessary
+        base.OnModelCreating(modelBuilder);
     }
 
     // Enable Lazy Loading for loading data when it is needed

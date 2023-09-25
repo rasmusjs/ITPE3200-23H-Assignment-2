@@ -1,54 +1,54 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>forum</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>forum</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Models\" />
-    <None Remove="Views\" />
-    <None Remove="Controllers\" />
-    <None Remove="Views\Item\" />
-    <None Remove="Views\Home\" />
-    <None Remove="Views\Shared\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Logs\" />
-    <Folder Include="Views\Home\" />
-    <Folder Include="wwwroot\lib\fontawesome\" />
-  </ItemGroup>
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Views\Item\Details.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Item\Grid.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Item\Table.cshtml" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\.gitignore" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\bower.json" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\index-svg.html" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\index.html" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\index.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\jquery.min.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\LICENSE" />
-    <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\README.md" />
- </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Markdig" Version="0.33.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.22" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.22" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.22">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.22">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
-    <PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Models\"/>
+        <None Remove="Views\"/>
+        <None Remove="Controllers\"/>
+        <None Remove="Views\Item\"/>
+        <None Remove="Views\Home\"/>
+        <None Remove="Views\Shared\"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Logs\"/>
+        <Folder Include="Views\Home\"/>
+        <Folder Include="wwwroot\lib\fontawesome\"/>
+    </ItemGroup>
+    <ItemGroup>
+        <_ContentIncludedByDefault Remove="Views\Item\Details.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Item\Grid.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Item\Table.cshtml"/>
+        <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\.gitignore"/>
+        <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\bower.json"/>
+        <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\index-svg.html"/>
+        <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\index.html"/>
+        <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\index.svg"/>
+        <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\jquery.min.js"/>
+        <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\LICENSE"/>
+        <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\README.md"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Markdig" Version="0.33.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.22"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.22"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.11">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.11"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.11"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.11"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.22">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16"/>
+        <PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.0"/>
+    </ItemGroup>
 </Project>
