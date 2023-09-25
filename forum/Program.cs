@@ -32,7 +32,7 @@ builder.Services.AddDbContext<ForumDbContext>(options =>
 /*builder.Services.AddDefaultIdentity<IdentityUser>()
     .AddEntityFrameworkStores<ForumDbContext>();*/
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     {
         // Password settings
         options.Password.RequireDigit = true;
@@ -52,6 +52,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     })
     .AddEntityFrameworkStores<ForumDbContext>()
     .AddDefaultUI() // Need to add this for the login page to work https://itecnote.com/tecnote/r-unable-to-resolve-service-for-type-iemailsender-while-attempting-to-activate-registermodel/
+    /*
+    .AddSignInManager<SignInManager<ApplicationUser>>()
+    */
     .AddDefaultTokenProviders();
 
 //Taken from lecture, see https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration?view=aspnetcore-7.0 for more info
@@ -59,7 +62,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
 
-builder.Services.AddScoped<IForumRepository<User>, ForumRepository<User>>();
+builder.Services.AddScoped<IForumRepository<ApplicationUser>, ForumRepository<ApplicationUser>>();
 builder.Services.AddScoped<IForumRepository<Post>, ForumRepository<Post>>();
 builder.Services.AddScoped<IForumRepository<Category>, ForumRepository<Category>>();
 builder.Services.AddScoped<IForumRepository<Tag>, ForumRepository<Tag>>();

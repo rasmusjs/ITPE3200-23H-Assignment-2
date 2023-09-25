@@ -26,7 +26,7 @@ public class Comment
     public string? UserId { get; set; }
 
     // navigation property
-    public virtual User? User { get; set; } = default!;
+    public virtual ApplicationUser? User { get; set; } = default!;
 
     public int? ParentCommentId { get; set; } // Self-referencing foreign key
 

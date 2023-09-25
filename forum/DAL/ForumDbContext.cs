@@ -8,7 +8,7 @@ namespace forum.DAL;
 
 // The ORM (Object-Relational Mapper) for the application
 // This is the communication between the application and the database, defining data structures and relationships.
-public class ForumDbContext : IdentityDbContext
+public class ForumDbContext : IdentityDbContext<ApplicationUser>
 {
     public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
     {
@@ -18,7 +18,7 @@ public class ForumDbContext : IdentityDbContext
     // Getter and setters for the models
     // public DbSet<User> CustomUsers { get; set; }
 
-    public DbSet<User> CustomUsers { get; set; }
+    public DbSet<ApplicationUser> CustomUsers { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<Post> Posts { get; set; }

@@ -1,27 +1,33 @@
 @using Microsoft.AspNetCore.Identity
 
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 <ul>
-@if (SignInManager.IsSignedIn(User))
-{
-    <li>
-        <a id="manage-link" class="nav-btn-text" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-    </li>
-    <li>
-        <form id="logout-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button id="logout-btn" class="nav-btn-text" type="submit">Logout</button>
-        </form>
-    </li>
-}
-else
-{
-    <li>
-        <a id="register-link" class="nav-btn-text" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li>
-        <a id="login-link" class="nav-btn-text" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
-}
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li>
+            <a id="manage-link" class="nav-btn-text" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+        </li>
+        <li class="nav-item" style="align-self: center;">
+            @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
+            {
+                <img style="width:40px;height:40px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))" alt="Picture of @UserManager.GetUserName(User)">
+            }
+        </li>
+        <li>
+            <form id="logout-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button id="logout-btn" class="nav-btn-text" type="submit">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li>
+            <a id="register-link" class="nav-btn-text" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li>
+            <a id="login-link" class="nav-btn-text" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
 </ul>

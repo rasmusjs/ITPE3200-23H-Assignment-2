@@ -68,28 +68,33 @@ public static class DbInit
 
         /*if (!context.Users.Any())
         {
-            var usersList = new List<User>()
+            var userList = new List<User>()
             {
                 new()
                 {
+                    Id = new Guid().ToString(),
                     UserName = "user123",
+                    PasswordHash = "AQAAAAEAACcQAA",
                     CreationDate = DateTime.Now
                 },
                 new()
                 {
+                    Id = new Guid().ToString(),
                     UserName = "johndoe",
+                    PasswordHash = "AQAAAAEAACcQAA",
                     CreationDate = DateTime.Now
                 },
                 new()
                 {
+                    Id = new Guid().ToString(),
                     UserName = "alice",
+                    PasswordHash = "AQAAAAEAACcQAA",
                     CreationDate = DateTime.Now
                 }
             };
-
-            context.AddRange(usersList);
+            context.AddRange(userList);
             context.SaveChanges();
-            Console.WriteLine("Temp users added");
+            Console.WriteLine("Users added");
         }*/
 
         /*

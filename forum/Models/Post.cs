@@ -32,7 +32,7 @@ public class Post
     public string? UserId { get; set; }
 
     // navigation property
-    public virtual User? User { get; set; }
+    public virtual ApplicationUser? User { get; set; }
     [Required] public int CategoryId { get; set; }
 
     public virtual Category? Category { get; set; }
