@@ -1,0 +1,16 @@
+#identity-account-register {
+    max-width: 400px;
+    margin: 0 auto;
+    
+    #registerForm {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin: 16px 0;
+    }
+    
+    #registerSubmit {
+        padding: 16px;
+        margin-top: 16px;
+    }
+}
