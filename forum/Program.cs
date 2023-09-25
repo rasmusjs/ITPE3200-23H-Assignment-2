@@ -1,6 +1,7 @@
 ﻿using forum.DAL;
 using Microsoft.EntityFrameworkCore;
 using forum.Models;
+using Jdenticon.AspNetCore;
 using Serilog;
 using Serilog.Events;
 using Microsoft.AspNetCore.Identity;
@@ -123,7 +124,7 @@ builder.Services.AddSession(options =>
 });*/
 
 //Taken from lecture, see https://learn.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-7.0&viewFallbackFrom=aspnetcore-3.0 for more info
-
+app.UseJdenticon(); // For using for generating identicons. //https://jdenticon.com/#quick-start-asp-net-core
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapDefaultControllerRoute();
