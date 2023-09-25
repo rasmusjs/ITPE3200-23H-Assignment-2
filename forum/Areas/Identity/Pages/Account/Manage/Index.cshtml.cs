@@ -121,6 +121,20 @@ namespace forum.Areas.Identity.Pages.Account.Manage
                 IFormFile file = Request.Form.Files.FirstOrDefault();
                 using (var dataStream = new MemoryStream())
                 {
+                    if (file == null || file.Length == 0)
+                    {
+                        StatusMessage = "File not selected";
+                        return RedirectToPage();
+                    }
+
+                    long maxSize = 1 * 1024 * 1024; // 1Mb
+
+                    if (file.Length > maxSize) // If the file is greater than 1Mb
+                    {
+                        StatusMessage = "File size must be less than 1Mb";
+                        return RedirectToPage();
+                    }
+
                     await file.CopyToAsync(dataStream);
                     user.ProfilePicture = dataStream.ToArray();
                 }
