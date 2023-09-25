@@ -7,9 +7,9 @@
         flex-direction: column;
         gap: 12px;
         margin: 16px 0;
-    }
-    
-    .submit-btn {
-        padding: 16px;
+
+        .submit-btn {
+            padding: 16px;
+        }
     }
 }

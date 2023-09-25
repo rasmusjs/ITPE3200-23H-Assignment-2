@@ -9,18 +9,13 @@
     }
 }
 
-<h1>Manage your account</h1>
-
-<div>
+<div class="identity-account">
+    <h1>Manage your account</h1>
     <h2>Change your account settings</h2>
     <hr />
-    <div class="row">
-        <div class="col-md-3">
-            <partial name="_ManageNav" />
-        </div>
-        <div class="col-md-9">
-            @RenderBody()
-        </div>
+    <div>
+        <partial name="_ManageNav" />
+        @RenderBody()
     </div>
 </div>
 
