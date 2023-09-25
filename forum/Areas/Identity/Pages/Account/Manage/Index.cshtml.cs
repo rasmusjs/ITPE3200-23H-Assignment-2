@@ -62,6 +62,9 @@ namespace forum.Areas.Identity.Pages.Account.Manage
             public string PhoneNumber { get; set; }
 
             [Display(Name = "Profile Picture")] public byte[] ProfilePicture { get; set; }
+
+            [Display(Name = "Remove Profile Picture ?")]
+            public bool RemoveProfilePicture { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -116,7 +119,7 @@ namespace forum.Areas.Identity.Pages.Account.Manage
                 }
             }
 
-            if (Request.Form.Files.Count > 0)
+            if (Request.Form.Files.Count > 0) // If the user has selected a file
             {
                 IFormFile file = Request.Form.Files.FirstOrDefault();
                 using (var dataStream = new MemoryStream())
@@ -138,9 +141,17 @@ namespace forum.Areas.Identity.Pages.Account.Manage
                     await file.CopyToAsync(dataStream);
                     user.ProfilePicture = dataStream.ToArray();
                 }
-
-                await _userManager.UpdateAsync(user);
             }
+
+            // If RemoveProfilePicture is true, then remove the profile picture
+            if (Input.RemoveProfilePicture)
+            {
+                StatusMessage = "Profile picture removed";
+                user.ProfilePicture = null;
+            }
+
+            // Update the user
+            await _userManager.UpdateAsync(user);
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
