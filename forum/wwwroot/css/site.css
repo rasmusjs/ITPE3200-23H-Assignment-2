@@ -81,6 +81,45 @@ p {
     margin: 6px 0;
 }
 
+a {
+    color: var(--info);
+}
+
+input, select, button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--fg-1);
+    transition: var(--tr-default);
+    
+    &:hover {
+        background-color: var(--fg-2);
+    }
+}
+
+input, select {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    
+    &:focus {
+        outline-color: var(--fg-3);
+    }
+}
+
+button {
+    cursor: pointer;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    
+    & .error {
+        background-color: var(--error);
+    }
+}
+
 nav {
     position: fixed;
     top: 0;
@@ -168,6 +207,7 @@ nav {
         padding: 8px 12px;
         border: none;
         border-radius: 4px;
+        color: var(--txt-1);
         background-color: var(--fg-1);
         cursor: pointer;
         transition: var(--tr-default);
