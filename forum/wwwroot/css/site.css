@@ -99,10 +99,9 @@ input, select, button {
 
 input, select {
     outline: 2px solid transparent;
-    outline-offset: 2px;
     
     &:focus {
-        outline-color: var(--fg-3);
+        outline-color: var(--primary);
     }
 }
 
@@ -113,10 +112,18 @@ button {
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 2px;
     
-    & .error {
+    & label {
+        margin-bottom: 2px;
+    }
+    
+    & .error:not(:empty) {
+        margin-top: -6px;
+        padding: 10px 12px 4px 12px;
+        border-radius: 0 0 4px 4px;
+        color: var(--txt-1);
         background-color: var(--error);
+        z-index: -1;
     }
 }
 
