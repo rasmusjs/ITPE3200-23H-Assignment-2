@@ -4,36 +4,34 @@
     ViewData["Title"] = "Register";
 }
 
-<div id="identity-account-register">
+<div class="identity-account">
     <h1>@ViewData["Title"]</h1>
-    <div>
-        <h2>Create a new account.</h2>
-        <hr/>
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <div asp-validation-summary="ModelOnly"></div>
-            <div class="form-group">
-                <label asp-for="Input.UserName"></label>
-                <input asp-for="Input.UserName" autocomplete="username" aria-required="true"/>
-                <span asp-validation-for="Input.UserName" class="error"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" autocomplete="email" aria-required="true"/>
-                <span asp-validation-for="Input.Email" class="error"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.Password"></label>
-                <input asp-for="Input.Password" autocomplete="new-password" aria-required="true"/>
-                <span asp-validation-for="Input.Password" class="error"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.ConfirmPassword"></label>
-                <input asp-for="Input.ConfirmPassword" autocomplete="new-password" aria-required="true"/>
-                <span asp-validation-for="Input.ConfirmPassword" class="error"></span>
-            </div>
-            <button id="registerSubmit" type="submit">Register</button>
-        </form>
-    </div>
+    <h2>Create a new account.</h2>
+    <hr/>
+    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div class="form-group">
+            <label asp-for="Input.UserName"></label>
+            <input asp-for="Input.UserName" autocomplete="username" aria-required="true"/>
+            <span asp-validation-for="Input.UserName" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.Email"></label>
+            <input asp-for="Input.Email" autocomplete="email" aria-required="true"/>
+            <span asp-validation-for="Input.Email" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.Password"></label>
+            <input asp-for="Input.Password" autocomplete="new-password" aria-required="true"/>
+            <span asp-validation-for="Input.Password" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.ConfirmPassword"></label>
+            <input asp-for="Input.ConfirmPassword" autocomplete="new-password" aria-required="true"/>
+            <span asp-validation-for="Input.ConfirmPassword" class="error"></span>
+        </div>
+        <button id="registerSubmit" class="submit-btn" type="submit">Register</button>
+    </form>
     @*<div>
         <section>
             <h3>Use another service to register.</h3>

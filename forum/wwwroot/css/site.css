@@ -127,6 +127,48 @@ button {
     }
 }
 
+.checkbox-group {
+    & label {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+
+        & input {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            appearance: none;
+            padding: 0;
+            height: 24px;
+            width: 24px;
+            color: var(--fg-1);
+            background-color: var(--fg-1);
+            cursor: pointer;
+            
+            &::before {
+                font-family: "Font Awesome 6 Free"; /* Ignore warning, font-family is imported along with the fontawesome cdn but not recognised by editor */
+                font-weight: 400;
+                content: "\f00c";
+                color: var(--txt-1);
+                transform: scale(0);
+                transition: var(--tr-default);
+            }
+
+            &:checked::before {
+                transform: scale(1);
+            }
+        }
+        
+        &:hover {
+            & input {
+                background-color: var(--fg-3);
+            }
+        }
+    }
+}
+
 nav {
     position: fixed;
     top: 0;
