@@ -1,6 +1,12 @@
 .identity-account {
     max-width: 400px;
     margin: 0 auto;
+
+    .alert {
+        .btn-close {
+            display: none;
+        }
+    }
     
     & form {
         display: flex;
