@@ -70,14 +70,14 @@ These are the packages that we have imported to our project and a description of
 
 | Package | Description |
 |---|---|
-| `Microsoft.AspNetCore.Identity.EntityFrameworkCore` | This import provides classes and interfaces that are used to implement user authentication and authorization in ASP.NET Core applications using Entity Framework Core. |
-| `Microsoft.AspNetCore.Identity.UI` | This import provides Razor Pages pages and components that are used to implement common user account management tasks, such as login, registration, and password reset. |
-| `Microsoft.EntityFrameworkCore.Design` | This import provides classes and interfaces that are used to design and manage Entity Framework Core models. |
-| `Microsoft.EntityFrameworkCore.Proxies` | This import provides classes and interfaces that are used to implement lazy loading and change tracking in Entity Framework Core. |
-| `Microsoft.EntityFrameworkCore.Sqlite` | This import provides classes and interfaces that are used to interact with SQLite databases using Entity Framework Core. |
-| `Microsoft.EntityFrameworkCore.SqlServer` | This import provides classes and interfaces that are used to interact with SQL Server databases using Entity Framework Core. |
-| `Microsoft.EntityFrameworkCore.Tools` | This import provides tools that can be used to manage Entity Framework Core models and databases. |
-| `Microsoft.VisualStudio.Web.CodeGeneration.Design` | This import provides classes and interfaces that are used to generate code for ASP.NET Core applications in Visual Studio. |
-| `Serilog.Extensions.Logging.File` | This import provides classes and interfaces that are used to log to files using Serilog. |
-| `Jdenticon.AspNetCore` | This import provides auto generation of avatars for users who doesn't have a profile picture. This generates a unique picture based on username. |
+| `Microsoft.AspNetCore.Identity.EntityFrameworkCore` | Provides classes and interfaces that are used to implement user authentication and authorization in ASP.NET Core applications. |
+| `Microsoft.AspNetCore.Identity.UI` | Provides Razor Pages and components that are used to implement common user account management tasks, such as login, registration, and password reset. |
+| `Microsoft.VisualStudio.Web.CodeGeneration.Design` | Provides classes and interfaces that are used to generate code for ASP.NET Core applications. Used for scaffolding to generate code for adding authentication. |
+| `Microsoft.EntityFrameworkCore.Design` | Provides classes and interfaces that are used to design and manage Entity Framework Core models. |
+| `Microsoft.EntityFrameworkCore.Proxies` | Provides classes and interfaces that are used to implement lazy loading. |
+| `Microsoft.EntityFrameworkCore.Sqlite` | Provides classes and interfaces that are used to interact with SQLite databases. |
+| `Microsoft.EntityFrameworkCore.SqlServer` | Provides classes and interfaces that are used to interact with SQL Server databases. |
+| `Microsoft.EntityFrameworkCore.Tools` | Provides tools that can be used to manage Entity Framework Core models and databases. |
+| `Serilog.Extensions.Logging.File` | Provides classes and interfaces that are used to log to files. |
+| `Jdenticon.AspNetCore` | Provides auto generation of avatars for users who doesn't have a profile picture. This generates a unique picture based on username. |
 | `Markdig` | This import provides markdown support for posts. |

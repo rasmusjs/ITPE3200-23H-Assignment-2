@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Ganss.Xss;
+using Markdig;
 
 namespace forum.Controllers;
 
@@ -146,6 +148,10 @@ public class PostController : Controller
         if (allTags != null && post.TagsId != null)
             post.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId)).ToList();
 
+        // Sanitizing the post content
+        post.Content = new HtmlSanitizer().Sanitize(post.Content);
+        // This is done to prevent XSS attacks. Source: https://weblog.west-wind.com/posts/2018/Aug/31/Markdown-and-Cross-Site-Scripting
+
         // Checks if the post object is valid per the post model and creates the object or return NotFound.
         if (ModelState.IsValid)
         {
@@ -242,8 +248,17 @@ public class PostController : Controller
     [Authorize]
     public async Task<IActionResult> Update(Post post)
     {
+        // Sanitizing the post content
+        post.Content = new HtmlSanitizer().Sanitize(post.Content);
+
         // Check if model is valid before updating #TODO: Fix this
-        if (!ModelState.IsValid) return RedirectToAction(nameof(Update));
+        if (!ModelState.IsValid)
+        {
+            // Returns the user to create post if unsuccessful
+            var postViewModel = await GetPostViewModel();
+            return View(postViewModel);
+        }
+
 
         // Remove all the olds tags from post, this is done since we could not find a way to use CASCADE update in EF Core
         if (!await _postRepository.RemoveAllPostTags(post.PostId))

@@ -5,7 +5,8 @@
 }
 <h1>Update Post</h1>
 
-<form asp-action="Update">
+<form asp-action="Update" asp-method="post">
+    <div asp-validation-summary="All"></div>
     <input type="hidden" asp-for="Post.PostId"/>
     <div>
         <label asp-for="Post.Title"></label><span>*</span>
@@ -14,7 +15,7 @@
     </div>
     <div>
         <label asp-for="Post.Content"></label><span>*</span>
-        <input asp-for="Post.Content"/>
+        <textarea asp-for="Post.Content"></textarea>
         <span asp-validation-for="Post.Content"></span>
     </div>
     <div>
