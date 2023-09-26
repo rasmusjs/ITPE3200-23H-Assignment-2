@@ -21,9 +21,9 @@
     --warning: #FFC107;
     /* Background, foreground, text */
     --bg-1: #121212;
-    --fg-1: #212121;
-    --fg-2: #3c3c3c;
-    --fg-3: #565656;
+    --fg-1: #2d2d2d;
+    --fg-2: #414141;
+    --fg-3: #5a5a5a;
     --txt-1: #eeeeee;
     --txt-2: #bbbbbb;
     --txt-3: #a9a9a9;
@@ -85,7 +85,7 @@ a {
     color: var(--info);
 }
 
-input, select, button, .input {
+input, select, button, .input, #file-upload-button {
     padding: 8px 12px;
     border: none;
     border-radius: 4px;
@@ -96,6 +96,11 @@ input, select, button, .input {
     
     &:hover {
         background-color: var(--fg-2);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
     }
 }
 
@@ -116,7 +121,7 @@ button {
     flex-direction: column;
     
     & label {
-        margin-bottom: 2px;
+        padding-bottom: 2px;
     }
     
     & .error:not(:empty) {
