@@ -1,17 +1,24 @@
 /* Used for the index (profile) page */
 
 #profile {
-    .no-profile-picture-selected {
-        font-size: var(--fs-s);
-        color: var(--txt-2);
-    }
-    
-    #profilePictureInput {
-        padding: 0;
-        background-color: unset;
-    }
-    
-    #file-upload-button {
+    .profile-container {
+        margin: 4px 0;
         
+        .no-profile-picture-selected {
+            font-size: var(--fs-s);
+            color: var(--txt-2);
+        }
+        
+        #profilePicture {
+            position: relative;
+            width: 100%;
+            margin: 4px 0;
+            border: 1px solid var(--fg-1);
+        }
+        
+        #profilePictureInput {
+            padding: 0;
+            background-color: unset;
+        }
     }
 }
