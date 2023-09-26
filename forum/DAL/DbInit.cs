@@ -174,7 +174,7 @@ public static class DbInit
             Console.WriteLine("Temp posts added");
         }
 
-        if (!context.Comments.Any())
+        if (!context.Comments.Any() && !context.Posts.Any() && addedUsers.Count > 0)
         {
             // Create some top-level comments
             var comment1 = new Comment

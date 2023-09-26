@@ -1,11 +1,13 @@
 @using Microsoft.AspNetCore.Identity
+@using Azure
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
 
 <ul>
-    @if (SignInManager.IsSignedIn(User))
+    @* Check if user is signed in and if the user exists *@
+    @if (SignInManager.IsSignedIn(User) && UserManager.GetUserAsync(User).Result != null)
     {
         <li>
             <a id="manage-link" class="nav-btn-text" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
@@ -35,4 +37,7 @@
             <a id="login-link" class="nav-btn-text" asp-area="Identity" asp-page="/Account/Login">Login</a>
         </li>
     }
+
+
+
 </ul>
