@@ -10,18 +10,17 @@ public class Post
     public int PostId { get; set; }
 
     // Regex for error handling the post title
-    [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ. \-]{2,64}",
-        ErrorMessage = "The title must be numbers or letters and between 2 to 64 characters.")]
+    [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ.?! \-]{2,64}",
+        ErrorMessage = "The title can only contain numbers, letters or !?, and must be between 2 to 64 characters.")]
     [Display(Name = "Title")]
 
     // Getters and setters for post title
     public string Title { get; set; }
 
     // Regex for error handling the post content
-    [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ. \-]{2,1024}",
-        ErrorMessage = "The content can contain numbers or letters and be upto 1024 characters.")]
-    [Display(Name = "Content")]
 
+    [StringLength(4096, MinimumLength = 2, ErrorMessage = "The content must be between 2 to 4096 characters.")]
+    [Display(Name = "Content")]
     // Getters and setters for post data
     public string Content { get; set; }
 
