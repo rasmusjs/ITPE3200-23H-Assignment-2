@@ -14,6 +14,7 @@
         <None Remove="Views\Item\"/>
         <None Remove="Views\Home\"/>
         <None Remove="Views\Shared\"/>
+        <None Remove="ForumDatabase.db" />
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Logs\"/>
