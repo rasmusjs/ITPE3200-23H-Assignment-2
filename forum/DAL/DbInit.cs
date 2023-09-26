@@ -174,7 +174,8 @@ public static class DbInit
             Console.WriteLine("Temp posts added");
         }
 
-        if (!context.Comments.Any() && !context.Posts.Any() && addedUsers.Count > 0)
+        //        if (!context.Comments.Any() && !context.Posts.Any() && addedUsers.Count > 0)
+        if (!context.Comments.Any())
         {
             // Create some top-level comments
             var comment1 = new Comment
@@ -240,6 +241,8 @@ public static class DbInit
             };
             context.Comments.AddRange(reply1Reply1);
             context.SaveChanges();
+
+            Console.WriteLine("Comments added");
         }
     }
 }

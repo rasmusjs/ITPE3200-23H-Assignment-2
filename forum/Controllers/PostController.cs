@@ -322,13 +322,21 @@ public class PostController : Controller
     public async Task<IActionResult> CreateComment(Comment comment)
     {
         // Error handling to check if the model is correct
-        if (!ModelState.IsValid) return NotFound("Comment not created, comment invalid");
+        if (!ModelState.IsValid)
+        {
+            return Redirect(
+                $"{Url.Action("Post", new { id = comment.PostId })}"); // Redirect to the post with the comment
+        }
 
         // Sets current time to comment and creates comment. Returns NotFound with message if there is no comment
         comment.DateCreated = DateTime.Now;
         comment.UserId = GetUserId();
         var newComment = await _commentRepository.Create(comment);
-        if (newComment == null) return NotFound("Comment not created");
+        if (newComment == null)
+        {
+            return Redirect(
+                $"{Url.Action("Post", new { id = comment.PostId })}"); // Redirect to the post with the comment
+        }
 
         /* Validation not working, fix later */
         return Redirect(
@@ -344,10 +352,18 @@ public class PostController : Controller
         var commentFromDb = await _commentRepository.GetTById(comment.CommentId);
 
         // Error handling if no comment is found
-        if (commentFromDb == null) return NotFound();
+        if (commentFromDb == null)
+        {
+            return Redirect(
+                $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
+        }
 
         // Checks if the model for comments is valid and returns error message.
-        if (!ModelState.IsValid) return NotFound("Comment not updated, comment invalid");
+        if (!ModelState.IsValid)
+        {
+            return Redirect(
+                $"{Url.Action("Post", new { id = commentFromDb.PostId })}#commentId-{commentFromDb.CommentId}"); // Redirect to the post with the comment
+        }
 
         // Updates the comment in the database
         commentFromDb.DateLastEdited = DateTime.Now;

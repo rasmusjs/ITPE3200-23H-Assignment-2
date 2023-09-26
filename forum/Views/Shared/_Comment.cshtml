@@ -1,7 +1,21 @@
 @model Comment
 
 <div id="commentId-@Model.CommentId">
+    <span asp-validation-for="@Model.Content"></span>
+    @*
     <h3>@Model.CommentId</h3>
+    *@
+
+    <h3>
+        @if (Model.User != null)
+        {
+            @Model.User.UserName
+        }
+        else
+        {
+            <span>Anonymous</span>
+        }
+    </h3>
     <div>@Model.DateCreated</div>
     <div>@Model.DateLastEdited</div>
     <div>@Model.Likes</div>
