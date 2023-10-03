@@ -1,0 +1,97 @@
+@model forum.Models.ApplicationUser
+
+
+<div id="post-card">
+    <div class="main-header">
+        <span class="title">Posts</span>
+    </div>
+    <div class="posts">
+        @if (Model.Posts == null)
+        {
+            <div class="no-posts">
+                <span>You haven't posted anything yet.</span>
+            </div>
+        }
+        else
+        {
+            @foreach (var post in Model.Posts.OrderByDescending(post => post.DateCreated))
+            {
+                <partial name="_PostCard" model="post"/>
+            }
+        }
+        <p>Liked posts</p>
+        @if (Model.LikedPosts == null)
+        {
+            <div class="no-posts">
+                <span>You haven't liked anything yet.</span>
+            </div>
+        }
+        else
+        {
+            @foreach (var post in Model.LikedPosts.OrderByDescending(post => post.DateCreated))
+            {
+                <partial name="_PostCard" model="post"/>
+            }
+        }
+    </div>
+
+    <div>
+
+        <span class="title">Comments</span>
+
+        @if (Model.Comments == null)
+        {
+            <div class="no-posts">
+                <span>You haven't liked any comments.</span>
+            </div>
+        }
+        else
+        {
+            @foreach (var comment in Model.Comments.OrderByDescending(comment => comment.DateCreated))
+            {
+                <div>
+                    "@comment.Content" Likes @comment.TotalLikes
+
+                    <a asp-controller="Post"
+                       asp-action="Post"
+                       asp-route-id="@comment.PostId">
+                        View post
+                    </a>
+                </div>
+            }
+        }
+        <p>Liked comments</p>
+
+        @if (Model.LikedComments == null)
+        {
+            <div class="no-posts">
+                <span>You haven't liked any comments.</span>
+            </div>
+        }
+        else
+        {
+            @foreach (var comment in Model.LikedComments.OrderByDescending(comment => comment.DateCreated))
+            {
+                <div>
+                    "@comment.Content" Likes @comment.TotalLikes
+
+                    <a asp-controller="Post"
+                       asp-action="LikeComment"
+                       asp-route-id="@comment.CommentId">
+                        Unlike
+                    </a>
+
+
+                    <a asp-controller="Post"
+                       asp-action="Post"
+                       asp-route-id="@comment.PostId">
+                        View post
+                    </a>
+
+                </div>
+            }
+        }
+    </div>
+
+
+</div>

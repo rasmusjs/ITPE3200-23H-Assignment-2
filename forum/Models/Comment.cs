@@ -15,7 +15,7 @@ public class Comment
     // Getters and setters for data in comments
     public string Content { get; set; } = string.Empty;
 
-    public int Likes { get; set; } = 0;
+    public int TotalLikes { get; set; } = 0;
     public DateTime DateCreated { get; set; }
     public DateTime? DateLastEdited { get; set; }
 
@@ -33,4 +33,7 @@ public class Comment
     // navigation property
     public virtual Comment? ParentComment { get; set; } // Self-referencing navigation property
     public virtual List<Comment>? CommentReplies { get; set; }
+
+    // navigation property
+    public virtual List<ApplicationUser>? UserLikes { get; set; }
 }

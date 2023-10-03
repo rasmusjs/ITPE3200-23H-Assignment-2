@@ -1,5 +1,6 @@
 @model Post
 @using Markdig;
+@using System.Security.Claims
 
 <div class="shared-postCard">
     <div class="top">
@@ -45,7 +46,7 @@
             <a asp-controller="Post"
                asp-action="LikePost"
                asp-route-id="@Model.PostId">
-                <i class="fa-solid fa-thumbs-up"></i>@Model.Likes likes
+                <i class="fa-solid fa-thumbs-up"></i>@Model.TotalLikes likes
             </a>
             <a asp-controller="Post"
                asp-action="Post"
@@ -54,16 +55,19 @@
             </a>
         </div>
         <div class="links">
-            <a asp-controller="Post"
-               asp-action="Update"
-               asp-route-id="@Model.PostId">
-                Edit
-            </a>
-            <a asp-controller="Post"
-               asp-action="Delete"
-               asp-route-id="@Model.PostId">
-                Delete
-            </a>
+            @if (@Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+            {
+                <a asp-controller="Post"
+                   asp-action="Update"
+                   asp-route-id="@Model.PostId">
+                    Edit
+                </a>
+                <a asp-controller="Post"
+                   asp-action="Delete"
+                   asp-route-id="@Model.PostId">
+                    Delete
+                </a>
+            }
             <a asp-controller="Post"
                asp-action="Post"
                asp-route-id="@Model.PostId">

@@ -1,4 +1,18 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    bool signedIn = false;
+}
+
+@if (SignInManager.IsSignedIn(User) && UserManager.GetUserAsync(User).Result != null)
+{
+    signedIn = true;
+}
+
+<!DOCTYPE html>
 <html lang="no">
 <head>
     <meta charset="utf-8"/>
@@ -39,12 +53,21 @@
                 <li>
                     <a asp-area="" asp-controller="Post" asp-action="Card" class="@IsActive("Post", "Card") or @IsActive("Post", "Compact") nav-btn-text">Posts</a>
                 </li>
+                @if (signedIn)
+                {
+                    <li>
+                        <a asp-area="" asp-controller="Dashboard" asp-action="Dashboard" class="@IsActive("Dashboard", "Dashboard") nav-btn-text">Dashboard</a>
+                    </li>
+                }
                 <li>
                     <a asp-area="" asp-controller="Search" asp-action="Index" class="@IsActive("Search", "Index") nav-btn-text">Search</a>
                 </li>
-                <li>
-                    <a asp-area="" asp-controller="Post" asp-action="Create" class="@IsActive("Post", "Create") nav-btn-text">Create Post</a>
-                </li>
+                @if (signedIn)
+                {
+                    <li>
+                        <a asp-area="" asp-controller="Post" asp-action="Create" class="@IsActive("Post", "Create") nav-btn-text">Create Post</a>
+                    </li>
+                }
             </ul>
             <div id="nav-login-container">
                 <partial name="_LoginPartial"/>
@@ -62,6 +85,7 @@
 </html>
 
 @functions {
+
     public string IsActive(string controller, string action)
     {
         var currentController = ViewContext.RouteData.Values["controller"] as string;
@@ -69,4 +93,5 @@
 
         return controller == currentController && action == currentAction ? "active" : "";
     }
+
 }

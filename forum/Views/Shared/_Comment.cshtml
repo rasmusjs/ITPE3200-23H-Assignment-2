@@ -1,4 +1,5 @@
 @model Comment
+@using System.Security.Claims
 
 <div id="commentId-@Model.CommentId">
     <span asp-validation-for="@Model.Content"></span>
@@ -18,20 +19,27 @@
     </h3>
     <div>@Model.DateCreated</div>
     <div>@Model.DateLastEdited</div>
-    <div>@Model.Likes</div>
+    <div>@Model.TotalLikes</div>
     <div>
         <div>@Model.Content</div>
+ 
+  @if (@Model.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier)) // If the user is not the owner of the comment
+{
         <a asp-controller="Post"
            asp-action="LikeComment"
            asp-route-id="@Model.CommentId">
             Like
         </a>
+}
+else // If the user is the owner of the comment show buttons for editing
+            {
         <details>
             <summary>Edit</summary>
             <div>
                 <partial name="_UpdateComment" model="Model"/>
             </div>
         </details>
+}
     </div>
     <div>
         <details>

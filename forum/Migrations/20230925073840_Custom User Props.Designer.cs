@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using forum.DAL;
 
@@ -10,9 +11,11 @@ using forum.DAL;
 namespace forum.Migrations
 {
     [DbContext(typeof(ForumDbContext))]
-    partial class ForumDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230925073840_Custom User Props")]
+    partial class CustomUserProps
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -267,7 +270,7 @@ namespace forum.Migrations
                     b.Property<DateTime?>("DateLastEdited")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TotalLikes")
+                    b.Property<int>("Likes")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("ParentCommentId")
@@ -309,7 +312,7 @@ namespace forum.Migrations
                     b.Property<DateTime?>("DateLastEdited")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TotalLikes")
+                    b.Property<int>("Likes")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")

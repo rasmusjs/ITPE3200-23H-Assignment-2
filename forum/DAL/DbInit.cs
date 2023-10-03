@@ -14,7 +14,7 @@ public static class DbInit
         using var serviceScope = app.ApplicationServices.CreateScope();
         ForumDbContext context = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
 
-        context.Database.EnsureDeleted();
+        //context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
 
         if (!context.Categories.Any())
@@ -184,7 +184,7 @@ public static class DbInit
                 DateCreated = DateTime.Now,
                 UserId = addedUsers[1].Id,
                 PostId = 1,
-                Likes = 420
+                TotalLikes = 420
             };
             var comment2 = new Comment
             {
@@ -192,7 +192,7 @@ public static class DbInit
                 DateCreated = DateTime.Now,
                 UserId = addedUsers[2].Id,
                 PostId = 1,
-                Likes = 69
+                TotalLikes = 69
             };
 
             // Add comments to the database

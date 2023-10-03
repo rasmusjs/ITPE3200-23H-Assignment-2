@@ -24,7 +24,7 @@ public class Post
     // Getters and setters for post data
     public string Content { get; set; }
 
-    public int Likes { get; set; } = 0;
+    public int TotalLikes { get; set; } = 0;
     public DateTime DateCreated { get; set; }
     public DateTime? DateLastEdited { get; set; }
 
@@ -44,4 +44,7 @@ public class Post
 
     // navigation property
     public virtual List<Comment>? Comments { get; set; }
+
+    // navigation property
+    public virtual List<ApplicationUser>? UserLikes { get; set; }
 }

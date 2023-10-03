@@ -36,6 +36,25 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         }
     }
 
+    public async Task<ApplicationUser?> GetUserActivity(string userid)
+    {
+        // Tries to retrieve all activity from the database as object
+        try
+        {
+            return await _db.Set<ApplicationUser>().Include(user => user.Posts).Include(user => user.Comments)
+                .Include(user => user.LikedPosts).Include(user => user.LikedComments)
+                .Where(user => user.Id == userid).FirstAsync();
+        }
+        // Exception error handling if it can't fetch entities from the database
+        catch (Exception e)
+        {
+            _logger.LogError(
+                $"[{typeof(TEntity).Name} Repository] GetUserActivity() failed, error message: {e.Message}");
+            return null;
+        }
+    }
+
+
     // Get all posts from database, based on a search term 
     public async Task<IEnumerable<Post>?> GetAllPostsByTerm(string term)
     {
@@ -49,11 +68,14 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
                 .Include(post => post.Tags)
                 .Include(post => post.Category)
                 .Include(post => post.Comments)
+                .Include(post => post.User)
                 .Where(post =>
                     ((post.Title.ToLower().Contains(term) || post.Content.ToLower().Contains(term)) ||
                      post.Category!.Name.ToLower().Contains(term) ||
                      post.Tags!.Any(tag => tag.Name!.ToLower().Contains(term)) ||
-                     post.Comments!.Any(comment => comment.Content.ToLower().Contains(term)))
+                     post.Comments!.Any(comment => comment.Content.ToLower().Contains(term)) ||
+                     post.User!.UserName.ToLower().Contains(term)
+                    )
                 )
                 .ToListAsync();
 
@@ -74,7 +96,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         {
             // Query the database for posts by id. Includes tags and categories (eagerly loading)
             return await _db.Posts.Include(post => post.Tags).Include(post => post.Category)
-                .Where(post => post.PostId == id).FirstOrDefaultAsync();
+                .Where(post => post.PostId == id).FirstAsync();
         }
         // Error handling if it can't fetch the post
         catch (Exception e)
@@ -91,6 +113,23 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         {
             // Query the database for all posts. Includes tags and categories (eagerly loading)
             return await _db.Posts.Include(post => post.Tags).Include(post => post.Category).ToListAsync();
+        }
+        // Error handling if it can't fetch posts
+        catch (Exception e)
+        {
+            _logger.LogError($"[{typeof(Post).Name} Repository] GetAll() failed, error message: {e.Message}");
+            return null;
+        }
+    }
+
+    // Fetches all posts from the database
+    public async Task<IEnumerable<Post>?> GetAllPostActivity(string userId)
+    {
+        try
+        {
+            // Query the database for all posts. Includes tags and categories (eagerly loading)
+            return await _db.Posts.Include(post => post.Tags).Include(post => post.Category)
+                .Where(post => post.UserId.Contains(userId)).ToListAsync();
         }
         // Error handling if it can't fetch posts
         catch (Exception e)
@@ -134,6 +173,25 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
             return null;
         }
     }
+
+    // Generic method to fetch any entity based on id
+    public async Task<ApplicationUser?> GetUserById(string id)
+    {
+        try
+        {
+            // Query the database for all entities with primary key as id
+            return await _db.Set<ApplicationUser>().FindAsync(id);
+        }
+        // Error handling if it can't fetch entities
+        catch (Exception e)
+        {
+            _logger.LogError(
+                "[ForumRepository] entity GetUserById(id) failed for TEntityId {TEntityId:0000}, error message: {e}",
+                id, e.Message);
+            return null;
+        }
+    }
+
 
     // Generic method to create and save an entity
     public async Task<TEntity?> Create(TEntity entity)
