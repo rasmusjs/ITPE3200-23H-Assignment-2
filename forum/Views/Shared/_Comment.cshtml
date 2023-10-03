@@ -1,5 +1,9 @@
 @model Comment
 @using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
 
 <div id="commentId-@Model.CommentId">
     <span asp-validation-for="@Model.Content"></span>
@@ -22,40 +26,49 @@
     <div>@Model.TotalLikes</div>
     <div>
         <div>@Model.Content</div>
- 
-  @if (@Model.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier)) // If the user is not the owner of the comment
-{
-        <a asp-controller="Post"
-           asp-action="LikeComment"
-           asp-route-id="@Model.CommentId">
-            Like
-        </a>
-}
-else // If the user is the owner of the comment show buttons for editing
-            {
-        <details>
-            <summary>Edit</summary>
-            <div>
-                <partial name="_UpdateComment" model="Model"/>
-            </div>
-        </details>
-}
-    </div>
-    <div>
-        <details>
-            <summary>Reply</summary>
-            <div>
-                <partial name="_CreateComment" model="new Comment { ParentCommentId = Model.CommentId, PostId = Model.PostId }"/>
-            </div>
-        </details>
-    </div>
-    <div style="padding-left: 50px">
-        @if (Model.CommentReplies != null)
+
+        @if (@Model.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier)) // If the user is not the owner of the comment
         {
-            foreach (var comment in Model.CommentReplies)
-            {
-                <partial name="_Comment" model="comment"/>
-            }
+            <a asp-controller="Post"
+               asp-action="LikeComment"
+               asp-route-id="@Model.CommentId">
+                Like
+            </a>
+        }
+        else // If the user is the owner of the comment show buttons for editing
+        {
+            <details>
+                <summary>Edit</summary>
+                <div>
+                    <partial name="_UpdateComment" model="Model"/>
+                </div>
+            </details>
         }
     </div>
+
+
+    @if (SignInManager.IsSignedIn(User) && UserManager.GetUserAsync(User).Result != null)
+    {
+        <div>
+            <details>
+                <summary>Reply</summary>
+                <div>
+                    <partial name="_CreateComment" model="new Comment { ParentCommentId = Model.CommentId, PostId = Model.PostId }"/>
+                </div>
+            </details>
+        </div>
+        <div style="padding-left: 50px">
+            @if (Model.CommentReplies != null)
+            {
+                foreach (var comment in Model.CommentReplies)
+                {
+                    <partial name="_Comment" model="comment"/>
+                }
+            }
+        </div>
+    }
+    else
+    {
+        <b> Please <a asp-area="Identity" asp-page="/Account/Login">Login</a> to reply to this comment </b>
+    }
 </div>

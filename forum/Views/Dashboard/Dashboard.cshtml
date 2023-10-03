@@ -38,11 +38,12 @@
     <div>
 
         <span class="title">Comments</span>
+        <b>Your comments</b>
 
         @if (Model.Comments == null)
         {
             <div class="no-posts">
-                <span>You haven't liked any comments.</span>
+                <span>You haven't created any comments.</span>
             </div>
         }
         else
@@ -60,7 +61,7 @@
                 </div>
             }
         }
-        <p>Liked comments</p>
+        <b>Liked comments</b>
 
         @if (Model.LikedComments == null)
         {

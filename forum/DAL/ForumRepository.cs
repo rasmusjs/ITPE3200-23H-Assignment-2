@@ -31,7 +31,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         // Exception error handling if it can't fetch entities from the database
         catch (Exception e)
         {
-            _logger.LogError($"[{typeof(TEntity).Name} Repository] GetAll() failed, error message: {e.Message}");
+            LogError("GetAll", e);
             return null;
         }
     }
@@ -48,8 +48,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         // Exception error handling if it can't fetch entities from the database
         catch (Exception e)
         {
-            _logger.LogError(
-                $"[{typeof(TEntity).Name} Repository] GetUserActivity() failed, error message: {e.Message}");
+            LogError("GetUserActivity", e);
             return null;
         }
     }
@@ -84,7 +83,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         // Error handling if it can't fetch posts from the search term
         catch (Exception e)
         {
-            _logger.LogError($"[{typeof(TEntity).Name} Repository] GetAll() failed, error message: {e.Message}");
+            LogError("GetAllPostsByTerm", e);
             return null;
         }
     }
@@ -101,7 +100,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         // Error handling if it can't fetch the post
         catch (Exception e)
         {
-            _logger.LogError($"[{typeof(Post).Name} Repository] GetAll() failed, error message: {e.Message}");
+            LogError("GetPostById", e);
             return null;
         }
     }
@@ -117,24 +116,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         // Error handling if it can't fetch posts
         catch (Exception e)
         {
-            _logger.LogError($"[{typeof(Post).Name} Repository] GetAll() failed, error message: {e.Message}");
-            return null;
-        }
-    }
-
-    // Fetches all posts from the database
-    public async Task<IEnumerable<Post>?> GetAllPostActivity(string userId)
-    {
-        try
-        {
-            // Query the database for all posts. Includes tags and categories (eagerly loading)
-            return await _db.Posts.Include(post => post.Tags).Include(post => post.Category)
-                .Where(post => post.UserId.Contains(userId)).ToListAsync();
-        }
-        // Error handling if it can't fetch posts
-        catch (Exception e)
-        {
-            _logger.LogError($"[{typeof(Post).Name} Repository] GetAll() failed, error message: {e.Message}");
+            LogError("GetAllPosts", e);
             return null;
         }
     }
@@ -151,7 +133,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         // Error handling if it can't fetch the comment
         catch (Exception e)
         {
-            _logger.LogError($"[ForumRepository] GetCommentsByPostId() failed, error message: {e.Message}");
+            LogError("GetCommentsByPostId", e);
             return null;
         }
     }
@@ -167,9 +149,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         // Error handling if it can't fetch entities
         catch (Exception e)
         {
-            _logger.LogError(
-                "[ForumRepository] entity GetTById(id) failed for TEntityId {TEntityId:0000}, error message: {e}",
-                id, e.Message);
+            LogError("GetTById", e);
             return null;
         }
     }
@@ -185,9 +165,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         // Error handling if it can't fetch entities
         catch (Exception e)
         {
-            _logger.LogError(
-                "[ForumRepository] entity GetUserById(id) failed for TEntityId {TEntityId:0000}, error message: {e}",
-                id, e.Message);
+            LogError("GetUserById", e);
             return null;
         }
     }
@@ -206,9 +184,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         // Error handling if it can't create a new entity
         catch (Exception e)
         {
-            _logger.LogError("[ForumRepository] entity creation failed for entity {@entity}, error message: {e}",
-                entity,
-                e.Message);
+            LogError("Create", e);
             return null;
         }
     }
@@ -226,9 +202,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         // Error handling if it can't update an entity
         catch (Exception e)
         {
-            _logger.LogError(
-                "[ForumRepository] entity FindAsync(id) failed when updating the TEntityId {TEntityId:0000}, error message: {e}",
-                entity, e.Message);
+            LogError("Update", e);
             return false;
         }
     }
@@ -243,7 +217,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
             // Error handling if there are no entity with the provided id
             if (entity == null)
             {
-                _logger.LogError("[ForumRepository] entity not found for the TEntityId {TEntityId:0000}", id);
+                LogError($"Delete, entity not found for id {id}", new Exception("Entity not found"));
                 return false;
             }
 
@@ -255,8 +229,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         // Error handling if it is not able to delete the entity
         catch (Exception e)
         {
-            _logger.LogError("[ForumRepository] deletion failed for the TEntityId {TEntityId:0000}, error message: {e}",
-                id, e.Message);
+            LogError("Delete", e);
             return false;
         }
     }
@@ -265,7 +238,10 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
     public async Task<bool> RemoveAllPostTags(int id)
     {
         if (id < 0) // id is not valid (negative)
+        {
+            LogError($"RemoveAllPostTags, entity not found for id {id}", new Exception("Entity not found"));
             return false;
+        }
 
         try
         {
@@ -279,7 +255,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
             // Error handling if it could not find the entity 
             if (executeSqlAsync == 0)
             {
-                _logger.LogError("[ForumRepository] entity not found for the TEntityId {TEntityId:0000}", id);
+                LogError($"RemoveAllPostTags, entity not found for id {id}", new Exception("Entity not found"));
                 return false;
             }
 
@@ -288,9 +264,16 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         // Error handling if it failed to delete the tags from the entity
         catch (Exception e)
         {
-            _logger.LogError("[ForumRepository] deletion failed for the TEntityId {TEntityId:0000}, error message: {e}",
-                id, e.Message);
+            LogError("RemoveAllPostTags", e);
+
             return false;
         }
+    }
+
+    // Common method for logging errors
+    private void LogError(string methodName, Exception exception)
+    {
+        _logger.LogError(
+            $"[{typeof(TEntity).Name} Repository] {methodName}() failed, error message: {exception.Message}");
     }
 }
