@@ -38,7 +38,7 @@ public class SearchController : Controller
     {
         return Redirect(Request.Headers["Referer"].ToString());
     }
-    
+
     // Function to go to post based on id
     public IActionResult GoToPost(int id)
     {
@@ -50,12 +50,12 @@ public class SearchController : Controller
     public async Task<IActionResult> Search(string term)
     {
         // Error handling for the search term
-        if (string.IsNullOrWhiteSpace(term)) return Index(); // TODO: Redirect to error page
-        if (term.Length < 2) return Index(); // TODO: Redirect to error page
+        if (string.IsNullOrWhiteSpace(term)) return Refresh(); // TODO: Redirect to error page
+        if (term.Length < 2) return Refresh(); // TODO: Redirect to error page
 
         // Fetch all posts based on the search term
         var posts = await _postRepository.GetAllPostsByTerm(term);
-        
+
         // Error handling if the term does not provide any posts
         if (posts == null)
         {
