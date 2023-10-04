@@ -17,13 +17,13 @@ public class SearchController : Controller
     private readonly IForumRepository<Tag> _tags;
     private readonly IForumRepository<Comment> _commentRepository;
 
-    private readonly ILogger<PostController> _logger; // Ikke satt opp enda!
+    private readonly ILogger<SearchController> _logger; // Ikke satt opp enda!
 
     // Constructor for Dependency Injection to the Data Access Layer from the different repositories
     public SearchController(IForumRepository<Category> categoryRepository,
         IForumRepository<Tag> tagRepo, IForumRepository<Post> postRepository,
         IForumRepository<Comment> commentRepository,
-        ILogger<PostController> logger)
+        ILogger<SearchController> logger)
     {
         _categoryRepository = categoryRepository;
         _tags = tagRepo;

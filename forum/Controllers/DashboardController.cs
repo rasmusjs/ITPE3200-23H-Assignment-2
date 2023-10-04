@@ -17,12 +17,12 @@ public class DashBoardController : Controller
 {
     // Connect the controller to the different models
     private readonly IForumRepository<ApplicationUser> _userRepository;
-    private readonly ILogger<PostController> _logger; // Ikke satt opp enda!
+    private readonly ILogger<ApplicationUser> _logger; // Ikke satt opp enda!
 
     // Constructor for Dependency Injection to the Data Access Layer from the different repositories
     public DashBoardController(
         IForumRepository<ApplicationUser> userRepository,
-        ILogger<PostController> logger)
+        ILogger<ApplicationUser> logger)
     {
         _userRepository = userRepository;
         _logger = logger;
