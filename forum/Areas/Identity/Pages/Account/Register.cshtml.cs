@@ -123,6 +123,11 @@ namespace forum.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
+            // Custom validation for username, anonymous is reserved for deleted users
+            if (Input.UserName.ToLower() == "anonymous")
+                ModelState.AddModelError(string.Empty, "Username is not allowed");
+
+
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
