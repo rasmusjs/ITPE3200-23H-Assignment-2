@@ -35,7 +35,8 @@
     <div>
         <div>@Model.Content</div>
 
-        @if (@Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)) // If the user is the owner of the comment show buttons for editing
+        @* If the user is the owner of the comment show buttons for editing, deleting, signedIn is checked to prevent the buttons to be shown if User.Id is null *@
+        @if (@Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) && signedIn)
         {
             <details>
                 <summary>Edit</summary>
@@ -49,7 +50,7 @@
                 Delete
             </a>
         }
-        else if (signedIn)
+        else
         {
             <a asp-controller="Post"
                asp-action="LikeComment"
