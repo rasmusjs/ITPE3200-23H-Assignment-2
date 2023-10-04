@@ -4,6 +4,14 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
+@{
+    bool signedIn = false;
+}
+
+@if (SignInManager.IsSignedIn(User) && UserManager.GetUserAsync(User).Result != null)
+{
+    signedIn = true;
+}
 
 <div id="commentId-@Model.CommentId">
     <span asp-validation-for="@Model.Content"></span>
@@ -18,24 +26,16 @@
         }
         else
         {
-            <span>Anonymous</span>
+            <span class="deleted-user" title="Deleted user">Anonymous</span>
         }
     </h3>
     <div>@Model.DateCreated</div>
     <div>@Model.DateLastEdited</div>
-    <div>@Model.TotalLikes</div>
+    <div>Total likes @Model.TotalLikes</div>
     <div>
         <div>@Model.Content</div>
 
-        @if (@Model.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier)) // If the user is not the owner of the comment
-        {
-            <a asp-controller="Post"
-               asp-action="LikeComment"
-               asp-route-id="@Model.CommentId">
-                Like
-            </a>
-        }
-        else // If the user is the owner of the comment show buttons for editing
+        @if (@Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)) // If the user is the owner of the comment show buttons for editing
         {
             <details>
                 <summary>Edit</summary>
@@ -43,11 +43,24 @@
                     <partial name="_UpdateComment" model="Model"/>
                 </div>
             </details>
+            <a asp-controller="Post"
+               asp-action="DeleteComment"
+               asp-route-id="@Model.CommentId">
+                Delete
+            </a>
+        }
+        else if (signedIn)
+        {
+            <a asp-controller="Post"
+               asp-action="LikeComment"
+               asp-route-id="@Model.CommentId">
+                Like
+            </a>
         }
     </div>
 
 
-    @if (SignInManager.IsSignedIn(User) && UserManager.GetUserAsync(User).Result != null)
+    @if (signedIn)
     {
         <div>
             <details>
@@ -57,18 +70,14 @@
                 </div>
             </details>
         </div>
-        <div style="padding-left: 50px">
-            @if (Model.CommentReplies != null)
+    }
+    <div style="padding-left: 50px">
+        @if (Model.CommentReplies != null)
+        {
+            foreach (var comment in Model.CommentReplies)
             {
-                foreach (var comment in Model.CommentReplies)
-                {
-                    <partial name="_Comment" model="comment"/>
-                }
+                <partial name="_Comment" model="comment"/>
             }
-        </div>
-    }
-    else
-    {
-        <b> Please <a asp-area="Identity" asp-page="/Account/Login">Login</a> to reply to this comment </b>
-    }
+        }
+    </div>
 </div>

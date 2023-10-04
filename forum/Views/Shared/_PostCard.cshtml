@@ -26,7 +26,22 @@
             }
         </div>
         <div class="creation-info">
-            Posted by <span class="user">@Model.User?.UserName</span> @CalculateTimeAgo(Model.DateCreated)
+            Posted by
+            <span class="user">
+                @if (Model.User != null)
+                {
+                    <a asp-controller="Search"
+                       asp-action="Search"
+                       asp-route-term="@Model.User.UserName">
+                        @Model.User.UserName
+                    </a>
+                }
+                else
+                {
+                    <span class="deleted-user" title="Deleted user">Anonymous</span>
+                }
+            </span>
+            @CalculateTimeAgo(Model.DateCreated)
             @if (Model.DateLastEdited != null)
             {
                 <span class="last-edited">Last edited @CalculateTimeAgo(Model.DateLastEdited.Value)</span>

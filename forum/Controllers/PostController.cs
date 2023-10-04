@@ -351,7 +351,7 @@ public class PostController : Controller
     public async Task<IActionResult> CreateComment(Comment comment)
     {
         // Error handling to check if the model is correct
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid) // TODO: Add error message
         {
             return Redirect(
                 $"{Url.Action("Post", new { id = comment.PostId })}"); // Redirect to the post with the comment
@@ -359,13 +359,14 @@ public class PostController : Controller
 
         // Sets current time to comment and creates comment. Returns NotFound with message if there is no comment
         comment.DateCreated = DateTime.Now;
-
-
         comment.UserId = GetUserId();
+
+
         var newComment = await _commentRepository.Create(comment);
 
         if (newComment == null)
         {
+            Console.Write("Could not create comment");
             return Redirect(
                 $"{Url.Action("Post", new { id = comment.PostId })}"); // Redirect to the post with the comment
         }
@@ -393,7 +394,7 @@ public class PostController : Controller
         var commentFromDb = await _commentRepository.GetTById(comment.CommentId);
 
         // Error handling if no comment is found
-        if (commentFromDb == null)
+        if (commentFromDb == null) // TODO: Add error message
         {
             return Redirect(
                 $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
@@ -407,7 +408,7 @@ public class PostController : Controller
         }
 
         // Checks if the model for comments is valid and returns error message.
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid) // TODO: Add error message
         {
             return Redirect(
                 $"{Url.Action("Post", new { id = commentFromDb.PostId })}#commentId-{commentFromDb.CommentId}"); // Redirect to the post with the comment
@@ -505,5 +506,43 @@ public class PostController : Controller
         // Refreshes the post
         return Redirect(
             $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
+    }
+    // Get request for adding likes to a comment
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> DeleteComment(int id)
+    {
+        // Fetch the comment from database, based on id
+        var commentFromDb = await _commentRepository.GetTById(id);
+
+        // Error handling if no comment is found
+        if (commentFromDb == null) // TODO: Add error message
+        {
+            return Refresh();
+        }
+
+        // Checks if the user is the owner of the comment
+        if (commentFromDb.UserId != GetUserId()) // TODO: Add error message
+        {
+            return Redirect(
+                $"{Url.Action("Post", new { id = commentFromDb.PostId })}#commentId-{id}"); // Redirect to the post with the comment
+        }
+
+        // Checks if the model for comments is valid and returns error message.
+        if (!ModelState.IsValid)
+        {
+            return Redirect(
+                $"{Url.Action("Post", new { id = commentFromDb.PostId })}#commentId-{commentFromDb.CommentId}"); // Redirect to the post with the comment
+        }
+
+        // Updates the comment in the database
+        commentFromDb.DateLastEdited = DateTime.Now;
+        commentFromDb.Content = "[Deleted]";
+        await _commentRepository.Update(commentFromDb);
+
+        /* Validation not working, fix later */
+        return Redirect(
+            $"{Url.Action("Post", new { id = commentFromDb.PostId })}"); // Redirect to the post
     }
 }
