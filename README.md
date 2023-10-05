@@ -17,7 +17,9 @@ When you have logged in you can create/edit posts, comment and like posts. You g
 **🔨 Project architecture**
 ---
 
-A brief intro can help set the stage. What kind of architecture are you using (MVC, etc.)? Why was it chosen?
+BracketBros is built using the Model-View-Controller (MVC) architecture as required for this task. This is the architecture we would have chosen anyways, as it offers different advantages like seperation of the different components, easy to maintain and scale, reusable code and good support in .NET Core to mention some.
+
+The following sections break down the architecture into its different layers and component and providing detail for how they contribute to the application as a whole.
 
 *The tables needs to be rewritten to provide more concrete example of use.*
 
@@ -25,7 +27,7 @@ A brief intro can help set the stage. What kind of architecture are you using (M
 
 | Layer | Description |
 |---|---|
-| Areas | This layer contains the user account management functionality (auto generated from the 'Microsoft.AspNetCore.Identity.UI' package. |
+| Areas | This layer contains the user account management functionality (auto generated from the 'Microsoft.AspNetCore.Identity.UI' package). |
 | Controllers | This layer contains the controllers that handle HTTP requests. When a user requests a page, the corresponding controller is responsible for returning the appropriate response. For example, the ForumController is responsible for handling requests to forum pages. |
 | Models | This layer contains the models that represent the data in the application. For example, the Forum model represents a forum and the Post model represents a post in a forum.|
 | Views | This layer contains the Razor Pages that are used to render the user interface. When a controller needs to render a page, it passes the appropriate model to the view. The view then uses the model to generate the HTML output for the page. |
@@ -36,14 +38,14 @@ A brief intro can help set the stage. What kind of architecture are you using (M
 
 | Component | Description |
 |---|---|
-| wwwroot | This layer contains the static files that are served to the client, such as CSS and JavaScript files. These files are served directly to the client without any processing by the ASP.NET Core application. |
+| wwwroot | This houses the static files that are served to the client, such as CSS and JavaScript files. These files are served directly to the client without any processing by the ASP.NET Core application. |
 
 ### Supporting components
 
 | Component | Description |
 |---|---|
 | Migrations | Contains the changes to our database schema. These are auto generated. They allow us to version our database schema in a way that corresponds with the changes in our codebase. |
-| Logs | Contains error logging |
+| Logs | Contains error logging. What do we log??? How??? |
 
 ### Diagrams
 
@@ -61,19 +63,26 @@ Spør Ole
 
 **📝 Functionality**
 ---
-This forum website allows users to browse posts and comment. Both in a feed, by searching or by using categories. The user can register an account to create posts, comment on other posts and like posts. When the user is logged in it gets a dashboard view with an overview over the users posts, comments and likes. 
+This forum website allows users to browse posts and comment. Both in a feed, by searching or by using categories. The user can register an account to create posts, comment on other posts and like posts. When the user is logged in it gets a dashboard view with an overview over the users posts, comments and likes. The following sections break down the functionality into different aspects.
 
-### Navigation and content (dele opp?)
+### Navigation
 Different feed views. What the user can do with posts (edit, delete, like, etc). Menu and navigation bars. Search functionality. Pagination and scrolling, filtering and sorting, responsiveness (different screens?), dynamic features, call to action (sent to register account), browsing by categories. Markdown support
+
+### Content
+ALL about posts baby 
 
 ### Error handling
 Error handling, input validation authentication/authorization, etc.
 
+Identity, try/catches in ForumRepository, error logging with LogError method, regex for input validation + html sanitizer
+
 ### User management
 
-We use Microsoft.AspNetCore.Identity for authentication and authorization. *More about what this do in praxis*
+We use `Microsoft.AspNetCore.Identity` for authentication and authorization. This is an ASP.NET Core API that supports user interface for login functionality. It manages users, passwords, profile data and more. Identity creates a Razor Class Library with the 'Identity' area endpoint, e.g. '/Identity/Account/Login'. The user is not authorized to do anything other than to browse the forum without an user account. The user must register with a username, email and password. The password must consist of at least 8 characters, one alphanumeric character, one lowercase and one uppercase letter. 
 
-Jdenticon.AspNetCore for generating profile pictures if the user has not uploaded one. The user can upload custom profile picture in their profile settings.
+When a user is authenticated it can create/edit posts, comment and like posts. The user has access to a dashboard with overview of their post, comments and likes. In the upper right corner they have your profile panel. Here they can change username, upload a profile picture, change mail/password, enable 2FA and download all their user data. They can delete their user and data under "personal data". Then all the users posts and comments will be marked as posted by 'Anonymous'.
+
+We use `Jdenticon.AspNetCore` for generating random profile pictures if the user has not uploaded one. The image is generated by converting the username into a hash, which is used as a unique id for generation. The user can later upload a custom profile picture in their profile settings.
 
 **⌨️ Code**
 ---
@@ -103,4 +112,5 @@ These are the packages that we have imported to our project and a description of
 | `Microsoft.EntityFrameworkCore.Tools` | Provides tools that can be used to manage Entity Framework Core models and databases. |
 | `Serilog.Extensions.Logging.File` | Provides classes and interfaces that are used to log to files. |
 | `Jdenticon.AspNetCore` | Provides auto generation of avatars for users who doesn't have a profile picture. This generates a unique picture based on username. |
-| `Markdig` | This import provides markdown support for posts. |
+| `Markdig` | This import provides markdown support for writing posts. |
+| `HtmlSanitizer` | This import is used to sanitize HTML when writing in Markdown. This is to provide just basic Markdown support and to not open up for potential injections or malicious code. |
