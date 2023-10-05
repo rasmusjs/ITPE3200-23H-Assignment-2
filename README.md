@@ -12,16 +12,16 @@ When starting the server you will be sent to the post view, where there is an ch
 
 To interact with the site, you need to register a user. Register a username, email and password. The password must consist of at least 8 characters, one alphanumeric character, one lowercase and one uppercase letter. 
 
-When you have logged in you can create/edit posts, comment and like posts. In the upper right corner you have your profile panel. Here you can change username, upload a profile picture, change mail/password, enable 2FA and download all your user data.
+When you have logged in you can create/edit posts, comment and like posts. You get a dashboard with overview of your post, comments and likes. In the upper right corner you have your profile panel. Here you can change username, upload a profile picture, change mail/password, enable 2FA and download all your user data. You can delete your user and data under "personal data". Then all your posts and comments will be marked as posted by Anonymous.
 
 **🔨 Project architecture**
 ---
 
-A bit about how the program is structured
+A brief intro can help set the stage. What kind of architecture are you using (MVC, etc.)? Why was it chosen?
 
-**This table shows the general structure for our applications:**
+*The tables needs to be rewritten to provide more concrete example of use.*
 
-*The table needs to be rewritten to provide more concrete example of use.*
+### Architectural layers
 
 | Layer | Description |
 |---|---|
@@ -29,36 +29,59 @@ A bit about how the program is structured
 | Controllers | This layer contains the controllers that handle HTTP requests. When a user requests a page, the corresponding controller is responsible for returning the appropriate response. For example, the ForumController is responsible for handling requests to forum pages. |
 | Models | This layer contains the models that represent the data in the application. For example, the Forum model represents a forum and the Post model represents a post in a forum.|
 | Views | This layer contains the Razor Pages that are used to render the user interface. When a controller needs to render a page, it passes the appropriate model to the view. The view then uses the model to generate the HTML output for the page. |
-| wwwroot | This layer contains the static files that are served to the client, such as CSS and JavaScript files. These files are served directly to the client without any processing by the ASP.NET Core application. |
 | DAL | Data Access Layer - This layer contains the code that interacts with the database. This code is responsible for performing CRUD operations on the data in the database.|
 | ViewModel | This layer contains the classes that represent the data that is passed to the views. The ViewModels are used to simplify the code in the views and make them more reusable |
 
+### Static resources
+
+| Component | Description |
+|---|---|
+| wwwroot | This layer contains the static files that are served to the client, such as CSS and JavaScript files. These files are served directly to the client without any processing by the ASP.NET Core application. |
+
+### Supporting components
+
+| Component | Description |
+|---|---|
+| Migrations | Contains the changes to our database schema. These are auto generated. They allow us to version our database schema in a way that corresponds with the changes in our codebase. |
+| Logs | Contains error logging |
+
+### Diagrams
 
 _**UMLs GOES HERE**_
 
 ### Views
 
-Something cool about the views
+Something cool about the views. discuss why you chose a particular structure or design pattern for your views.ViewModels. Partial views? How data is passed to the views. Layouts. 
 
-###  
+### Database
+Something about how the database works
+
+### Design
+Spør Ole
 
 **📝 Functionality**
 ---
-Something about the functionality of the site. 
+This forum website allows users to browse posts and comment. Both in a feed, by searching or by using categories. The user can register an account to create posts, comment on other posts and like posts. When the user is logged in it gets a dashboard view with an overview over the users posts, comments and likes. 
 
-### Navigation and content
-????
+### Navigation and content (dele opp?)
+Different feed views. What the user can do with posts (edit, delete, like, etc). Menu and navigation bars. Search functionality. Pagination and scrolling, filtering and sorting, responsiveness (different screens?), dynamic features, call to action (sent to register account), browsing by categories. Markdown support
 
-### error handling
+### Error handling
 Error handling, input validation authentication/authorization, etc.
 
 ### User management
 
-Microsoft.AspNetCore.Identity and Jdenticon.AspNetCore
+We use Microsoft.AspNetCore.Identity for authentication and authorization. *More about what this do in praxis*
+
+Jdenticon.AspNetCore for generating profile pictures if the user has not uploaded one. The user can upload custom profile picture in their profile settings.
 
 **⌨️ Code**
 ---
-No idea what goes here. We'll figure it out.
+We have tried to follow the C# coding convention for syntax and naming conventions to make sure the code is readable and managable. However, we haven't focused much on this, so the code might sometimes break conventions.
+
+*If there's something unique or innovative about the way you've coded the project, this is the place to mention it.*
+
+The project is structured in a typical MVC fashion. We have different directories for each layer, components and resources. Controllers are located in /Controllers, user account management under /Area, the different views in /Views, ViewModels under /ViewModels, static files like CSS, HTML and Javascript under /wwwroot, data access layer under /DAL. 
 
 The code is documented with comments throughout the project. The code should either be self explanatory or explained with comments. We have also provided comments with links where we have found inspiration or code from the internet.
 
