@@ -51,32 +51,39 @@ html {
     font-weight: bold;
     margin: 14px 0;
 }
+
 h1 {
     font-size: var(--fs-2xl);
     margin: 12px 0 8px 0;
 }
+
 h2 {
     font-size: var(--fs-xl);
     margin: 10px 0 6px 0;
 }
+
 h3 {
     font-size: var(--fs-l);
     font-weight: bold;
     margin: 8px 0 6px 0;
 }
+
 h4 {
     font-size: var(--fs-l);
     margin: 6px 0;
 }
+
 h5 {
     font-weight: bold;
     margin: 6px 0;
 }
+
 h6 {
     font-weight: bold;
     opacity: 75%;
     margin: 6px 0;
 }
+
 p {
     margin: 6px 0;
 }
@@ -93,7 +100,7 @@ input, textarea, select, button, .input, #file-upload-button {
     color: var(--txt-1);
     background-color: var(--fg-1);
     transition: var(--tr-default);
-    
+
     &:hover {
         background-color: var(--fg-2);
     }
@@ -106,7 +113,7 @@ input, textarea, select, button, .input, #file-upload-button {
 
 input:not([type='checkbox'], [type='file']), textarea, select {
     outline: 2px solid transparent;
-    
+
     &:focus {
         outline-color: var(--primary);
     }
@@ -119,11 +126,11 @@ button {
 .form-group {
     display: flex;
     flex-direction: column;
-    
+
     & label {
         padding-bottom: 2px;
     }
-    
+
     & .error:not(:empty) {
         margin-top: -6px;
         padding: 10px 12px 4px 12px;
@@ -153,7 +160,7 @@ button {
             color: var(--fg-1);
             background-color: var(--fg-1);
             cursor: pointer;
-            
+
             &::before {
                 font-family: "Font Awesome 6 Free"; /* Ignore warning, font-family is imported along with the fontawesome cdn but not recognised by editor */
                 font-weight: 400;
@@ -167,7 +174,7 @@ button {
                 transform: scale(1);
             }
         }
-        
+
         &:hover {
             & input {
                 background-color: var(--fg-3);
@@ -197,24 +204,24 @@ nav {
         align-items: center;
         gap: 12px;
         text-decoration: none;
-        
+
         & i {
             font-size: var(--fs-xl);
         }
-        
+
         & span {
             font-size: var(--fs-l);
             font-family: var(--ff-mono);
             letter-spacing: -1px;
         }
     }
-    
+
     #nav-links-container {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         flex-grow: 1;
-        
+
         & ul {
             list-style: none;
             display: flex;
@@ -222,7 +229,7 @@ nav {
             align-items: center;
             gap: 2px;
         }
-        
+
         @media screen and (max-width: 848px) {
             display: none;
             position: absolute;
@@ -240,10 +247,10 @@ nav {
             &.active {
                 display: flex;
             }
-            
+
             & ul {
                 flex-direction: column;
-                
+
                 & li {
                     margin: 16px 0;
                 }
@@ -257,7 +264,7 @@ nav {
             }
         }
     }
-    
+
     .nav-btn-text {
         text-decoration: none;
         padding: 8px 12px;
@@ -276,7 +283,7 @@ nav {
             background-color: var(--fg-3);
         }
     }
-    
+
     .nav-btn-icon {
         display: flex;
         justify-content: center;
@@ -298,7 +305,7 @@ nav {
             font-size: var(--fs-l);
         }
     }
-    
+
     #burger-btn {
         display: none;
         margin-left: auto;
@@ -306,7 +313,7 @@ nav {
         @media screen and (max-width: 848px) {
             display: flex;
         }
-        
+
         & i {
             &.fa-bars {
                 display: inline-block;
@@ -316,7 +323,7 @@ nav {
                 display: none;
             }
         }
-            
+
         &.active {
             & i {
                 &.fa-bars {
@@ -327,14 +334,14 @@ nav {
                     display: inline-block;
                 }
             }
-        }        
+        }
     }
 }
 
 main {
     width: 100%;
     padding-top: var(--nav-height);
-    
+
     #main-inner-container {
         max-width: 948px;
         margin: 0 auto;

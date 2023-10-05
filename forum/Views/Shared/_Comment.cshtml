@@ -1,11 +1,11 @@
-@model Comment
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Identity
+@model Comment
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
 @{
-    bool signedIn = false;
+    var signedIn = false;
 }
 
 @if (SignInManager.IsSignedIn(User) && UserManager.GetUserAsync(User).Result != null)
@@ -36,7 +36,7 @@
         <div>@Model.Content</div>
 
         @* If the user is the owner of the comment show buttons for editing, deleting, signedIn is checked to prevent the buttons to be shown if User.Id is null *@
-        @if (@Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) && signedIn)
+        @if (Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) && signedIn)
         {
             <details>
                 <summary>Edit</summary>

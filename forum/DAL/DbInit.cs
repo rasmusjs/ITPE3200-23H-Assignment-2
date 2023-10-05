@@ -1,8 +1,4 @@
-﻿using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
-using forum.Models;
-using Microsoft.AspNetCore.Identity;
-using forum.Models;
+﻿using forum.Models;
 
 namespace forum.DAL;
 
@@ -12,30 +8,30 @@ public static class DbInit
     public static void Seed(IApplicationBuilder app)
     {
         using var serviceScope = app.ApplicationServices.CreateScope();
-        ForumDbContext context = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
+        var context = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
 
         //context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
 
         if (!context.Categories.Any())
         {
-            var categoriesList = new List<Category>()
+            var categoriesList = new List<Category>
             {
                 new()
                 {
-                    Name = "General",
+                    Name = "General"
                 },
                 new()
                 {
-                    Name = "News",
+                    Name = "News"
                 },
                 new()
                 {
-                    Name = "Sports",
+                    Name = "Sports"
                 },
                 new()
                 {
-                    Name = "Politics",
+                    Name = "Politics"
                 }
             };
             context.AddRange(categoriesList);
@@ -45,32 +41,32 @@ public static class DbInit
 
         if (!context.Tags.Any())
         {
-            var tagsList = new List<Tag>()
+            var tagsList = new List<Tag>
             {
                 new()
                 {
-                    Name = "Java",
+                    Name = "Java"
                 },
                 new()
                 {
-                    Name = "C#",
+                    Name = "C#"
                 },
                 new()
                 {
-                    Name = "Python",
+                    Name = "Python"
                 },
                 new()
                 {
-                    Name = "JavaScript",
+                    Name = "JavaScript"
                 },
                 new()
                 {
-                    Name = "Web",
+                    Name = "Web"
                 },
                 new()
                 {
-                    Name = "Beginner",
-                },
+                    Name = "Beginner"
+                }
             };
             context.AddRange(tagsList);
             context.SaveChanges();
@@ -79,7 +75,7 @@ public static class DbInit
 
         if (!context.Users.Any())
         {
-            var userList = new List<ApplicationUser>()
+            var userList = new List<ApplicationUser>
             {
                 new()
                 {
@@ -111,7 +107,7 @@ public static class DbInit
 
         if (!context.Posts.Any() && addedUsers.Count > 0) // If there are no posts in the database and there are users
         {
-            var postsList = new List<Post>()
+            var postsList = new List<Post>
             {
                 new()
                 {
@@ -139,7 +135,7 @@ public static class DbInit
                     DateLastEdited = DateTime.Now,
                     UserId = addedUsers[1].Id,
                     CategoryId = 2,
-                    Tags = new List<Tag>()
+                    Tags = new List<Tag>
                     {
                         new()
                         {
@@ -163,7 +159,7 @@ public static class DbInit
                     {
                         tags.First(t => t.Name == "JavaScript"),
                         tags.First(t => t.Name == "Web"),
-                        tags.First(t => t.Name == "Beginner"),
+                        tags.First(t => t.Name == "Beginner")
                     }
                 }
             };

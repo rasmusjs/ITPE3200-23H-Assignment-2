@@ -1,23 +1,17 @@
-﻿using System.ComponentModel;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using forum.DAL;
-using Microsoft.AspNetCore.Mvc;
 using forum.Models;
-using forum.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Ganss.Xss;
-using Markdig;
+using Microsoft.AspNetCore.Mvc;
 
 namespace forum.Controllers;
 
 public class DashBoardController : Controller
 {
+    private readonly ILogger<ApplicationUser> _logger; // Ikke satt opp enda!
+
     // Connect the controller to the different models
     private readonly IForumRepository<ApplicationUser> _userRepository;
-    private readonly ILogger<ApplicationUser> _logger; // Ikke satt opp enda!
 
     // Constructor for Dependency Injection to the Data Access Layer from the different repositories
     public DashBoardController(

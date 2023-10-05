@@ -22,7 +22,7 @@ public interface IForumRepository<TEntity>
     // Get all posts by search term
     Task<IEnumerable<Post>?> GetAllPostsByTerm(string term);
     Task<ApplicationUser?> GetUserActivity(string userId);
-    
+
     // Create entity
     Task<TEntity?> Create(TEntity entity);
 

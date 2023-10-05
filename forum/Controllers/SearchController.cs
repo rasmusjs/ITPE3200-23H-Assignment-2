@@ -1,23 +1,21 @@
-using System.ComponentModel;
 using forum.DAL;
-using Microsoft.AspNetCore.Mvc;
 using forum.Models;
 using forum.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 namespace forum.Controllers;
 
 // Controller for the search function
 public class SearchController : Controller
 {
-    // Connect the controller to the different models
-    private readonly IForumRepository<Post> _postRepository;
     private readonly IForumRepository<Category> _categoryRepository;
-    private readonly IForumRepository<Tag> _tags;
     private readonly IForumRepository<Comment> _commentRepository;
 
     private readonly ILogger<SearchController> _logger; // Ikke satt opp enda!
+
+    // Connect the controller to the different models
+    private readonly IForumRepository<Post> _postRepository;
+    private readonly IForumRepository<Tag> _tags;
 
     // Constructor for Dependency Injection to the Data Access Layer from the different repositories
     public SearchController(IForumRepository<Category> categoryRepository,

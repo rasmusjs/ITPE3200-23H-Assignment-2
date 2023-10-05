@@ -1,6 +1,6 @@
-@model Post
-@using Markdig;
 @using System.Security.Claims
+@using Markdig
+@model Post
 
 <div class="shared-postCard">
     <div class="top">
@@ -70,7 +70,7 @@
             </a>
         </div>
         <div class="links">
-            @if (@Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+            @if (Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
             {
                 <a asp-controller="Post"
                    asp-action="Update"
@@ -96,37 +96,34 @@
 
     static string CalculateTimeAgo(DateTime date)
     {
-        TimeSpan timeDifference = DateTime.Now - date;
+        var timeDifference = DateTime.Now - date;
 
         if (timeDifference.TotalMinutes < 1)
         {
             return "just now";
         }
-        else if (timeDifference.TotalMinutes < 60)
+        if (timeDifference.TotalMinutes < 60)
         {
-            int minutesAgo = (int)timeDifference.TotalMinutes;
+            var minutesAgo = (int)timeDifference.TotalMinutes;
             return $"{minutesAgo} {(minutesAgo == 1 ? "minute" : "minutes")} ago";
         }
-        else if (timeDifference.TotalHours < 24)
+        if (timeDifference.TotalHours < 24)
         {
-            int hoursAgo = (int)timeDifference.TotalHours;
+            var hoursAgo = (int)timeDifference.TotalHours;
             return $"{hoursAgo} {(hoursAgo == 1 ? "hour" : "hours")} ago";
         }
-        else if (timeDifference.TotalDays < 30)
+        if (timeDifference.TotalDays < 30)
         {
-            int daysAgo = (int)timeDifference.TotalDays;
+            var daysAgo = (int)timeDifference.TotalDays;
             return $"{daysAgo} {(daysAgo == 1 ? "day" : "days")} ago";
         }
-        else if (timeDifference.TotalDays < 365)
+        if (timeDifference.TotalDays < 365)
         {
-            int monthsAgo = (int)(timeDifference.TotalDays / 30);
+            var monthsAgo = (int)(timeDifference.TotalDays / 30);
             return $"{monthsAgo} {(monthsAgo == 1 ? "month" : "months")} ago";
         }
-        else
-        {
-            int yearsAgo = (int)(timeDifference.TotalDays / 365);
-            return $"{yearsAgo} {(yearsAgo == 1 ? "year" : "years")} ago";
-        }
+        var yearsAgo = (int)(timeDifference.TotalDays / 365);
+        return $"{yearsAgo} {(yearsAgo == 1 ? "year" : "years")} ago";
     }
 
 }

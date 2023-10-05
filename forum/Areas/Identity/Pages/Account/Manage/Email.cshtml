@@ -7,27 +7,27 @@
 
 <div class="identity-account">
     <h3>@ViewData["Title"]</h3>
-    <partial name="_StatusMessage" for="StatusMessage" />
+    <partial name="_StatusMessage" for="StatusMessage"/>
     <form id="email-form" method="post">
         <div asp-validation-summary="All"></div>
         @if (Model.IsEmailConfirmed)
         {
             <div class="form-group">
                 <label asp-for="Email"></label>
-                <input asp-for="Email" disabled />
+                <input asp-for="Email" disabled/>
             </div>
         }
         else
         {
             <div class="form-group">
                 <label asp-for="Email"></label>
-                <input asp-for="Email" disabled />
-            </div>  
+                <input asp-for="Email" disabled/>
+            </div>
             <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
         }
         <div class="form-group">
             <label asp-for="Input.NewEmail"></label>
-            <input asp-for="Input.NewEmail" autocomplete="email" aria-required="true" />
+            <input asp-for="Input.NewEmail" autocomplete="email" aria-required="true"/>
             <span asp-validation-for="Input.NewEmail" class="error"></span>
         </div>
         <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="submit-btn">Change email</button>
@@ -35,5 +35,5 @@
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial"/>
 }

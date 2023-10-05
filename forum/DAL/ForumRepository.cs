@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using forum.Models;
+﻿using forum.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace forum.DAL;
 
@@ -69,12 +69,11 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
                 .Include(post => post.Comments)
                 .Include(post => post.User)
                 .Where(post =>
-                    ((post.Title.ToLower().Contains(term) || post.Content.ToLower().Contains(term)) ||
-                     post.Category!.Name.ToLower().Contains(term) ||
-                     post.Tags!.Any(tag => tag.Name!.ToLower().Contains(term)) ||
-                     post.Comments!.Any(comment => comment.Content.ToLower().Contains(term)) ||
-                     post.User!.UserName.ToLower().Contains(term)
-                    )
+                    post.Title.ToLower().Contains(term) || post.Content.ToLower().Contains(term) ||
+                    post.Category!.Name.ToLower().Contains(term) ||
+                    post.Tags!.Any(tag => tag.Name!.ToLower().Contains(term)) ||
+                    post.Comments!.Any(comment => comment.Content.ToLower().Contains(term)) ||
+                    post.User!.UserName.ToLower().Contains(term)
                 )
                 .ToListAsync();
 
@@ -150,22 +149,6 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         catch (Exception e)
         {
             LogError("GetTById", e);
-            return null;
-        }
-    }
-
-    // Generic method to fetch any entity based on id
-    public async Task<ApplicationUser?> GetUserById(string id)
-    {
-        try
-        {
-            // Query the database for all entities with primary key as id
-            return await _db.Set<ApplicationUser>().FindAsync(id);
-        }
-        // Error handling if it can't fetch entities
-        catch (Exception e)
-        {
-            LogError("GetUserById", e);
             return null;
         }
     }
@@ -267,6 +250,22 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
             LogError("RemoveAllPostTags", e);
 
             return false;
+        }
+    }
+
+    // Generic method to fetch any entity based on id
+    public async Task<ApplicationUser?> GetUserById(string id)
+    {
+        try
+        {
+            // Query the database for all entities with primary key as id
+            return await _db.Set<ApplicationUser>().FindAsync(id);
+        }
+        // Error handling if it can't fetch entities
+        catch (Exception e)
+        {
+            LogError("GetUserById", e);
+            return null;
         }
     }
 

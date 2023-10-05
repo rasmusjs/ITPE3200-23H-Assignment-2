@@ -1,29 +1,27 @@
-﻿using System.ComponentModel;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using forum.DAL;
-using Microsoft.AspNetCore.Mvc;
 using forum.Models;
 using forum.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Ganss.Xss;
-using Markdig;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace forum.Controllers;
 
 public class PostController : Controller
 {
-    // Connect the controller to the different models
-    private readonly IForumRepository<Post> _postRepository;
     private readonly IForumRepository<Category> _categoryRepository;
-    private readonly IForumRepository<Tag> _tags;
     private readonly IForumRepository<Comment> _commentRepository;
-    private readonly UserManager<ApplicationUser> _userManager;
 
 
     private readonly ILogger<PostController> _logger; // Ikke satt opp enda!
+
+    // Connect the controller to the different models
+    private readonly IForumRepository<Post> _postRepository;
+    private readonly IForumRepository<Tag> _tags;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     // Constructor for Dependency Injection to the Data Access Layer from the different repositories
     public PostController(IForumRepository<Category> categoryRepository,
@@ -68,10 +66,7 @@ public class PostController : Controller
         var posts = await GetAllPosts();
 
         //If no posts found return NotFound
-        if (posts == null)
-        {
-            return NotFound("Item list not found");
-        }
+        if (posts == null) return NotFound("Item list not found");
 
         //Update session variable, used for determining which view to use
         HttpContext.Session.SetString("viewModel", "Card");
@@ -85,10 +80,7 @@ public class PostController : Controller
         var posts = await GetAllPosts();
 
         //If no posts found return NotFound
-        if (posts == null)
-        {
-            return NotFound("Item list not found");
-        }
+        if (posts == null) return NotFound("Item list not found");
 
         //Update session variable, used for determining which view to use
         HttpContext.Session.SetString("viewModel", "Compact");
@@ -261,9 +253,7 @@ public class PostController : Controller
 
 
         if (post.UserId != GetUserId()) // Checks if the user is the owner of the post, // TODO: Add error message
-        {
             return View(postViewModel); // Checks if the user is the owner of the post
-        }
 
 
         // Sanitizing the post content
@@ -271,10 +261,8 @@ public class PostController : Controller
 
         // Check if model is valid before updating #TODO: Fix this
         if (!ModelState.IsValid)
-        {
             // Returns the user to create post if unsuccessful
             return View(postViewModel);
-        }
 
 
         // Remove all the olds tags from post, this is done since we could not find a way to use CASCADE update in EF Core
@@ -311,10 +299,8 @@ public class PostController : Controller
         if (post == null) return NotFound();
 
         if (post.UserId != GetUserId()) // Checks if the user is the owner of the post, // TODO: Add error message
-        {
             // If the user is not the owner of the post, return to the post
             return RedirectToAction("Post", "Post", new { id });
-        }
 
         // Return the post to be deleted
         return View(post);
@@ -329,19 +315,15 @@ public class PostController : Controller
         if (post == null) return NotFound();
 
         if (post.UserId != GetUserId()) // Checks if the user is the owner of the post, // TODO: Add error message
-        {
             return RedirectToAction("Post", "Post", new { id }); // Send user back to the post if not owner
-        }
 
         // Delete post. If post not found, return NotFound
-        bool confimedDeleted = await _postRepository.Delete(id);
+        var confimedDeleted = await _postRepository.Delete(id);
         if (confimedDeleted == false) // TODO: Add error message
-        {
             return NotFound();
-        }
 
         // Get the current view model from session. Returns card view by default
-        string viewModel = HttpContext.Session.GetString("viewModel") ?? "Card";
+        var viewModel = HttpContext.Session.GetString("viewModel") ?? "Card";
         return RedirectToAction(viewModel, "Post"); // Redirect to the post list
     }
 
@@ -352,10 +334,8 @@ public class PostController : Controller
     {
         // Error handling to check if the model is correct
         if (!ModelState.IsValid) // TODO: Add error message
-        {
             return Redirect(
                 $"{Url.Action("Post", new { id = comment.PostId })}"); // Redirect to the post with the comment
-        }
 
         // Sets current time to comment and creates comment. Returns NotFound with message if there is no comment
         comment.DateCreated = DateTime.Now;
@@ -395,24 +375,18 @@ public class PostController : Controller
 
         // Error handling if no comment is found
         if (commentFromDb == null) // TODO: Add error message
-        {
             return Redirect(
                 $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
-        }
 
         // Checks if the user is the owner of the comment
         if (commentFromDb.UserId != GetUserId()) // TODO: Add error message
-        {
             return Redirect(
                 $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
-        }
 
         // Checks if the model for comments is valid and returns error message.
         if (!ModelState.IsValid) // TODO: Add error message
-        {
             return Redirect(
                 $"{Url.Action("Post", new { id = commentFromDb.PostId })}#commentId-{commentFromDb.CommentId}"); // Redirect to the post with the comment
-        }
 
         // Updates the comment in the database
         commentFromDb.DateLastEdited = DateTime.Now;
@@ -518,23 +492,17 @@ public class PostController : Controller
 
         // Error handling if no comment is found
         if (commentFromDb == null) // TODO: Add error message
-        {
             return Refresh();
-        }
 
         // Checks if the user is the owner of the comment
         if (commentFromDb.UserId != GetUserId()) // TODO: Add error message
-        {
             return Redirect(
                 $"{Url.Action("Post", new { id = commentFromDb.PostId })}#commentId-{id}"); // Redirect to the post with the comment
-        }
 
         // Checks if the model for comments is valid and returns error message.
         if (!ModelState.IsValid)
-        {
             return Redirect(
                 $"{Url.Action("Post", new { id = commentFromDb.PostId })}#commentId-{commentFromDb.CommentId}"); // Redirect to the post with the comment
-        }
 
         // Updates the comment in the database
         commentFromDb.DateLastEdited = DateTime.Now;

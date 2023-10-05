@@ -1,11 +1,8 @@
 ﻿using forum.DAL;
-using Microsoft.EntityFrameworkCore;
 using forum.Models;
 using Jdenticon.AspNetCore;
-using Serilog;
-using Serilog.Events;
 using Microsoft.AspNetCore.Identity;
-
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 //ForumDbContextFactory forumDbContextFactory = new();

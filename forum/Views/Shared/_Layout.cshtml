@@ -1,10 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
-
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
 @{
-    bool signedIn = false;
+    var signedIn = false;
 }
 
 @if (SignInManager.IsSignedIn(User) && UserManager.GetUserAsync(User).Result != null)
@@ -78,7 +77,7 @@
 <main>
     <div id="main-inner-container">
         @RenderBody()
-        @RenderSection("scripts", required: false)
+        @RenderSection("scripts", false)
     </div>
 </main>
 </body>
