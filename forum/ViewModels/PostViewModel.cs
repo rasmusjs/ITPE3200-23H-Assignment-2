@@ -5,7 +5,6 @@ namespace forum.ViewModels;
 
 // Classes and interfaces that are used for rendering HTML elements and layouts 
 
-
 // View model to pass data from the controller to the view.
 // Used by the view to display a forum post and to let the user select category and tags for the posts
 public class PostViewModel
