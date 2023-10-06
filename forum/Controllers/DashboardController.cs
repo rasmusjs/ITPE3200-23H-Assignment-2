@@ -41,7 +41,7 @@ public class DashBoardController : Controller
         // If no posts, return NotFound
         if (userActivity == null)
         {
-            _logger.LogError("[PostController] GetAllPosts failed while executing _itemRepository.GetAll()");
+            _logger.LogError($"[Dashboard controller] Dashboard() failed, error message: userActivity is null");
             return NotFound("Post list not found");
         }
 
