@@ -15,16 +15,16 @@ public class Post
     [Display(Name = "Title")]
 
     // Getters and setters for post title
-    public string Title { get; set; }
+    public string Title { get; set; } = String.Empty;
 
     // Regex for error handling the post content
 
     [StringLength(4096, MinimumLength = 2, ErrorMessage = "The content must be between 2 to 4096 characters.")]
     [Display(Name = "Content")]
     // Getters and setters for post data
-    public string Content { get; set; }
+    public string Content { get; set; } = String.Empty;
 
-    public int TotalLikes { get; set; } = 0;
+    public int TotalLikes { get; set; }
     public DateTime DateCreated { get; set; }
     public DateTime? DateLastEdited { get; set; }
 

@@ -14,5 +14,5 @@ public class Category
     [Display(Name = "Category name")]
 
     // Getters and setters for category name
-    public string Name { get; set; }
+    public string Name { get; set; } = String.Empty;
 }
