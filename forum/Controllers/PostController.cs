@@ -407,10 +407,13 @@ public class PostController : Controller
         var post = await _postRepository.GetTById(id);
 
         // Error handling if the post is not found
-        if (post == null) return NotFound(); // TODO: Add error message
+        if (post == null) return RedirectToAction(nameof(Refresh)); // TODO: Add error message
 
         // Fetches the user
         var user = await _userManager.FindByIdAsync(GetUserId());
+
+        // Error handling if the user is not found
+        if (user == null) return RedirectToPage("/Account/Login", new { area = "Identity" });
 
         // Checks if the user has already liked the post
         if (user.LikedPosts != null && user.LikedPosts.Any(t => t.PostId == id))
@@ -452,6 +455,9 @@ public class PostController : Controller
 
         // Fetches the user
         var user = await _userManager.FindByIdAsync(GetUserId());
+        
+        // Error handling if the user is not found
+        if (user == null) return RedirectToPage("/Account/Login", new { area = "Identity" });
 
         // Checks if the user has already liked the comment
         if (user.LikedComments != null && user.LikedComments.Any(t => t.CommentId == id))
