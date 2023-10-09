@@ -72,20 +72,20 @@ public static class DbInit
             {
                 new()
                 {
-                    UserName = "CoolGuy",
-                    Email = "CoolGuy@bracketbros.com",
+                    UserName = "coolguy",
+                    Email = "coolguy@bracketbros.com",
                     CreationDate = DateTime.Now
                 },
                 new()
                 {
-                    UserName = "HackerMan",
-                    Email = "HackerMan@bracketbros.com",
+                    UserName = "hackerman",
+                    Email = "hackerman@bracketbros.com",
                     CreationDate = DateTime.Now
                 },
                 new()
                 {
-                    UserName = "TheBoss",
-                    Email = "TheBoss@bracketbros.com",
+                    UserName = "theboss",
+                    Email = "theboss@bracketbros.com",
                     CreationDate = DateTime.Now
                 }
             };
@@ -128,7 +128,7 @@ public static class DbInit
                     "Ladies and gentlemen, gather 'round, for today, we embark on a divine journey through the ethereal realms of JavaScript! \ud83d\ude80\ud83c\udf0c\n\n##  **Unleash the Versatility**\nBehold, for JavaScript is the omnipotent chameleon of coding languages! It dances seamlessly not only in the sacred halls of browsers but also dons the crown of servers (praise be to Node.js) and blesses mobile apps with its touch (hail React Native)!\n\n##  **A Cosmic Force of Popularity**\nIt is not just a language; it's a celestial phenomenon! JavaScript's ubiquity transcends the boundaries of realms, making it one of the most widely-used languages, embraced by mortals and tech gods alike.\n\n##  **A Sacred Evolution**\nJavaScript is on an eternal quest for perfection. ES6, ES7, ES8... it evolves faster than the speed of light, adapting to the celestial needs of modern development.\n\n##  **The Art of Interactivity**\nWitness the magic as JavaScript breathes life into the lifeless! It grants websites the gift of interactivity and dynamism, ensnaring users in a spellbinding trance.\n\n##  **A Cosmic Job Market**\nBy embracing the holy scriptures of JavaScript, you open the gates to an abundance of job opportunities in the ever-expanding tech universe. Devs, rejoice! \ud83d\ude4c\ud83c\udf20\n\n##  **The Fellowship of Community**\nJavaScript's community is not just a community; it's a sacred brotherhood! On StackOverflow, GitHub, and countless other altars, the faithful gather to bestow wisdom upon the seeking souls.\n\nYes, it has its quirks (the enigmatic \"undefined\" and the mystical \"NaN\"), but what godly creation doesn't have its mysteries? \ud83e\udd37\u200d\u2642\ufe0f\ud83c\udf0c\n\nSo, let us kneel before JavaScript, the divine thread that weaves the very fabric of the web, a celestial gift that keeps on giving to us humble developers! \ud83d\ude4f\n\nDo you too believe in the divinity of JavaScript or have celestial tales to share? \ud83c\udf20\ud83d\udd2e #JavaScriptGift #DevotionToCode\n",
                 DateCreated = DateTime.Now,
                 DateLastEdited = DateTime.Now,
-                TotalLikes = random.Next(99999),
+                TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
                 CategoryId = random.Next(1, categoriesList.Count),
                 Tags = new List<Tag>
@@ -143,7 +143,7 @@ public static class DbInit
                     "Welcome!, we'll venture into the fascinating world of PowerShell and Windows. Join me as we unlock the secrets of automation and discover the power of scripting in the Windows environment.",
                 DateCreated = DateTime.Now,
                 DateLastEdited = DateTime.Now,
-                TotalLikes = random.Next(99999),
+                TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
                 CategoryId = random.Next(1, categoriesList.Count),
                 Tags = new List<Tag>
@@ -183,7 +183,7 @@ public static class DbInit
                     "Welcome noob! we'll embark on a journey into the exciting realm of JavaScript and web development. Whether you're a complete beginner or looking to reinforce your skills, this post is tailored just for you. Let's explore the fundamentals of JavaScript and how it plays a crucial role in creating dynamic web applications.",
                 DateCreated = DateTime.Now,
                 DateLastEdited = DateTime.Now,
-                TotalLikes = random.Next(99999),
+                TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
                 CategoryId = random.Next(1, categoriesList.Count),
                 Tags = new List<Tag>
@@ -199,7 +199,7 @@ public static class DbInit
                     "Explore the elegance of Python, a language that embraces simplicity and readability. Pythonic code is like poetry for programmers.",
                 DateCreated = DateTime.Now,
                 DateLastEdited = DateTime.Now,
-                TotalLikes = random.Next(99999),
+                TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
                 CategoryId = random.Next(1, categoriesList.Count),
                 Tags = new List<Tag>
@@ -214,7 +214,7 @@ public static class DbInit
                     "Debugging is both an art and a science. Learn the techniques and tools that seasoned developers use to hunt down and fix bugs in their code.",
                 DateCreated = DateTime.Now,
                 DateLastEdited = DateTime.Now,
-                TotalLikes = random.Next(99999),
+                TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
                 CategoryId = random.Next(1, categoriesList.Count),
                 Tags = new List<Tag>
@@ -229,7 +229,7 @@ public static class DbInit
                     "Interested in data science? Discover the essential concepts and tools you need to start your journey into the exciting world of data analysis and machine learning.",
                 DateCreated = DateTime.Now,
                 DateLastEdited = DateTime.Now,
-                TotalLikes = random.Next(99999),
+                TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
                 CategoryId = random.Next(1, categoriesList.Count),
                 Tags = new List<Tag>
@@ -246,7 +246,7 @@ public static class DbInit
                     "Git is a developer's best friend. Learn how this version control system simplifies collaboration and tracking changes in your codebase.",
                 DateCreated = DateTime.Now,
                 DateLastEdited = DateTime.Now,
-                TotalLikes = random.Next(99999),
+                TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
                 CategoryId = random.Next(1, categoriesList.Count),
                 Tags = new List<Tag>
@@ -263,7 +263,7 @@ public static class DbInit
                     "Dive into the world of CSS Grid and unlock the potential for creating stunning, responsive web layouts with ease.",
                 DateCreated = DateTime.Now,
                 DateLastEdited = DateTime.Now,
-                TotalLikes = random.Next(99999),
+                TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
                 CategoryId = random.Next(1, categoriesList.Count),
                 Tags = new List<Tag>
@@ -278,7 +278,7 @@ public static class DbInit
                     "Get ready for a journey into the Internet of Things, where everyday objects are connected to the digital world. Discover the possibilities and challenges of IoT.",
                 DateCreated = DateTime.Now,
                 DateLastEdited = DateTime.Now,
-                TotalLikes = random.Next(99999),
+                TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
                 CategoryId = random.Next(1, categoriesList.Count),
                 Tags = new List<Tag>
@@ -293,7 +293,7 @@ public static class DbInit
                     "If you've ever dreamed of creating your own video game, Unity is the platform to make it happen. Explore the world of game development and start building your masterpiece.",
                 DateCreated = DateTime.Now,
                 DateLastEdited = DateTime.Now,
-                TotalLikes = random.Next(99999),
+                TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
                 CategoryId = random.Next(1, categoriesList.Count),
                 Tags = new List<Tag>
