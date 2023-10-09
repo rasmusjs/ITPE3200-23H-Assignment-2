@@ -1,17 +1,18 @@
 ﻿using forum.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace forum.DAL;
 
 // Database initializer - Seeds the database with default content if there are no content in DB
 public static class DbInit
 {
-    public static void Seed(IApplicationBuilder app)
+    public static async void Seed(IApplicationBuilder app)
     {
         using var serviceScope = app.ApplicationServices.CreateScope();
         var context = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
 
-        //context.Database.EnsureDeleted();
-        context.Database.EnsureCreated();
+        //await context.Database.EnsureDeletedAsync();
+        await context.Database.EnsureCreatedAsync();
 
         if (!context.Categories.Any())
         {
@@ -35,7 +36,7 @@ public static class DbInit
                 }
             };
             context.AddRange(categoriesList);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
             Console.WriteLine("Categories added");
         }
 
@@ -69,35 +70,50 @@ public static class DbInit
                 }
             };
             context.AddRange(tagsList);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
             Console.WriteLine("Tags added");
         }
 
         if (!context.Users.Any())
         {
+            UserManager<ApplicationUser> userManager =
+                serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
             var userList = new List<ApplicationUser>
             {
                 new()
                 {
                     UserName = "CoolGuy",
-                    PasswordHash = "AQAAAAEAACcQAA",
+                    Email = "CoolGuy@bracketbros.com",
                     CreationDate = DateTime.Now
                 },
                 new()
                 {
                     UserName = "HackerMan",
-                    PasswordHash = "AQAAAAEAACcQAA",
+                    Email = "HackerMan@bracketbros.com",
                     CreationDate = DateTime.Now
                 },
                 new()
                 {
                     UserName = "TheBoss",
-                    PasswordHash = "AQAAAAEAACcQAA",
+                    Email = "TheBoss@bracketbros.com",
                     CreationDate = DateTime.Now
                 }
             };
-            context.AddRange(userList);
-            context.SaveChanges();
+
+            string password = "Password123!";
+
+            // Add users to database via UserManager
+            foreach (var applicationUser in userList)
+            {
+                var result = await userManager.CreateAsync(applicationUser, password);
+                // Add user to role
+                Console.WriteLine(applicationUser.UserName + (result.Succeeded ? " created" : " failed"));
+            }
+
+
+            /*context.AddRange(userList);
+            await context.SaveChangesAsync();*/
             Console.WriteLine("Users added");
         }
 
@@ -105,7 +121,8 @@ public static class DbInit
         var addedUsers = context.Users.ToList();
         var tags = context.Tags.ToArray();
 
-        if (!context.Posts.Any() && addedUsers.Count > 0) // If there are no posts in the database and there are users
+        if (!context.Posts.Any() &&
+            addedUsers.Count > 0) // If there are no posts in the database and there are users
         {
             var postsList = new List<Post>
             {
@@ -164,14 +181,14 @@ public static class DbInit
                 }
             };
             context.AddRange(postsList);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
 
             Console.WriteLine("Temp posts added");
         }
 
         //        if (!context.Comments.Any() && !context.Posts.Any() && addedUsers.Count > 0)
-        if (!context.Comments.Any())
+        if (!context.Comments.Any() && addedUsers.Count > 0)
         {
             // Create some top-level comments
             var comment1 = new Comment
@@ -193,7 +210,7 @@ public static class DbInit
 
             // Add comments to the database
             context.Comments.AddRange(comment1, comment2);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             // Add replies to comments
             var reply1 = new Comment
@@ -222,7 +239,7 @@ public static class DbInit
             };
 
             context.Comments.AddRange(reply1, reply2, reply3);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             // Adds reply to "reply1".
             // Gets stored in the database but does not seem to create a relation.
@@ -236,7 +253,7 @@ public static class DbInit
                 ParentCommentId = 3 // Set the parent comment ID
             };
             context.Comments.AddRange(reply1Reply1);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             Console.WriteLine("Comments added");
         }
