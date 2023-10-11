@@ -71,7 +71,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
                 .Where(post =>
                     post.Title.ToLower().Contains(term) || post.Content.ToLower().Contains(term) ||
                     post.Category!.Name.ToLower().Contains(term) ||
-                    post.Tags!.Any(tag => tag.Name!.ToLower().Contains(term)) ||
+                    post.Tags!.Any(tag => tag.Name.ToLower().Contains(term)) ||
                     post.Comments!.Any(comment => comment.Content.ToLower().Contains(term)) ||
                     post.User!.UserName.ToLower().Contains(term)
                 )
@@ -119,6 +119,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
             return null;
         }
     }
+
 
     // Fetches comments from the database, based on the comment id
     public async Task<IEnumerable<Comment>?> GetCommentsByPostId(int postId)

@@ -59,11 +59,13 @@ public class PostController : Controller
         return RedirectToAction("Post", "Post", new { id });
     }
 
+
+    [HttpGet]
     // Method for getting card view
-    public async Task<IActionResult> Card()
+    public async Task<IActionResult> Card(string sortby = "")
     {
         //Get all posts
-        var posts = await GetAllPosts();
+        var posts = await GetAllPosts(sortby);
 
         //If no posts found return NotFound
         if (posts == null) return NotFound("Item list not found");
@@ -73,11 +75,12 @@ public class PostController : Controller
         return View(new PostsListViewModel(posts, "Card"));
     }
 
+    [HttpGet]
     // Method for getting compact view
-    public async Task<IActionResult> Compact()
+    public async Task<IActionResult> Compact(string sortby = "")
     {
         //Get all posts
-        var posts = await GetAllPosts();
+        var posts = await GetAllPosts(sortby);
 
         //If no posts found return NotFound
         if (posts == null) return NotFound("Item list not found");
@@ -88,10 +91,11 @@ public class PostController : Controller
     }
 
     // Method for fetching all posts. Used by Card() and Compact()
-    public async Task<IEnumerable<Post>?> GetAllPosts()
+    public async Task<IEnumerable<Post>?> GetAllPosts(string sortby = "")
     {
         // Get all posts
         var posts = await _postRepository.GetAllPosts();
+
 
         // If no posts, return NotFound
         if (posts == null)
@@ -99,6 +103,19 @@ public class PostController : Controller
             _logger.LogError("[PostController] GetAllPosts failed while executing _itemRepository.GetAll()");
             return null;
         }
+
+
+        posts = sortby switch
+        {
+            "likes" => posts.OrderByDescending(post => post.TotalLikes),
+            "leastlikes" => posts.OrderBy(post => post.TotalLikes),
+            "comments" => posts.OrderByDescending(post => post.Comments!.Count),
+            "leastcomments" => posts.OrderBy(post => post.Comments!.Count),
+            "newest" => posts.OrderByDescending(post => post.DateCreated),
+            "oldest" => posts.OrderBy(post => post.DateCreated),
+            _ => posts.Where(post => post.DateLastEdited > DateTime.Now.AddDays(-7))
+                .OrderByDescending(post => post.DateCreated)
+        };
 
         return posts;
     }
@@ -322,7 +339,7 @@ public class PostController : Controller
         if (confimedDeleted == false) // TODO: Add error message
             return NotFound();
 
-        // Get the current view model from session. Returns card view by default
+        // Get the current view model from session. Returns Card view by default
         var viewModel = HttpContext.Session.GetString("viewModel") ?? "Card";
         return RedirectToAction(viewModel, "Post"); // Redirect to the post list
     }
@@ -455,7 +472,7 @@ public class PostController : Controller
 
         // Fetches the user
         var user = await _userManager.FindByIdAsync(GetUserId());
-        
+
         // Error handling if the user is not found
         if (user == null) return RedirectToPage("/Account/Login", new { area = "Identity" });
 

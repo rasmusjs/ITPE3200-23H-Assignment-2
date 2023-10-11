@@ -6,10 +6,31 @@
 <div id="post-card">
     <div class="main-header">
         <span class="title">Posts (@Model.CurrentViewName View)</span>
+        <form method="get" asp-action="Card">
+
+
+            <label for="sortby">Sort by:</label>
+            <select id="sortby" name="sortby" onchange="this.form.submit()">
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="likes">Most Likes</option>
+                <option value="leastlikes">Least Likes</option>
+                <option value="comments">Most Comments</option>
+                <option value="leastcomments">Least Comments</option>
+            </select>
+        </form>
+
+        <script>
+         // Set the value of the sortby dropdown to the value in the URL
+         const sortby = new URLSearchParams(window.location.search).get('sortby')
+         if (sortby != null) document.getElementById("sortby").value = sortby;
+         
+                    
+        </script>
         <a class="change-view-link" href="/Post/Compact">Change to Compact View<i class="fa-solid fa-compress"></i></a>
     </div>
     <div class="posts">
-        @foreach (var post in Model.Posts.OrderByDescending(post => post.DateCreated))
+        @foreach (var post in Model.Posts)
         {
             <partial name="_PostCard" model="post"/>
         }
