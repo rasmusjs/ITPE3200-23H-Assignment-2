@@ -76,7 +76,7 @@
         background-color: var(--fg-1);
         border-radius: 0 0 6px 6px;
 
-        & div {
+        & .limit-content {
             position: relative;
             max-height: 200px;
             overflow: hidden;
