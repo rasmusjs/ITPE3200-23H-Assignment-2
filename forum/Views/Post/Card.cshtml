@@ -7,24 +7,9 @@
 <div id="post-card">
     <div class="main-header">
         <span class="title">Posts (@Model.CurrentViewName View)</span>
-        <form method="get" asp-action="Card">
-            <label for="sortby">Sort by:</label>
-            <select id="sortby" name="sortby" onchange="this.form.submit()">
-                <option>Default</option>
-                <option value="newest">Newest</option>
-                <option value="oldest">Oldest</option>
-                <option value="likes">Most Likes</option>
-                <option value="leastlikes">Least Likes</option>
-                <option value="comments">Most Comments</option>
-                <option value="leastcomments">Least Comments</option>
-            </select>
-        </form>
-        <script>
-            // Set the value of the sortby dropdown to the value in the URL
-            const sortby = new URLSearchParams(window.location.search).get('sortby')
-            // If the value is not null, set the value of the dropdown to the value in the URL
-            if (sortby != null) document.getElementById("sortby").value = sortby;    
-        </script>
+
+        <partial name="_SortBy"/>
+
         <a class="change-view-link" href="/Post/Compact">Change to Compact View<i class="fa-solid fa-compress"></i></a>
     </div>
     <div class="posts">
@@ -36,7 +21,7 @@
                 LimitContent = true,
                 HideGoToPost = false
             };
-            
+
             <partial name="_PostCard" model="postCardViewModel"/>
         }
     </div>

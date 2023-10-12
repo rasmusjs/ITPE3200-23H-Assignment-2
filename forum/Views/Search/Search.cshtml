@@ -4,17 +4,16 @@
     ViewData["Title"] = "Search";
 }
 
-
 <form method="get" asp-action="Search">
     <div>
         <label for="term">Search Term:</label>
         <input type="text" id="term" name="term" placeholder="Enter a search term"/>
+        <partial name="_SortBy"/>
         <button type="submit">Search</button>
     </div>
 </form>
 
-
-<h1>Results for</h1>
+<h1>Results:</h1>
 <div>
     @if (Model.Posts.Any())
     {
@@ -26,7 +25,6 @@
                 LimitContent = true,
                 HideGoToPost = false
             };
-            
             <partial name="_PostCard" model="postCardViewModel"/>
         }
     }

@@ -36,7 +36,7 @@ public class SearchController : Controller
 
     // Get request to search based on a provided search term
     [HttpGet]
-    public async Task<IActionResult> Search(string term)
+    public async Task<IActionResult> Search(string term, string sortby = "")
     {
         // Error handling for the search term
         if (string.IsNullOrWhiteSpace(term)) return Refresh(); // TODO: Redirect to error page
@@ -51,6 +51,18 @@ public class SearchController : Controller
             _logger.LogError("[ItemController] Item list not found while executing _itemRepository.GetAll()");
             return NotFound("Item list not found");
         }
+        
+        posts = sortby switch
+        {
+            "newest" => posts.OrderByDescending(post => post.DateCreated),
+            "oldest" => posts.OrderBy(post => post.DateCreated),
+            "likes" => posts.OrderByDescending(post => post.TotalLikes),
+            "leastlikes" => posts.OrderBy(post => post.TotalLikes),
+            "comments" => posts.OrderByDescending(post => post.Comments!.Count),
+            "leastcomments" => posts.OrderBy(post => post.Comments!.Count),
+            _ => posts.OrderByDescending(post => post.DateCreated)
+        };
+
 
         // Return view with all the posts matching the search term
         var postsListViewModel = new PostsListViewModel(posts, "Search");
