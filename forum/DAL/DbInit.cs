@@ -17,18 +17,18 @@ public static class DbInit
 
         var categoriesList = new List<Category>
         {
-            new() { Name = "Entertainment" },
-            new() { Name = "News" },
-            new() { Name = "Politics" },
-            new() { Name = "Science" },
-            new() { Name = "Sports" },
-            new() { Name = "Technology" },
-            new() { Name = "General" },
-            new() { Name = "Debugging" },
-            new() { Name = "Development" },
-            new() { Name = "Front End" },
-            new() { Name = "Game Development" },
-            new() { Name = "Back End" },
+            new() { Name = "Entertainment", Color = "#a83432"},
+            new() { Name = "News", Color = "#a85b32" },
+            new() { Name = "Politics", Color = "#a89e32" },
+            new() { Name = "Science", Color = "#4ca832" },
+            new() { Name = "Sports", Color = "#32a85f" },
+            new() { Name = "Technology", Color = "#32a88c" },
+            new() { Name = "General", Color = "#329ea8" },
+            new() { Name = "Debugging", Color = "#3269a8" },
+            new() { Name = "Development", Color = "#3236a8" },
+            new() { Name = "Front End", Color = "#6932a8" },
+            new() { Name = "Game Development", Color = "#9a32a8" },
+            new() { Name = "Back End", Color = "#a83281" },
         };
 
         if (!context.Categories.Any())

@@ -1,20 +1,20 @@
 @using System.Security.Claims
 @using Markdig
-@model Post
+@model forum.ViewModels.PostCardViewModel
 
 <div class="shared-postCard">
     <div class="top">
         <div class="chips">
             <a asp-controller="Search"
                asp-action="Search"
-               asp-route-term="@Model.Category?.Name"
-               class="category">
-                @Model.Category?.Name
+               asp-route-term="@Model.Post.Category?.Name"
+               class="category" style="background-color: @Model.Post.Category?.Color">
+                @Model.Post.Category?.Name
             </a>
 
-            @if (Model.Tags != null)
+            @if (Model.Post.Tags != null)
             {
-                foreach (var tag in Model.Tags)
+                foreach (var tag in Model.Post.Tags)
                 {
                     <a asp-controller="Search"
                        asp-action="Search"
@@ -28,12 +28,12 @@
         <div class="creation-info">
             Posted by
             <span class="user">
-                @if (Model.User != null)
+                @if (Model.Post.User != null)
                 {
                     <a asp-controller="Search"
                        asp-action="Search"
-                       asp-route-term="@Model.User.UserName">
-                        @Model.User.UserName
+                       asp-route-term="@Model.Post.User.UserName">
+                        @Model.Post.User.UserName
                     </a>
                 }
                 else
@@ -41,18 +41,18 @@
                     <span class="deleted-user" title="Deleted user">Anonymous</span>
                 }
             </span>
-            @CalculateTimeAgo(Model.DateCreated)
-            @if (Model.DateLastEdited != null)
+            @CalculateTimeAgo(Model.Post.DateCreated)
+            @if (Model.Post.DateLastEdited != null)
             {
-                <span class="last-edited">Last edited @CalculateTimeAgo(Model.DateLastEdited.Value)</span>
+                <span class="last-edited">Last edited @CalculateTimeAgo(Model.Post.DateLastEdited.Value)</span>
             }
         </div>
     </div>
 
     <div class="content">
-        <div class="title">@Model.Title</div>
+        <div class="title">@Model.Post.Title</div>
         <div>
-            @Html.Raw(Markdown.ToHtml(Model.Content))
+            @Html.Raw(Markdown.ToHtml(Model.Post.Content))
         </div>
     </div>
 
@@ -60,32 +60,32 @@
         <div class="likes-comments">
             <a asp-controller="Post"
                asp-action="LikePost"
-               asp-route-id="@Model.PostId">
-                <i class="fa-solid fa-thumbs-up"></i>@Model.TotalLikes likes
+               asp-route-id="@Model.Post.PostId">
+                <i class="fa-solid fa-thumbs-up"></i>@Model.Post.TotalLikes likes
             </a>
             <a asp-controller="Post"
                asp-action="Post"
-               asp-route-id="@Model.PostId">
-                <i class="fa-solid fa-comment"></i>@Model.Comments?.Count comments
+               asp-route-id="@Model.Post.PostId">
+                <i class="fa-solid fa-comment"></i>@Model.Post.Comments?.Count comments
             </a>
         </div>
         <div class="links">
-            @if (Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+            @if (Model.Post.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
             {
                 <a asp-controller="Post"
                    asp-action="Update"
-                   asp-route-id="@Model.PostId">
+                   asp-route-id="@Model.Post.PostId">
                     Edit
                 </a>
                 <a asp-controller="Post"
                    asp-action="Delete"
-                   asp-route-id="@Model.PostId">
+                   asp-route-id="@Model.Post.PostId">
                     Delete
                 </a>
             }
             <a asp-controller="Post"
                asp-action="Post"
-               asp-route-id="@Model.PostId">
+               asp-route-id="@Model.Post.PostId">
                 Go to post
             </a>
         </div>

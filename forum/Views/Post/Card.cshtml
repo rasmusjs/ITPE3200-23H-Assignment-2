@@ -1,3 +1,4 @@
+@using forum.ViewModels
 @model forum.ViewModels.PostsListViewModel
 @{
     ViewData["Title"] = "Posts (" + Model.CurrentViewName + " view)";
@@ -19,17 +20,23 @@
             </select>
         </form>
         <script>
-        // Set the value of the sortby dropdown to the value in the URL
-        const sortby = new URLSearchParams(window.location.search).get('sortby')
-        // If the value is not null, set the value of the dropdown to the value in the URL
-        if (sortby != null) document.getElementById("sortby").value = sortby;    
+            // Set the value of the sortby dropdown to the value in the URL
+            const sortby = new URLSearchParams(window.location.search).get('sortby')
+            // If the value is not null, set the value of the dropdown to the value in the URL
+            if (sortby != null) document.getElementById("sortby").value = sortby;    
         </script>
         <a class="change-view-link" href="/Post/Compact">Change to Compact View<i class="fa-solid fa-compress"></i></a>
     </div>
     <div class="posts">
         @foreach (var post in Model.Posts)
         {
-            <partial name="_PostCard" model="post"/>
+            var postCardViewModel = new PostCardViewModel
+            {
+                Post = post,
+                LimitContent = true
+            };
+            
+            <partial name="_PostCard" model="postCardViewModel"/>
         }
     </div>
 </div>

@@ -36,10 +36,23 @@
                 padding: 8px 12px;
                 border-radius: 48px;
                 background-color: var(--fg-2);
-                transition: var(--tr-default);
 
-                &:hover {
-                    background-color: var(--fg-3);
+                &.category {
+                    color: var(--txt-1);
+                    font-weight: bold;
+                    transition: var(--tr-default);
+
+                    &:hover {
+                        filter: brightness(120%);
+                    }
+                }
+                
+                &.tag {
+                    transition: var(--tr-default);
+
+                    &:hover {
+                        background-color: var(--fg-3);
+                    }
                 }
             }
         }

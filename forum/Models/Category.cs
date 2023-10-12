@@ -15,4 +15,7 @@ public class Category
 
     // Getters and setters for category name
     public string Name { get; set; } = String.Empty;
+    
+    // Getters and setters for category color
+    public string Color { get; set; } = String.Empty;
 }
