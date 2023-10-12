@@ -1,3 +1,4 @@
+@using forum.ViewModels
 @model forum.ViewModels.PostsListViewModel
 @{
     ViewData["Title"] = "Search";
@@ -19,7 +20,13 @@
     {
         @foreach (var post in Model.Posts)
         {
-            <partial name="_PostCard" model="post"/>
+            var postCardViewModel = new PostCardViewModel
+            {
+                Post = post,
+                LimitContent = true
+            };
+            
+            <partial name="_PostCard" model="postCardViewModel"/>
         }
     }
     else

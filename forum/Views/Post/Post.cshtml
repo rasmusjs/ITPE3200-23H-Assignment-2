@@ -1,10 +1,19 @@
-﻿@model Post
+﻿@using forum.ViewModels
+@model Post
 @{
     ViewData["Title"] = Model.Title;
 }
 
 <div>
-    <partial name="_PostCard" model="Model"/>
+    @{
+        var postCardViewModel = new PostCardViewModel
+        {
+            Post = Model,
+            LimitContent = true
+        };
+    }
+    
+    <partial name="_PostCard" model="postCardViewModel"/>
     <div>
         <details>
             <summary>Add comment</summary>

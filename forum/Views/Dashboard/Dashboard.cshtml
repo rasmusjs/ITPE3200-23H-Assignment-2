@@ -1,3 +1,4 @@
+@using forum.ViewModels
 @model ApplicationUser
 
 
@@ -16,7 +17,13 @@
         {
             @foreach (var post in Model.Posts.OrderByDescending(post => post.DateCreated))
             {
-                <partial name="_PostCard" model="post"/>
+                var postCardViewModel = new PostCardViewModel
+                {
+                    Post = post,
+                    LimitContent = true
+                };
+                
+                <partial name="_PostCard" model="postCardViewModel"/>
             }
         }
         <p>Liked posts</p>
@@ -30,7 +37,13 @@
         {
             @foreach (var post in Model.LikedPosts.OrderByDescending(post => post.DateCreated))
             {
-                <partial name="_PostCard" model="post"/>
+                var postCardViewModel = new PostCardViewModel
+                {
+                    Post = post,
+                    LimitContent = true
+                };
+                
+                <partial name="_PostCard" model="postCardViewModel"/>
             }
         }
     </div>
