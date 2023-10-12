@@ -17,10 +17,13 @@ public class LoginModel : PageModel
 {
     private readonly ILogger<LoginModel> _logger;
     private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+    public LoginModel(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager,
+        ILogger<LoginModel> logger)
     {
         _signInManager = signInManager;
+        _userManager = userManager;
         _logger = logger;
     }
 
@@ -72,17 +75,27 @@ public class LoginModel : PageModel
 
 
         // The following codeblock is from https://stackoverflow.com/questions/75991569/how-to-login-with-either-username-or-email-in-an-asp-net-core-6-0 
-        if (Input.Email.IndexOf('@') > -1) // If the username contains an @ symbol, then it is an email
+        if (Input.Email.Contains('@')) // If the username contains an @ symbol, then it is an email
         {
             //Validate email format
             var emailRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
                              @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                              @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
             var re = new Regex(emailRegex);
-            if (!re.IsMatch(Input.Email)) ModelState.AddModelError("Email", "Email is not valid");
+            if (!re.IsMatch(Input.Email))
+            {
+                ModelState.AddModelError("Email", "Email is not valid");
+            }
+            else
+            {
+                // If the email is valid, try to find the username associated with the email
+                Input.Email = _userManager.FindByEmailAsync(Input.Email).Result.UserName ?? Input.Email; // If the email is not found, then the username is the email
+            }
         }
         else // If the username does not contain an @ symbol, then it is a username
         {
+            Console.WriteLine("User using username");
+
             //validate Username format
             var userNameRegex = @"^[a-zA-Z0-9]{3,20}$"; // Only letters and numbers, 3-20 characters
             var re = new Regex(userNameRegex);
