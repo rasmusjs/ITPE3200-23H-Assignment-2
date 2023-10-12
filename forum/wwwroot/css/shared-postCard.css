@@ -1,3 +1,8 @@
+.deleted-user {
+    color: var(--txt-2);
+    font-style: italic;
+}
+
 .shared-postCard {
     display: flex;
     flex-direction: column;
@@ -5,7 +10,7 @@
     border-radius: 6px;
     background-color: var(--fg-2);
     transition: var(--tr-default);
-    
+
     & .top {
         display: flex;
         flex-direction: row;
@@ -14,7 +19,7 @@
         padding: 16px 16px 0;
         border-radius: 6px 6px 0 0;
         background-color: var(--fg-1);
-        
+
         & * {
             font-size: var(--fs-s);
             color: var(--txt-2);
@@ -24,7 +29,7 @@
             display: flex;
             flex-direction: row;
             gap: 4px;
-            
+
             & a {
                 text-decoration: none;
                 height: min-content;
@@ -32,37 +37,37 @@
                 border-radius: 48px;
                 background-color: var(--fg-2);
                 transition: var(--tr-default);
-                
+
                 &:hover {
                     background-color: var(--fg-3);
                 }
             }
         }
-        
+
         & .creation-info {
             text-align: right;
-            
+
             & .user {
                 font-weight: bold;
             }
-            
+
             & .last-edited {
                 display: block;
                 font-style: italic;
             }
         }
     }
-    
+
     & .content {
         padding: 8px 16px 16px;
         background-color: var(--fg-1);
         border-radius: 0 0 6px 6px;
-        
+
         & div {
             position: relative;
             max-height: 200px;
             overflow: hidden;
-            
+
             &:after {
                 content: "";
                 position: absolute;
@@ -74,24 +79,24 @@
             }
         }
     }
-    
+
     & .bottom {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         margin-top: 4px;
         padding: 4px;
-        
+
         & * {
             font-size: var(--fs-s);
             font-weight: bold;
         }
-        
+
         > div {
             display: flex;
             flex-direction: row;
             gap: 4px;
-            
+
             & a {
                 text-decoration: none;
                 border-radius: 6px;
@@ -105,22 +110,22 @@
                     margin-right: 6px;
                     transition: var(--tr-default);
                 }
-                
+
                 &:hover {
                     color: var(--txt-1);
-                    
+
                     & i {
                         transform: scale(1.125);
                     }
                 }
-                
-                
+
+
             }
-            
+
             &.likes-comments {
                 & a {
                     background-color: transparent;
-                    
+
                     &:hover {
                         background-color: var(--fg-1);
                     }

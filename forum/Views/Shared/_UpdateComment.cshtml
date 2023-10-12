@@ -1,13 +1,13 @@
 @model Comment
 
-<form asp-controller="Post" asp-action="UpdateComment">
+<form asp-controller="Post" asp-action="UpdateComment" class="update-comment">
     <input type="hidden" asp-for="CommentId"/>
-
-    <div>
-        <label asp-for="Content">Content</label>
-        <textarea asp-for="Content" rows="1"></textarea>
-	    <span asp-validation-for="Content"></span>
+    <div class="form-group">
+        <label asp-for="Content">Edit:</label>
+        <textarea asp-for="Content" rows="3"></textarea>
+        <span asp-validation-for="Content" class="error"></span>
     </div>
-    
-    <button type="submit">Edit reply</button>
+    <div class="actions">
+        <button type="submit">Submit</button>
+    </div>
 </form>

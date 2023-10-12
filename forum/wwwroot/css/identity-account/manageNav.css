@@ -7,7 +7,7 @@
     border-bottom: 2px solid var(--txt-1);
     border-radius: 4px 4px 0 0;
     background-color: var(--fg-1);
-    
+
     & a {
         font-size: var(--fs-s);
 
@@ -16,15 +16,15 @@
             color: var(--txt-2);
             transition: var(--tr-default);
         }
-        
+
         &.active {
             background-color: var(--fg-2);
         }
-        
+
         &:hover {
             background-color: var(--fg-3);
         }
-        
+
         &.active,
         &:hover {
             & i {

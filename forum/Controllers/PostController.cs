@@ -1,50 +1,50 @@
-﻿using System.ComponentModel;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using forum.DAL;
-using Microsoft.AspNetCore.Mvc;
 using forum.Models;
 using forum.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Ganss.Xss;
-using Markdig;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace forum.Controllers;
 
 public class PostController : Controller
 {
-    // Connect the controller to the different models
-    private readonly IForumRepository<Post> _postRepository;
     private readonly IForumRepository<Category> _categoryRepository;
-    private readonly IForumRepository<Tag> _tags;
     private readonly IForumRepository<Comment> _commentRepository;
 
+
     private readonly ILogger<PostController> _logger; // Ikke satt opp enda!
+
+    // Connect the controller to the different models
+    private readonly IForumRepository<Post> _postRepository;
+    private readonly IForumRepository<Tag> _tags;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     // Constructor for Dependency Injection to the Data Access Layer from the different repositories
     public PostController(IForumRepository<Category> categoryRepository,
         IForumRepository<Tag> tagRepo, IForumRepository<Post> postRepository,
         IForumRepository<Comment> commentRepository,
+        UserManager<ApplicationUser> userManager,
         ILogger<PostController> logger)
     {
         _categoryRepository = categoryRepository;
         _tags = tagRepo;
         _postRepository = postRepository;
         _commentRepository = commentRepository;
+        _userManager = userManager;
         _logger = logger;
     }
+
 
     [HttpGet]
     [Authorize]
     public string GetUserId()
     {
         //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
-        var userId =
-            User.FindFirstValue(ClaimTypes
-                .NameIdentifier);
-        return userId;
+        return User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 
     // Method to refresh the post when user presses the like button
@@ -59,34 +59,31 @@ public class PostController : Controller
         return RedirectToAction("Post", "Post", new { id });
     }
 
+
+    [HttpGet]
     // Method for getting card view
-    public async Task<IActionResult> Card()
+    public async Task<IActionResult> Card(string sortby = "")
     {
         //Get all posts
-        var posts = await GetAllPosts();
+        var posts = await GetAllPosts(sortby);
 
         //If no posts found return NotFound
-        if (posts == null)
-        {
-            return NotFound("Item list not found");
-        }
+        if (posts == null) return NotFound("Item list not found");
 
         //Update session variable, used for determining which view to use
         HttpContext.Session.SetString("viewModel", "Card");
         return View(new PostsListViewModel(posts, "Card"));
     }
 
+    [HttpGet]
     // Method for getting compact view
-    public async Task<IActionResult> Compact()
+    public async Task<IActionResult> Compact(string sortby = "")
     {
         //Get all posts
-        var posts = await GetAllPosts();
+        var posts = await GetAllPosts(sortby);
 
         //If no posts found return NotFound
-        if (posts == null)
-        {
-            return NotFound("Item list not found");
-        }
+        if (posts == null) return NotFound("Item list not found");
 
         //Update session variable, used for determining which view to use
         HttpContext.Session.SetString("viewModel", "Compact");
@@ -94,10 +91,11 @@ public class PostController : Controller
     }
 
     // Method for fetching all posts. Used by Card() and Compact()
-    public async Task<IEnumerable<Post>?> GetAllPosts()
+    public async Task<IEnumerable<Post>?> GetAllPosts(string sortby = "")
     {
         // Get all posts
         var posts = await _postRepository.GetAllPosts();
+
 
         // If no posts, return NotFound
         if (posts == null)
@@ -105,6 +103,19 @@ public class PostController : Controller
             _logger.LogError("[PostController] GetAllPosts failed while executing _itemRepository.GetAll()");
             return null;
         }
+
+
+        posts = sortby switch
+        {
+            "newest" => posts.OrderByDescending(post => post.DateCreated),
+            "oldest" => posts.OrderBy(post => post.DateCreated),
+            "likes" => posts.OrderByDescending(post => post.TotalLikes),
+            "leastlikes" => posts.OrderBy(post => post.TotalLikes),
+            "comments" => posts.OrderByDescending(post => post.Comments!.Count),
+            "leastcomments" => posts.OrderBy(post => post.Comments!.Count),
+            _ => posts.Where(post => post.DateLastEdited > DateTime.Now.AddDays(-7))
+                .OrderByDescending(post => post.DateCreated)
+        };
 
         return posts;
     }
@@ -158,6 +169,13 @@ public class PostController : Controller
             var newPost = await _postRepository.Create(post);
 
             if (newPost == null) return NotFound("Post not created");
+
+            // Fetches the user
+            var user = await _userManager.FindByIdAsync(post.UserId);
+            user.Posts ??= new List<Post>();
+            user.Posts.Add(newPost);
+            // Updates the user attribute
+            await _userManager.UpdateAsync(user);
 
             // Redirects the user to the newly created post
             return GoToPost(newPost.PostId);
@@ -248,16 +266,20 @@ public class PostController : Controller
     [Authorize]
     public async Task<IActionResult> Update(Post post)
     {
+        var postViewModel = await GetPostViewModel();
+
+
+        if (post.UserId != GetUserId()) // Checks if the user is the owner of the post, // TODO: Add error message
+            return View(postViewModel); // Checks if the user is the owner of the post
+
+
         // Sanitizing the post content
         post.Content = new HtmlSanitizer().Sanitize(post.Content);
 
         // Check if model is valid before updating #TODO: Fix this
         if (!ModelState.IsValid)
-        {
             // Returns the user to create post if unsuccessful
-            var postViewModel = await GetPostViewModel();
             return View(postViewModel);
-        }
 
 
         // Remove all the olds tags from post, this is done since we could not find a way to use CASCADE update in EF Core
@@ -293,13 +315,12 @@ public class PostController : Controller
         var post = await _postRepository.GetTById(id);
         if (post == null) return NotFound();
 
-        if (post.UserId == GetUserId())
-        {
-            return View(post); // Checks if the user is the owner of the post
-        }
+        if (post.UserId != GetUserId()) // Checks if the user is the owner of the post, // TODO: Add error message
+            // If the user is not the owner of the post, return to the post
+            return RedirectToAction("Post", "Post", new { id });
 
-        // If the user is not the owner of the post, return to the post
-        return RedirectToAction("Post", "Post", new { id });
+        // Return the post to be deleted
+        return View(post);
     }
 
     // Post request for deleting post and confirming for the user
@@ -307,12 +328,19 @@ public class PostController : Controller
     [Authorize]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        // Delete post. If post not found, return NotFound
-        bool post = await _postRepository.Delete(id);
-        if (post == false) return NotFound();
+        var post = await _postRepository.GetTById(id);
+        if (post == null) return NotFound();
 
-        // Get the current view model from session. Returns card view by default
-        string viewModel = HttpContext.Session.GetString("viewModel") ?? "Card";
+        if (post.UserId != GetUserId()) // Checks if the user is the owner of the post, // TODO: Add error message
+            return RedirectToAction("Post", "Post", new { id }); // Send user back to the post if not owner
+
+        // Delete post. If post not found, return NotFound
+        var confimedDeleted = await _postRepository.Delete(id);
+        if (confimedDeleted == false) // TODO: Add error message
+            return NotFound();
+
+        // Get the current view model from session. Returns Card view by default
+        var viewModel = HttpContext.Session.GetString("viewModel") ?? "Card";
         return RedirectToAction(viewModel, "Post"); // Redirect to the post list
     }
 
@@ -322,13 +350,32 @@ public class PostController : Controller
     public async Task<IActionResult> CreateComment(Comment comment)
     {
         // Error handling to check if the model is correct
-        if (!ModelState.IsValid) return NotFound("Comment not created, comment invalid");
+        if (!ModelState.IsValid) // TODO: Add error message
+            return Redirect(
+                $"{Url.Action("Post", new { id = comment.PostId })}"); // Redirect to the post with the comment
 
         // Sets current time to comment and creates comment. Returns NotFound with message if there is no comment
         comment.DateCreated = DateTime.Now;
         comment.UserId = GetUserId();
+
+
         var newComment = await _commentRepository.Create(comment);
-        if (newComment == null) return NotFound("Comment not created");
+
+        if (newComment == null)
+        {
+            Console.Write("Could not create comment");
+            return Redirect(
+                $"{Url.Action("Post", new { id = comment.PostId })}"); // Redirect to the post with the comment
+        }
+
+        // Fetches the user
+        var user = await _userManager.FindByIdAsync(comment.UserId);
+
+        user.Comments ??= new List<Comment>();
+        user.Comments.Add(newComment);
+        // Updates the user attribute
+        await _userManager.UpdateAsync(user);
+
 
         /* Validation not working, fix later */
         return Redirect(
@@ -344,10 +391,19 @@ public class PostController : Controller
         var commentFromDb = await _commentRepository.GetTById(comment.CommentId);
 
         // Error handling if no comment is found
-        if (commentFromDb == null) return NotFound();
+        if (commentFromDb == null) // TODO: Add error message
+            return Redirect(
+                $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
+
+        // Checks if the user is the owner of the comment
+        if (commentFromDb.UserId != GetUserId()) // TODO: Add error message
+            return Redirect(
+                $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
 
         // Checks if the model for comments is valid and returns error message.
-        if (!ModelState.IsValid) return NotFound("Comment not updated, comment invalid");
+        if (!ModelState.IsValid) // TODO: Add error message
+            return Redirect(
+                $"{Url.Action("Post", new { id = commentFromDb.PostId })}#commentId-{commentFromDb.CommentId}"); // Redirect to the post with the comment
 
         // Updates the comment in the database
         commentFromDb.DateLastEdited = DateTime.Now;
@@ -364,16 +420,39 @@ public class PostController : Controller
     [Authorize]
     public async Task<IActionResult> LikePost(int id)
     {
-        // Fetches post based on id.
+        // Fetches post based on id
         var post = await _postRepository.GetTById(id);
 
         // Error handling if the post is not found
-        if (post == null) return NotFound();
+        if (post == null) return RedirectToAction(nameof(Refresh)); // TODO: Add error message
+
+        // Fetches the user
+        var user = await _userManager.FindByIdAsync(GetUserId());
+
+        // Error handling if the user is not found
+        if (user == null) return RedirectToPage("/Account/Login", new { area = "Identity" });
+
+        // Checks if the user has already liked the post
+        if (user.LikedPosts != null && user.LikedPosts.Any(t => t.PostId == id))
+        {
+            post.TotalLikes--; // Decrements like on the post
+            user.LikedPosts.Remove(post); // Removes the post from the user's liked posts
+            await _userManager.UpdateAsync(user); // Updates the user
+            await _postRepository.Update(post); // Updates the post
+            return RedirectToAction(nameof(Refresh)); // Refreshes the post
+        }
 
         // Increments like on the post
-        post.Likes++;
+        post.TotalLikes++;
 
-        // Updates post
+        // Adds the post to the user's liked posts
+        user.LikedPosts ??= new List<Post>();
+        user.LikedPosts.Add(post);
+
+        // Updates the user attribute
+        await _userManager.UpdateAsync(user);
+
+        // Updates the post
         await _postRepository.Update(post);
 
         // Refreshes the post
@@ -389,16 +468,72 @@ public class PostController : Controller
         var comment = await _commentRepository.GetTById(id);
 
         // Error handling if the comment is not found
-        if (comment == null) return NotFound();
+        if (comment == null) return NotFound(); // TODO: Add error message
+
+        // Fetches the user
+        var user = await _userManager.FindByIdAsync(GetUserId());
+
+        // Error handling if the user is not found
+        if (user == null) return RedirectToPage("/Account/Login", new { area = "Identity" });
+
+        // Checks if the user has already liked the comment
+        if (user.LikedComments != null && user.LikedComments.Any(t => t.CommentId == id))
+        {
+            comment.TotalLikes--; // Decrements like on the comment
+            user.LikedComments.Remove(comment); // Removes the comment from the user's liked comments
+            await _userManager.UpdateAsync(user); // Updates the user
+            await _commentRepository.Update(comment); // Updates the comment
+            return Redirect(
+                $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
+        }
 
         // Increments like on the comment
-        comment.Likes++;
+        comment.TotalLikes++;
 
-        // Updates the cimment
+        // Adds the comment to the user's liked comments
+        user.LikedComments ??= new List<Comment>();
+        user.LikedComments.Add(comment);
+
+        // Updates the user attribute
+        await _userManager.UpdateAsync(user);
+
+        // Updates the comment
         await _commentRepository.Update(comment);
 
-        //return RedirectToAction("Post", "Post", new { id = comment.PostId });
+        // Refreshes the post
         return Redirect(
             $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
+    }
+    // Get request for adding likes to a comment
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> DeleteComment(int id)
+    {
+        // Fetch the comment from database, based on id
+        var commentFromDb = await _commentRepository.GetTById(id);
+
+        // Error handling if no comment is found
+        if (commentFromDb == null) // TODO: Add error message
+            return Refresh();
+
+        // Checks if the user is the owner of the comment
+        if (commentFromDb.UserId != GetUserId()) // TODO: Add error message
+            return Redirect(
+                $"{Url.Action("Post", new { id = commentFromDb.PostId })}#commentId-{id}"); // Redirect to the post with the comment
+
+        // Checks if the model for comments is valid and returns error message.
+        if (!ModelState.IsValid)
+            return Redirect(
+                $"{Url.Action("Post", new { id = commentFromDb.PostId })}#commentId-{commentFromDb.CommentId}"); // Redirect to the post with the comment
+
+        // Updates the comment in the database
+        commentFromDb.DateLastEdited = DateTime.Now;
+        commentFromDb.Content = "[Deleted]";
+        await _commentRepository.Update(commentFromDb);
+
+        /* Validation not working, fix later */
+        return Redirect(
+            $"{Url.Action("Post", new { id = commentFromDb.PostId })}"); // Redirect to the post
     }
 }

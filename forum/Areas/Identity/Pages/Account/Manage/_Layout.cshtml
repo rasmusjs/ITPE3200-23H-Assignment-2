@@ -1,11 +1,12 @@
 ﻿@{
-    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
+    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout != null)
     {
         Layout = parentLayout.ToString();
     }
     else
     {
-        Layout = "/Areas/Identity/Pages/_Layout.cshtml";
+        Layout = "Manage/_Layout";
+        //Layout = "/Areas/Identity/Pages/_Layout.cshtml";
     }
 }
 
@@ -13,11 +14,11 @@
     <h1>Manage your account</h1>
     <h2>Change your account settings</h2>
     <div>
-        <partial name="_ManageNav" />
+        <partial name="_ManageNav"/>
         @RenderBody()
     </div>
 </div>
 
 @section Scripts {
-    @RenderSection("Scripts", required: false)
+    @RenderSection("Scripts", false)
 }

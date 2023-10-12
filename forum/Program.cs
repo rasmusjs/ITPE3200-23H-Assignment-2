@@ -1,11 +1,10 @@
 ﻿using forum.DAL;
-using Microsoft.EntityFrameworkCore;
 using forum.Models;
 using Jdenticon.AspNetCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
-using Microsoft.AspNetCore.Identity;
-
 
 var builder = WebApplication.CreateBuilder(args);
 //ForumDbContextFactory forumDbContextFactory = new();
@@ -70,8 +69,7 @@ builder.Services.AddScoped<IForumRepository<Tag>, ForumRepository<Tag>>();
 builder.Services.AddScoped<IForumRepository<Comment>, ForumRepository<Comment>>();
 
 
-/*
-var loggerConfiguration = new LoggerConfiguration()
+/*var loggerConfiguration = new LoggerConfiguration()
     .MinimumLevel.Information() // levels: Trace< Information < Warning < Error < Fatal
     .WriteTo.File($"Logs/app_{DateTime.Now:yyyy.MM.dd-HHmm_ss)}.log");
 
@@ -80,8 +78,7 @@ loggerConfiguration.Filter.ByExcluding(e => e.Properties.TryGetValue("SourceCont
                                             e.MessageTemplate.Text.Contains("Executed DbCommand"));
 
 var logger = loggerConfiguration.CreateLogger();
-builder.Logging.AddSerilog(logger);
-*/
+builder.Logging.AddSerilog(logger);*/
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

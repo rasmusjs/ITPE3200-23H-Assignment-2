@@ -267,7 +267,7 @@ namespace forum.Migrations
                     b.Property<DateTime?>("DateLastEdited")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Likes")
+                    b.Property<int>("TotalLikes")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("ParentCommentId")
@@ -309,7 +309,7 @@ namespace forum.Migrations
                     b.Property<DateTime?>("DateLastEdited")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Likes")
+                    b.Property<int>("TotalLikes")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")

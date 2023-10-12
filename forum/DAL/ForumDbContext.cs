@@ -1,8 +1,6 @@
 using forum.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 
 namespace forum.DAL;
 
@@ -29,10 +27,6 @@ public class ForumDbContext : IdentityDbContext<ApplicationUser>
     // Configuring the relationships and schemas for the entities in the database
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        /*
-        modelBuilder.Entity<Post>().HasOne(p => p.User).WithMany(u => u.Posts).HasForeignKey(p => p.UserId);
-        */
-
         // Configuring the many to many relationship between tags and posts
         // Source: https://learn.microsoft.com/en-us/ef/core/modeling/relationships/many-to-many
         // Link Posts and Tags using the help table PostTag
@@ -45,7 +39,9 @@ public class ForumDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<Post>().HasOne(p => p.Category).WithMany().HasForeignKey(p => p.CategoryId);
 
         // Configuring the one-to-many relationship between User and Posts
-        modelBuilder.Entity<Post>().HasOne(p => p.User).WithMany(u => u.Posts).HasForeignKey(p => p.UserId);
+        modelBuilder.Entity<Post>().HasOne(p => p.User).WithMany(u => u.Posts).HasForeignKey(p => p.UserId)
+            .OnDelete(DeleteBehavior
+                .SetNull); // If the user is deleted, the posts will not be deleted. User will show up a anonymous
 
 
         // Configuring the self-referencing relationship for Comments (For replies to comments)
@@ -55,13 +51,17 @@ public class ForumDbContext : IdentityDbContext<ApplicationUser>
             .HasForeignKey(c => c.ParentCommentId);
 
         // Configuring the one-to-many relationship between User and Comments
-        modelBuilder.Entity<Comment>().HasOne(p => p.User).WithMany(u => u.Comments).HasForeignKey(p => p.UserId);
+        modelBuilder.Entity<Comment>().HasOne(p => p.User).WithMany(u => u.Comments).HasForeignKey(p => p.UserId)
+            .OnDelete(DeleteBehavior
+                .SetNull); // If the user is deleted, the posts will not be deleted. User will show up a anonymous
+
 
         //Fixes
         //Unhandled exception. System.InvalidOperationException: The entity type 'IdentityUserLogin<string>' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.
         //Source: https://stackoverflow.com/questions/39576176/is-base-onmodelcreatingmodelbuilder-necessary
         base.OnModelCreating(modelBuilder);
     }
+
 
     // Enable Lazy Loading for loading data when it is needed
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

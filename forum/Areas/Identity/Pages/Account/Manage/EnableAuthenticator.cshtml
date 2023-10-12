@@ -5,6 +5,15 @@
     ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
 }
 
+<style>
+ /* Add padding for the QR code, to fix contrast issue when scanning. */
+    #qrCode > img {
+      display: block;
+      padding: 0.5rem;
+      background: white;
+    }
+</style>
+
 <partial name="_StatusMessage" for="StatusMessage"/>
 <h3>@ViewData["Title"]</h3>
 <div>

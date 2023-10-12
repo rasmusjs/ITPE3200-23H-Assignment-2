@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
 namespace forum.Models;
@@ -13,8 +14,10 @@ public class ApplicationUser : IdentityUser
 
     // navigation property
     public virtual List<Comment>? Comments { get; set; }
+
     // navigation property
-    //public List<Post>? LikedPosts { get; set; }
+    public virtual List<Post>? LikedPosts { get; set; }
+
     // navigation property
-    //public List<Comment>? LikedComments { get; set; }
+    public virtual List<Comment>? LikedComments { get; set; }
 }

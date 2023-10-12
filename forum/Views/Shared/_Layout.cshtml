@@ -1,4 +1,17 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var signedIn = false;
+}
+
+@if (SignInManager.IsSignedIn(User) && UserManager.GetUserAsync(User).Result != null)
+{
+    signedIn = true;
+}
+
+<!DOCTYPE html>
 <html lang="no">
 <head>
     <meta charset="utf-8"/>
@@ -12,6 +25,10 @@
     <link href="~/css/post-card.css" rel="stylesheet">
     <link href="~/css/post-compact.css" rel="stylesheet">
     <link href="~/css/shared-postCard.css" rel="stylesheet">
+    <link href="~/css/shared-comment.css" rel="stylesheet">
+    <link href="~/css/shared-comments.css" rel="stylesheet">
+    <link href="~/css/shared-createComment.css" rel="stylesheet">
+    <link href="~/css/shared-updateComment.css" rel="stylesheet">
     <link href="~/css/identity-account/main.css" rel="stylesheet">
     <link href="~/css/identity-account/manageNav.css" rel="stylesheet">
     <link href="~/css/identity-account/profile.css" rel="stylesheet">
@@ -39,12 +56,21 @@
                 <li>
                     <a asp-area="" asp-controller="Post" asp-action="Card" class="@IsActive("Post", "Card") or @IsActive("Post", "Compact") nav-btn-text">Posts</a>
                 </li>
+                @if (signedIn)
+                {
+                    <li>
+                        <a asp-area="" asp-controller="Dashboard" asp-action="Dashboard" class="@IsActive("Dashboard", "Dashboard") nav-btn-text">Dashboard</a>
+                    </li>
+                }
                 <li>
                     <a asp-area="" asp-controller="Search" asp-action="Index" class="@IsActive("Search", "Index") nav-btn-text">Search</a>
                 </li>
-                <li>
-                    <a asp-area="" asp-controller="Post" asp-action="Create" class="@IsActive("Post", "Create") nav-btn-text">Create Post</a>
-                </li>
+                @if (signedIn)
+                {
+                    <li>
+                        <a asp-area="" asp-controller="Post" asp-action="Create" class="@IsActive("Post", "Create") nav-btn-text">Create Post</a>
+                    </li>
+                }
             </ul>
             <div id="nav-login-container">
                 <partial name="_LoginPartial"/>
@@ -55,13 +81,14 @@
 <main>
     <div id="main-inner-container">
         @RenderBody()
-        @RenderSection("scripts", required: false)
+        @RenderSection("scripts", false)
     </div>
 </main>
 </body>
 </html>
 
 @functions {
+
     public string IsActive(string controller, string action)
     {
         var currentController = ViewContext.RouteData.Values["controller"] as string;
@@ -69,4 +96,5 @@
 
         return controller == currentController && action == currentAction ? "active" : "";
     }
+
 }

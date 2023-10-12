@@ -1,33 +1,84 @@
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
 @model Comment
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
-<div id="commentId-@Model.CommentId">
-    <h3>@Model.CommentId</h3>
-    <div>@Model.DateCreated</div>
-    <div>@Model.DateLastEdited</div>
-    <div>@Model.Likes</div>
-    <div>
-        <div>@Model.Content</div>
-        <a asp-controller="Post"
-           asp-action="LikeComment"
-           asp-route-id="@Model.CommentId">
-            Like
-        </a>
-        <details>
-            <summary>Edit</summary>
-            <div>
-                <partial name="_UpdateComment" model="Model"/>
+@{
+    var signedIn = false;
+}
+
+@if (SignInManager.IsSignedIn(User) && UserManager.GetUserAsync(User).Result != null)
+{
+    signedIn = true;
+}
+
+<div id="commentId-@Model.CommentId" class="comment">
+    <div class="main-content">
+        <span asp-validation-for="@Model.Content"></span>
+        <div class="creation-info">
+            <span class="user">
+                @if (Model.User != null)
+                {
+                    <a asp-controller="Search"
+                       asp-action="Search"
+                       asp-route-term="@Model.User.UserName">
+                        @Model.User.UserName
+                    </a>
+                }
+                else
+                {
+                    <span class="deleted-user" title="Deleted user">Anonymous</span>
+                }
+            </span>
+            <span>Created @CalculateTimeAgo(Model.DateCreated)</span>
+            @if (Model.DateLastEdited != null)
+            {
+                <span class="last-edited">(last edited @CalculateTimeAgo(@Model.DateLastEdited.Value))</span>
+            }
+        </div>
+        
+        <div class="content">@Model.Content</div>
+        
+        <div class="likes-and-comments">@Model.TotalLikes likes<span class="spacer">|</span>@Model.CommentReplies?.Count replies</div>
+        
+        <div class="bottom">
+            <a asp-controller="Post"
+               asp-action="LikeComment"
+               asp-route-id="@Model.CommentId"
+               class="clickable">
+                Like
+            </a>
+            
+            @if (signedIn)
+            {
+                <button class="reply-btn clickable">Reply</button>
+                <div class="reply-div">
+                    <partial name="_CreateComment" model="new Comment { ParentCommentId = Model.CommentId, PostId = Model.PostId }"/>
+                </div>
+            }
+            
+            <div class="right-side">
+                @* If the user is the owner of the comment show buttons for editing, deleting, signedIn is checked to prevent the buttons to be shown if User.Id is null *@
+                @if (Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) && signedIn)
+                {
+                    <button class="edit-btn clickable">Edit</button>
+                    <div class="edit-div">
+                        <partial name="_UpdateComment" model="Model"/>
+                    </div>
+                    
+                    <a asp-controller="Post"
+                       asp-action="DeleteComment"
+                       asp-route-id="@Model.CommentId"
+                       class="clickable">
+                        Delete
+                    </a>
+                }
             </div>
-        </details>
+        </div>
     </div>
-    <div>
-        <details>
-            <summary>Reply</summary>
-            <div>
-                <partial name="_CreateComment" model="new Comment { ParentCommentId = Model.CommentId, PostId = Model.PostId }"/>
-            </div>
-        </details>
-    </div>
-    <div style="padding-left: 50px">
+    
+    <div class="sub-comments">
         @if (Model.CommentReplies != null)
         {
             foreach (var comment in Model.CommentReplies)
@@ -37,3 +88,39 @@
         }
     </div>
 </div>
+
+@functions {
+
+    static string CalculateTimeAgo(DateTime date)
+    {
+        var timeDifference = DateTime.Now - date;
+
+        if (timeDifference.TotalMinutes < 1)
+        {
+            return "just now";
+        }
+        if (timeDifference.TotalMinutes < 60)
+        {
+            var minutesAgo = (int)timeDifference.TotalMinutes;
+            return $"{minutesAgo} {(minutesAgo == 1 ? "minute" : "minutes")} ago";
+        }
+        if (timeDifference.TotalHours < 24)
+        {
+            var hoursAgo = (int)timeDifference.TotalHours;
+            return $"{hoursAgo} {(hoursAgo == 1 ? "hour" : "hours")} ago";
+        }
+        if (timeDifference.TotalDays < 30)
+        {
+            var daysAgo = (int)timeDifference.TotalDays;
+            return $"{daysAgo} {(daysAgo == 1 ? "day" : "days")} ago";
+        }
+        if (timeDifference.TotalDays < 365)
+        {
+            var monthsAgo = (int)(timeDifference.TotalDays / 30);
+            return $"{monthsAgo} {(monthsAgo == 1 ? "month" : "months")} ago";
+        }
+        var yearsAgo = (int)(timeDifference.TotalDays / 365);
+        return $"{yearsAgo} {(yearsAgo == 1 ? "year" : "years")} ago";
+    }
+
+}

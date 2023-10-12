@@ -1,107 +1,108 @@
-﻿using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
-using forum.Models;
+﻿using forum.Models;
 using Microsoft.AspNetCore.Identity;
-using forum.Models;
 
 namespace forum.DAL;
 
 // Database initializer - Seeds the database with default content if there are no content in DB
 public static class DbInit
 {
-    public static void Seed(IApplicationBuilder app)
+    public static async void Seed(IApplicationBuilder app)
     {
         using var serviceScope = app.ApplicationServices.CreateScope();
-        ForumDbContext context = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
+        var context = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
 
-        context.Database.EnsureDeleted();
-        context.Database.EnsureCreated();
+        await context.Database.EnsureDeletedAsync();
+        await context.Database.EnsureCreatedAsync();
+
+
+        var categoriesList = new List<Category>
+        {
+            new() { Name = "Entertainment" },
+            new() { Name = "News" },
+            new() { Name = "Politics" },
+            new() { Name = "Science" },
+            new() { Name = "Sports" },
+            new() { Name = "Technology" },
+            new() { Name = "General" },
+            new() { Name = "Debugging" },
+            new() { Name = "Development" },
+            new() { Name = "Front End" },
+            new() { Name = "Game Development" },
+            new() { Name = "Back End" },
+        };
 
         if (!context.Categories.Any())
         {
-            var categoriesList = new List<Category>()
-            {
-                new()
-                {
-                    Name = "General",
-                },
-                new()
-                {
-                    Name = "News",
-                },
-                new()
-                {
-                    Name = "Sports",
-                },
-                new()
-                {
-                    Name = "Politics",
-                }
-            };
             context.AddRange(categoriesList);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
             Console.WriteLine("Categories added");
         }
 
         if (!context.Tags.Any())
         {
-            var tagsList = new List<Tag>()
+            var tagsList = new List<Tag>
             {
-                new()
-                {
-                    Name = "Java",
-                },
-                new()
-                {
-                    Name = "C#",
-                },
-                new()
-                {
-                    Name = "Python",
-                },
-                new()
-                {
-                    Name = "JavaScript",
-                },
-                new()
-                {
-                    Name = "Web",
-                },
-                new()
-                {
-                    Name = "Beginner",
-                },
+                new() { Name = "Beginner" },
+                new() { Name = "CSS" },
+                new() { Name = "C#" },
+                new() { Name = "Gaming" },
+                new() { Name = "Git" },
+                new() { Name = "Data Science" },
+                new() { Name = "Machine Learning" },
+                new() { Name = "Internet Of Things" },
+                new() { Name = "JavaScript" },
+                new() { Name = "PowerShell" },
+                new() { Name = "Python" },
+                new() { Name = "Unity" },
+                new() { Name = "Version Control" },
+                new() { Name = "Windows" },
+                new() { Name = "Java" }
             };
             context.AddRange(tagsList);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
             Console.WriteLine("Tags added");
         }
 
         if (!context.Users.Any())
         {
-            var userList = new List<ApplicationUser>()
+            UserManager<ApplicationUser> userManager =
+                serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            var userList = new List<ApplicationUser>
             {
                 new()
                 {
-                    UserName = "CoolGuy",
-                    PasswordHash = "AQAAAAEAACcQAA",
+                    UserName = "coolguy",
+                    Email = "coolguy@bracketbros.com",
                     CreationDate = DateTime.Now
                 },
                 new()
                 {
-                    UserName = "HackerMan",
-                    PasswordHash = "AQAAAAEAACcQAA",
+                    UserName = "hackerman",
+                    Email = "hackerman@bracketbros.com",
                     CreationDate = DateTime.Now
                 },
                 new()
                 {
-                    UserName = "TheBoss",
-                    PasswordHash = "AQAAAAEAACcQAA",
+                    UserName = "theboss",
+                    Email = "theboss@bracketbros.com",
                     CreationDate = DateTime.Now
                 }
             };
-            context.AddRange(userList);
-            context.SaveChanges();
+
+            string password = "Password123!";
+
+            // Add users to database via UserManager
+            foreach (var applicationUser in userList)
+            {
+                var result = await userManager.CreateAsync(applicationUser, password);
+                // Add user to role
+                Console.WriteLine(applicationUser.UserName + (result.Succeeded ? " created" : " failed"));
+            }
+
+
+            /*context.AddRange(userList);
+            await context.SaveChangesAsync();*/
             Console.WriteLine("Users added");
         }
 
@@ -109,137 +110,274 @@ public static class DbInit
         var addedUsers = context.Users.ToList();
         var tags = context.Tags.ToArray();
 
-        if (!context.Posts.Any() && addedUsers.Count > 0) // If there are no posts in the database and there are users
+        // Random number generator
+        Random random = new();
+
+        string RandomUser()
         {
-            var postsList = new List<Post>()
+            return addedUsers[random.Next(1, addedUsers.Count())].Id;
+        }
+
+
+        var postsList = new List<Post>
+        {
+            new()
             {
-                new()
+                Title = "\ud83d\udcdc Why JavaScript should be considered a gift from GOD! \ud83d\udcdc",
+                Content =
+                    "Ladies and gentlemen, gather 'round, for today, we embark on a divine journey through the ethereal realms of JavaScript! \ud83d\ude80\ud83c\udf0c\n\n##  **Unleash the Versatility**\nBehold, for JavaScript is the omnipotent chameleon of coding languages! It dances seamlessly not only in the sacred halls of browsers but also dons the crown of servers (praise be to Node.js) and blesses mobile apps with its touch (hail React Native)!\n\n##  **A Cosmic Force of Popularity**\nIt is not just a language; it's a celestial phenomenon! JavaScript's ubiquity transcends the boundaries of realms, making it one of the most widely-used languages, embraced by mortals and tech gods alike.\n\n##  **A Sacred Evolution**\nJavaScript is on an eternal quest for perfection. ES6, ES7, ES8... it evolves faster than the speed of light, adapting to the celestial needs of modern development.\n\n##  **The Art of Interactivity**\nWitness the magic as JavaScript breathes life into the lifeless! It grants websites the gift of interactivity and dynamism, ensnaring users in a spellbinding trance.\n\n##  **A Cosmic Job Market**\nBy embracing the holy scriptures of JavaScript, you open the gates to an abundance of job opportunities in the ever-expanding tech universe. Devs, rejoice! \ud83d\ude4c\ud83c\udf20\n\n##  **The Fellowship of Community**\nJavaScript's community is not just a community; it's a sacred brotherhood! On StackOverflow, GitHub, and countless other altars, the faithful gather to bestow wisdom upon the seeking souls.\n\nYes, it has its quirks (the enigmatic \"undefined\" and the mystical \"NaN\"), but what godly creation doesn't have its mysteries? \ud83e\udd37\u200d\u2642\ufe0f\ud83c\udf0c\n\nSo, let us kneel before JavaScript, the divine thread that weaves the very fabric of the web, a celestial gift that keeps on giving to us humble developers! \ud83d\ude4f\n\nDo you too believe in the divinity of JavaScript or have celestial tales to share? \ud83c\udf20\ud83d\udd2e #JavaScriptGift #DevotionToCode\n",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = random.Next(1, categoriesList.Count),
+                Tags = new List<Tag>
                 {
-                    Title = "\ud83d\udcdc Why JavaScript should be considered a gift from GOD! \ud83d\udcdc",
-                    Content =
-                        "Ladies and gentlemen, gather 'round, for today, we embark on a divine journey through the ethereal realms of JavaScript! \ud83d\ude80\ud83c\udf0c\n\n##  **Unleash the Versatility**\nBehold, for JavaScript is the omnipotent chameleon of coding languages! It dances seamlessly not only in the sacred halls of browsers but also dons the crown of servers (praise be to Node.js) and blesses mobile apps with its touch (hail React Native)!\n\n##  **A Cosmic Force of Popularity**\nIt is not just a language; it's a celestial phenomenon! JavaScript's ubiquity transcends the boundaries of realms, making it one of the most widely-used languages, embraced by mortals and tech gods alike.\n\n##  **A Sacred Evolution**\nJavaScript is on an eternal quest for perfection. ES6, ES7, ES8... it evolves faster than the speed of light, adapting to the celestial needs of modern development.\n\n##  **The Art of Interactivity**\nWitness the magic as JavaScript breathes life into the lifeless! It grants websites the gift of interactivity and dynamism, ensnaring users in a spellbinding trance.\n\n##  **A Cosmic Job Market**\nBy embracing the holy scriptures of JavaScript, you open the gates to an abundance of job opportunities in the ever-expanding tech universe. Devs, rejoice! \ud83d\ude4c\ud83c\udf20\n\n##  **The Fellowship of Community**\nJavaScript's community is not just a community; it's a sacred brotherhood! On StackOverflow, GitHub, and countless other altars, the faithful gather to bestow wisdom upon the seeking souls.\n\nYes, it has its quirks (the enigmatic \"undefined\" and the mystical \"NaN\"), but what godly creation doesn't have its mysteries? \ud83e\udd37\u200d\u2642\ufe0f\ud83c\udf0c\n\nSo, let us kneel before JavaScript, the divine thread that weaves the very fabric of the web, a celestial gift that keeps on giving to us humble developers! \ud83d\ude4f\n\nDo you too believe in the divinity of JavaScript or have celestial tales to share? \ud83c\udf20\ud83d\udd2e #JavaScriptGift #DevotionToCode\n",
-                    DateCreated = DateTime.Now,
-                    DateLastEdited = DateTime.Now,
-                    UserId = addedUsers[0].Id,
-                    CategoryId = 1,
-                    Tags = new List<Tag>
-                    {
-                        tags.First(t => t.Name == "JavaScript"),
-                        new()
-                        {
-                            Name = "Science"
-                        }
-                    }
+                    tags.First(t => t.Name == "JavaScript"),
+                }
+            },
+            new()
+            {
+                Title = "Exploring the Depths of PowerShell and Windows",
+                Content =
+                    "Welcome!, we'll venture into the fascinating world of PowerShell and Windows. Join me as we unlock the secrets of automation and discover the power of scripting in the Windows environment.",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = random.Next(1, categoriesList.Count),
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "PowerShell"),
+                    tags.First(t => t.Name == "Windows")
                 },
-                new()
+                Comments = new List<Comment>
                 {
-                    Title = "Second post",
-                    Content = "This is the second post",
-                    DateCreated = DateTime.Now,
-                    DateLastEdited = DateTime.Now,
-                    UserId = addedUsers[1].Id,
-                    CategoryId = 2,
-                    Tags = new List<Tag>()
+                    new()
                     {
-                        new()
-                        {
-                            Name = "PowerShell"
-                        },
-                        new()
-                        {
-                            Name = "Windows"
-                        }
-                    }
-                },
-                new()
-                {
-                    Title = "Third post",
-                    Content = "This is the third post",
-                    DateCreated = DateTime.Now,
-                    DateLastEdited = DateTime.Now,
-                    UserId = addedUsers[2].Id,
-                    CategoryId = 3,
-                    Tags = new List<Tag>
+                        Content = "This post is soo cool!",
+                        DateCreated = DateTime.Now,
+                        UserId = RandomUser(),
+                        TotalLikes = random.Next(99999)
+                    },
+                    new()
                     {
-                        tags.First(t => t.Name == "JavaScript"),
-                        tags.First(t => t.Name == "Web"),
-                        tags.First(t => t.Name == "Beginner"),
+                        Content = "I can't wait to learn more!",
+                        DateCreated = DateTime.Now,
+                        UserId = RandomUser(),
+                        TotalLikes = random.Next(99999)
+                    },
+                    new()
+                    {
+                        Content = "PowerShell is amazing!",
+                        DateCreated = DateTime.Now,
+                        UserId = RandomUser(),
+                        TotalLikes = random.Next(99999)
                     }
                 }
-            };
+            },
+            new()
+            {
+                Title = "Mastering Web Development",
+                Content =
+                    "Welcome noob! we'll embark on a journey into the exciting realm of JavaScript and web development. Whether you're a complete beginner or looking to reinforce your skills, this post is tailored just for you. Let's explore the fundamentals of JavaScript and how it plays a crucial role in creating dynamic web applications.",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = random.Next(1, categoriesList.Count),
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "JavaScript"),
+                    tags.First(t => t.Name == "Beginner")
+                }
+            },
+            new()
+            {
+                Title = "The Beauty of Python's Simplicity",
+                Content =
+                    "Explore the elegance of Python, a language that embraces simplicity and readability. Pythonic code is like poetry for programmers.",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = random.Next(1, categoriesList.Count),
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Python")
+                }
+            },
+            new()
+            {
+                Title = "The Art of Debugging: Finding the Needle in the Haystack",
+                Content =
+                    "Debugging is both an art and a science. Learn the techniques and tools that seasoned developers use to hunt down and fix bugs in their code.",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = random.Next(1, categoriesList.Count),
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Python")
+                }
+            },
+            new()
+            {
+                Title = "Diving into Data Science: A Beginner's Guide",
+                Content =
+                    "Interested in data science? Discover the essential concepts and tools you need to start your journey into the exciting world of data analysis and machine learning.",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = random.Next(1, categoriesList.Count),
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Data Science"),
+                    tags.First(t => t.Name == "Beginner"),
+                    tags.First(t => t.Name == "Machine Learning")
+                }
+            },
+            new()
+            {
+                Title = "The Power of Git: Version Control Made Easy",
+                Content =
+                    "Git is a developer's best friend. Learn how this version control system simplifies collaboration and tracking changes in your codebase.",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = random.Next(1, categoriesList.Count),
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Git"),
+                    tags.First(t => t.Name == "Version Control")
+                }
+            },
+
+            new()
+            {
+                Title = "Building Responsive Web Design with CSS Grid",
+                Content =
+                    "Dive into the world of CSS Grid and unlock the potential for creating stunning, responsive web layouts with ease.",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = random.Next(1, categoriesList.Count),
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "CSS")
+                }
+            },
+            new()
+            {
+                Title = "Exploring the Internet of Things (IoT)",
+                Content =
+                    "Get ready for a journey into the Internet of Things, where everyday objects are connected to the digital world. Discover the possibilities and challenges of IoT.",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = random.Next(1, categoriesList.Count),
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Internet Of Things")
+                }
+            },
+            new()
+            {
+                Title = "Game Development with Unity: Bringing Ideas to Life",
+                Content =
+                    "If you've ever dreamed of creating your own video game, Unity is the platform to make it happen. Explore the world of game development and start building your masterpiece.",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = random.Next(1, categoriesList.Count),
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Unity")
+                }
+            }
+        };
+
+        if (!context.Posts.Any() && addedUsers.Count > 0) // If there are no posts in the database and there are users
+        {
             context.AddRange(postsList);
-            context.SaveChanges();
-
-
+            await context.SaveChangesAsync();
             Console.WriteLine("Temp posts added");
         }
 
-        if (!context.Comments.Any() && !context.Posts.Any() && addedUsers.Count > 0)
+        //        if (!context.Comments.Any() && !context.Posts.Any() && addedUsers.Count > 0)
+        //         if ( /*!context.Comments.Any() &&*/ !context.Posts.Any() && addedUsers.Count > 0)
+        if (context.Posts.Any() && addedUsers.Count > 0) // If there are no posts in the database and there are users
         {
-            // Create some top-level comments
-            var comment1 = new Comment
+            List<Comment> comments = new List<Comment>();
+
+            //Taken from https://www.cardenhall.com/wp-content/uploads/2016/10/POSITIVE-COMMENTS-List.pdf
+            List<String> commentContent = new List<string>()
             {
-                Content = "This post is soo cool!",
-                DateCreated = DateTime.Now,
-                UserId = addedUsers[1].Id,
-                PostId = 1,
-                Likes = 420
+                "A powerful argument! I commend you for your quick thinking.",
+                "A splendid job! I commend you for your thorough work.",
+                "A well-developed theme! I knew you could do it!",
+                "An A-1 paper! I like how you've tackled this assignment.",
+                "Appreciated I like the way you're working.", "Astounding I like the way you've handled this.",
+                "Awesome I like the way you settle down to work.", "Beautiful I like your style.",
+                "Bravo I love your care.", "Brilliant I noticed that you got right down to work.",
+                "Dazzling Impressive", "Dedicated effort In fine style", "Delightful Incredible",
+                "Desirable It looks like you've put a lot of work into this.", "Exactly right! Keep it up.",
+                "Excellent Keep up the good work.", "Exceptional Magnificent", "Exciting Majestic thoughts",
+                "Exemplary Marvelous", "Exhilarating Meritorious", "Extraordinary Much better",
+                "Fabulous My goodness, how impressive!", "Fantastic Nice going", "Favorable Noble", "Fine Noteworthy",
+                "Fine job Now you've figured it out.", "First-rate An orderly paper", "Go to the head of the class.",
+                " Outstanding", "Good for you Phenomenal", "Good reasoning Praiseworthy",
+                "Good thinking Prestigious work", "Good work/Good job Proper", "Grand Purrrfect", "Great Remarkable",
+                "Great going Resounding results", "Honorable Respectable", "I appreciate your cooperation.",
+                " Right on target", "I appreciate your help.", " ", "Sensational",
+                "Sharp thinking This shows fine improvement.", "Spectacular This shows you've really been thinking.",
+                "Splendid Thorough", "Stupendous Thoughtful!", "Successful effort Tiptop", "Super Top-notch",
+                "Super job/Super work Top-notch work!", "Superb Very creative",
+                "Superior work/Superior job Very fine work", "Supreme Very interesting", "Terrific Very stylish",
+                "Terrific job Well thought out", "Thank you What a stylish paper!",
+                "Thank you for getting right to work.", " What careful work!", "Thank you for such a fine effort.",
+                " What neat work!", "That looks like it's going to be a good report.",
+                " Where have you been hiding all this talent?", "That was fun.", " Wonderful", "That's a good point.",
+                " Worthy", "That's a very good observation.", " You are really in touch with the feeling here.",
+                "That's an interesting point of view.", " You are showing that you were thinking.",
+                "That's an interesting way of looking at it.", " You make it look so easy.",
+                "That's certainly one way of looking at it.", " You must have been practicing.", "That's clever.",
+                " You really outdid yourself today.", "That's coming along nicely.", " You really scored here.",
+                "That's great! You're becoming an expert at this.", "That's quite an improvement.",
+                " You're on the ball today.", "That's really nice.", " You're on the right track now.", "That's right.",
+                " Good for you.", " You're really moving.", "That's the right answer.", " You're right on target.",
+                "That's very perceptive.", " You've come a long way with this one.",
+                "The results were worth all your hard work.", " You've got it now.", "This gets a four-star rating.",
+                " You've put in a full day today.", "This is a moving scene.", " You've really been paying attention.",
+                "This is a winner! You've shown a lot of patience with this.",
+                "This is fun, isn't it? Your hard work has paid off.", "This is prize-winning work.",
+                " Your remark shows a lot of sensitivity.", "This is quite an accomplishment.",
+                " Your style has spark.", "This is something special.", " Your work has such personality.",
+                "This kind of work pleases me very much.", "This paper has pizzazz!", "This really has flair."
             };
-            var comment2 = new Comment
+
+
+            foreach (var content in commentContent)
             {
-                Content = "I hate this post",
-                DateCreated = DateTime.Now,
-                UserId = addedUsers[2].Id,
-                PostId = 1,
-                Likes = 69
-            };
+                comments.Add(new Comment()
+                {
+                    Content = content, DateCreated = DateTime.Now, UserId = RandomUser(),
+                    PostId = random.Next(1, postsList.Count), TotalLikes = random.Next(9999)
+                });
+            }
+
 
             // Add comments to the database
-            context.Comments.AddRange(comment1, comment2);
-            context.SaveChanges();
+            context.Comments.AddRange(comments);
 
-            // Add replies to comments
-            var reply1 = new Comment
-            {
-                Content = "This is sooo right!!!",
-                DateCreated = DateTime.Now,
-                UserId = addedUsers[0].Id,
-                PostId = 1,
-                ParentCommentId = 1 // Set the parent comment ID
-            };
-            var reply2 = new Comment
-            {
-                Content = "You are stupid",
-                DateCreated = DateTime.Now,
-                UserId = addedUsers[1].Id,
-                PostId = 1,
-                ParentCommentId = 1 // Set the parent comment ID
-            };
-            var reply3 = new Comment
-            {
-                Content = "No, you are stupid!",
-                DateCreated = DateTime.Now,
-                UserId = addedUsers[1].Id,
-                PostId = 1,
-                ParentCommentId = 2 // Set the parent comment ID
-            };
-
-            context.Comments.AddRange(reply1, reply2, reply3);
-            context.SaveChanges();
-
-            // Adds reply to "reply1".
-            // Gets stored in the database but does not seem to create a relation.
-            // Also does not work when trying to add a reply in the website
-            var reply1Reply1 = new Comment
-            {
-                Content = "Actually, this is very wrong!",
-                DateCreated = DateTime.Now,
-                UserId = addedUsers[2].Id,
-                PostId = 1,
-                ParentCommentId = 3 // Set the parent comment ID
-            };
-            context.Comments.AddRange(reply1Reply1);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
+            Console.WriteLine("Temp comments added");
         }
     }
 }

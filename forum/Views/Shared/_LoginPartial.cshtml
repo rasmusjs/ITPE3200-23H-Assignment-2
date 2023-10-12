@@ -1,6 +1,4 @@
 @using Microsoft.AspNetCore.Identity
-@using Azure
-
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
@@ -19,7 +17,7 @@
             }
             else
             {
-                <img src="@Url.Identicon(@UserManager.GetUserName(User), size: 40)" alt="Identicon of @UserManager.GetUserName(User)" width="40" height="40"/>
+                <img src="@Url.Identicon(UserManager.GetUserName(User), 40)" alt="Identicon of @UserManager.GetUserName(User)" width="40" height="40"/>
             }
         </li>
         <li>

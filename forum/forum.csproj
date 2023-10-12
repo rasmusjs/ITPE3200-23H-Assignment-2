@@ -14,7 +14,7 @@
         <None Remove="Views\Item\"/>
         <None Remove="Views\Home\"/>
         <None Remove="Views\Shared\"/>
-        <None Remove="ForumDatabase.db" />
+        <None Remove="ForumDatabase.db"/>
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Logs\"/>
@@ -35,14 +35,14 @@
         <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\README.md"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="HtmlSanitizer" Version="8.0.718" />
-        <PackageReference Include="Jdenticon.AspNetCore" Version="3.1.2" />
+        <PackageReference Include="HtmlSanitizer" Version="8.0.718"/>
+        <PackageReference Include="Jdenticon.AspNetCore" Version="3.1.2"/>
         <PackageReference Include="Markdig" Version="0.33.0"/>
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.22"/>
         <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.22"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.11">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.11"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.11"/>

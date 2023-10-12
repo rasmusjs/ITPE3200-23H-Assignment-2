@@ -1,34 +1,23 @@
-using System.ComponentModel;
 using forum.DAL;
-using Microsoft.AspNetCore.Mvc;
 using forum.Models;
 using forum.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 namespace forum.Controllers;
 
 // Controller for the search function
 public class SearchController : Controller
 {
+    private readonly ILogger<SearchController> _logger; // Ikke satt opp enda!
+
     // Connect the controller to the different models
     private readonly IForumRepository<Post> _postRepository;
-    private readonly IForumRepository<Category> _categoryRepository;
-    private readonly IForumRepository<Tag> _tags;
-    private readonly IForumRepository<Comment> _commentRepository;
-
-    private readonly ILogger<PostController> _logger; // Ikke satt opp enda!
 
     // Constructor for Dependency Injection to the Data Access Layer from the different repositories
-    public SearchController(IForumRepository<Category> categoryRepository,
-        IForumRepository<Tag> tagRepo, IForumRepository<Post> postRepository,
-        IForumRepository<Comment> commentRepository,
-        ILogger<PostController> logger)
+    public SearchController(IForumRepository<Post> postRepository,
+        ILogger<SearchController> logger)
     {
-        _categoryRepository = categoryRepository;
-        _tags = tagRepo;
         _postRepository = postRepository;
-        _commentRepository = commentRepository;
         _logger = logger;
     }
 
@@ -38,7 +27,7 @@ public class SearchController : Controller
     {
         return Redirect(Request.Headers["Referer"].ToString());
     }
-    
+
     // Function to go to post based on id
     public IActionResult GoToPost(int id)
     {
@@ -50,12 +39,12 @@ public class SearchController : Controller
     public async Task<IActionResult> Search(string term)
     {
         // Error handling for the search term
-        if (string.IsNullOrWhiteSpace(term)) return Index(); // TODO: Redirect to error page
-        if (term.Length < 2) return Index(); // TODO: Redirect to error page
+        if (string.IsNullOrWhiteSpace(term)) return Refresh(); // TODO: Redirect to error page
+        if (term.Length < 2) return Refresh(); // TODO: Redirect to error page
 
         // Fetch all posts based on the search term
         var posts = await _postRepository.GetAllPostsByTerm(term);
-        
+
         // Error handling if the term does not provide any posts
         if (posts == null)
         {
