@@ -107,12 +107,12 @@ public class PostController : Controller
 
         posts = sortby switch
         {
+            "newest" => posts.OrderByDescending(post => post.DateCreated),
+            "oldest" => posts.OrderBy(post => post.DateCreated),
             "likes" => posts.OrderByDescending(post => post.TotalLikes),
             "leastlikes" => posts.OrderBy(post => post.TotalLikes),
             "comments" => posts.OrderByDescending(post => post.Comments!.Count),
             "leastcomments" => posts.OrderBy(post => post.Comments!.Count),
-            "newest" => posts.OrderByDescending(post => post.DateCreated),
-            "oldest" => posts.OrderBy(post => post.DateCreated),
             _ => posts.Where(post => post.DateLastEdited > DateTime.Now.AddDays(-7))
                 .OrderByDescending(post => post.DateCreated)
         };
