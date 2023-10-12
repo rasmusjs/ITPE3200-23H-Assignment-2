@@ -83,11 +83,15 @@
                     Delete
                 </a>
             }
-            <a asp-controller="Post"
-               asp-action="Post"
-               asp-route-id="@Model.Post.PostId">
-                Go to post
-            </a>
+            
+            @if (Model.HideGoToPost)
+            {
+                <a asp-controller="Post"
+                   asp-action="Post"
+                   asp-route-id="@Model.Post.PostId">
+                    Go to post
+                </a>
+            }
         </div>
     </div>
 </div>
