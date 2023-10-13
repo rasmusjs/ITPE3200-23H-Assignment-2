@@ -84,7 +84,7 @@
                 </a>
             }
             
-            @if (Model.HideGoToPost)
+            @if (!Model.HideGoToPost)
             {
                 <a asp-controller="Post"
                    asp-action="Post"

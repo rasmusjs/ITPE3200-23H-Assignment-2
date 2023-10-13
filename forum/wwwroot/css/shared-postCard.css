@@ -61,7 +61,12 @@
             text-align: right;
 
             & .user {
+                text-decoration: none;
                 font-weight: bold;
+
+                & a {
+                    text-decoration: none;
+                }
             }
 
             & .last-edited {

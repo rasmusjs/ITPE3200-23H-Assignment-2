@@ -111,6 +111,11 @@ input, textarea, select, button, .input, #file-upload-button {
     }
 }
 
+select {
+    padding-right: 8px;
+    border-right: 12px solid transparent;
+}
+
 input:not([type='checkbox'], [type='file']), textarea, select {
     outline: 2px solid transparent;
 

@@ -1,7 +1,6 @@
 .comment {    
     & .main-content {
         position: relative;
-        padding: 2px;
         border-radius: 6px;
         background-color: var(--fg-2);
         
@@ -20,6 +19,10 @@
             & .user {
                 font-weight: bold;
                 margin-right: auto;
+                
+                & a {
+                    text-decoration: none;
+                }
             }
     
             & .last-edited {
@@ -50,8 +53,7 @@
         .bottom {
             display: flex;
             flex-direction: row;
-            margin-top: 2px;
-            padding: 1px 2px;
+            padding: 4px 6px;
             
             & .clickable {
                 text-decoration: none;
