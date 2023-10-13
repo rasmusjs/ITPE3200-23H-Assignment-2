@@ -1,7 +1,7 @@
-#post-card {
+.post-compact {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
 
     & .main-header {
         display: flex;
@@ -12,34 +12,11 @@
         & .title {
             margin: 0 !important;
         }
-
-        & .change-view-link {
-            text-decoration: none;
-            width: min-content;
-            border-radius: 6px;
-            padding: 12px 18px;
-            background-color: var(--fg-2);
-            white-space: nowrap;
-            transition: var(--tr-default);
-
-            & i {
-                margin-left: 16px;
-                transition: var(--tr-default);
-            }
-
-            &:hover {
-                background-color: var(--fg-3);
-
-                & i {
-                    transform: scale(1.125);
-                }
-            }
-        }
     }
 
     & .posts {
         display: flex;
         flex-direction: column;
-        gap: 24px;
+        gap: 20px;
     }
 }

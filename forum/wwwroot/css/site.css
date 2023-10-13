@@ -100,6 +100,7 @@ input, textarea, select, button, .input, #file-upload-button {
     color: var(--txt-1);
     background-color: var(--fg-1);
     transition: var(--tr-default);
+    line-height: 19px;
 
     &:hover {
         background-color: var(--fg-2);
@@ -186,6 +187,11 @@ button {
             }
         }
     }
+}
+
+.deleted-user {
+    color: var(--txt-2);
+    font-style: italic;
 }
 
 nav {
