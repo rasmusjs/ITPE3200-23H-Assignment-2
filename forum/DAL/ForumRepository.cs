@@ -1,5 +1,6 @@
 ﻿using forum.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace forum.DAL;
 
@@ -38,6 +39,9 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
 
     public async Task<ApplicationUser?> GetUserActivity(string userId)
     {
+        // Checks if the user id is null or empty
+        if (userId.IsNullOrEmpty()) return null;
+
         // Tries to retrieve all activity from the database as object
         try
         {
