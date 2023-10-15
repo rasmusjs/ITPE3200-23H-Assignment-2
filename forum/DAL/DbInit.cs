@@ -11,13 +11,13 @@ public static class DbInit
         using var serviceScope = app.ApplicationServices.CreateScope();
         var context = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
 
-        await context.Database.EnsureDeletedAsync();
+        //await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
 
 
         var categoriesList = new List<Category>
         {
-            new() { Name = "Entertainment", Color = "#a83432"},
+            new() { Name = "Entertainment", Color = "#a83432" },
             new() { Name = "News", Color = "#a85b32" },
             new() { Name = "Politics", Color = "#a89e32" },
             new() { Name = "Science", Color = "#4ca832" },
@@ -150,30 +150,6 @@ public static class DbInit
                 {
                     tags.First(t => t.Name == "PowerShell"),
                     tags.First(t => t.Name == "Windows")
-                },
-                Comments = new List<Comment>
-                {
-                    new()
-                    {
-                        Content = "This post is soo cool!",
-                        DateCreated = DateTime.Now,
-                        UserId = RandomUser(),
-                        TotalLikes = random.Next(99999)
-                    },
-                    new()
-                    {
-                        Content = "I can't wait to learn more!",
-                        DateCreated = DateTime.Now,
-                        UserId = RandomUser(),
-                        TotalLikes = random.Next(99999)
-                    },
-                    new()
-                    {
-                        Content = "PowerShell is amazing!",
-                        DateCreated = DateTime.Now,
-                        UserId = RandomUser(),
-                        TotalLikes = random.Next(99999)
-                    }
                 }
             },
             new()
@@ -310,9 +286,8 @@ public static class DbInit
             Console.WriteLine("Temp posts added");
         }
 
-        //        if (!context.Comments.Any() && !context.Posts.Any() && addedUsers.Count > 0)
-        //         if ( /*!context.Comments.Any() &&*/ !context.Posts.Any() && addedUsers.Count > 0)
-        if (context.Posts.Any() && addedUsers.Count > 0) // If there are no posts in the database and there are users
+        if (context.Posts.Any() && addedUsers.Count > 0 &&
+            !context.Comments.Any()) // If there are no posts in the database and there are users
         {
             List<Comment> comments = new List<Comment>();
 
@@ -368,7 +343,7 @@ public static class DbInit
                 comments.Add(new Comment()
                 {
                     Content = content, DateCreated = DateTime.Now, UserId = RandomUser(),
-                    PostId = random.Next(1, postsList.Count), TotalLikes = random.Next(9999)
+                    PostId = random.Next(1, postsList.Count), TotalLikes = random.Next(999)
                 });
             }
 
