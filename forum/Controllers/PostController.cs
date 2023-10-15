@@ -100,7 +100,7 @@ public class PostController : Controller
         // If no posts, return NotFound
         if (posts == null)
         {
-            _logger.LogError("[PostController] GetAllPosts failed while executing _itemRepository.GetAll()");
+            _logger.LogError("[PostController] GetAllPosts failed while executing GetAll()");
             return null;
         }
 
@@ -126,10 +126,11 @@ public class PostController : Controller
         var post = await _postRepository.GetPostById(id, GetUserId());
 
         // If no post for the specified id, return NotFound
-        if (post == null) return NotFound();
-
-        //Retrieve comments for post
-        //await _commentRepository.GetCommentsByPostId(id);
+        if (post == null)
+        {
+            _logger.LogError("[PostController] Post failed, while executing GetPostById()");
+            return NotFound("Post not found, cannot show post");
+        }
 
         return View(post);
     }
@@ -148,7 +149,7 @@ public class PostController : Controller
     [Authorize]
     public async Task<IActionResult> Create(Post post)
     {
-        // Initial values for the post
+        // Set initial values for the post
         post.DateCreated = DateTime.Now;
         post.DateLastEdited = DateTime.Now;
         post.UserId = GetUserId();
@@ -165,13 +166,21 @@ public class PostController : Controller
         // Checks if the post object is valid per the post model and creates the object or return NotFound.
         if (ModelState.IsValid)
         {
+            // Try to create the post
             var newPost = await _postRepository.Create(post);
 
-            if (newPost == null) return NotFound("Post not created");
+            // If the post is not created, return 422 Unprocessable Content
+            if (newPost == null)
+            {
+                _logger.LogError("[PostController] Create failed, while executing Create()");
+                return StatusCode(422, "Post not created successfully");
+            }
 
             // Fetches the user
             var user = await _userManager.FindByIdAsync(post.UserId);
+            // If the user has no posts, create a new list of posts
             user.Posts ??= new List<Post>();
+            // Adds the post to the user's posts
             user.Posts.Add(newPost);
             // Updates the user attribute
             await _userManager.UpdateAsync(user);
@@ -269,16 +278,14 @@ public class PostController : Controller
 
 
         if (post.UserId != GetUserId()) // Checks if the user is the owner of the post, // TODO: Add error message
-            return View(postViewModel); // Checks if the user is the owner of the post
+            return View(postViewModel);
 
 
         // Sanitizing the post content
         post.Content = new HtmlSanitizer().Sanitize(post.Content);
 
-        // Check if model is valid before updating #TODO: Fix this
-        if (!ModelState.IsValid)
-            // Returns the user to create post if unsuccessful
-            return View(postViewModel);
+        // Check if model is valid before updating
+        if (!ModelState.IsValid) return View(postViewModel);
 
 
         // Remove all the olds tags from post, this is done since we could not find a way to use CASCADE update in EF Core
@@ -295,8 +302,7 @@ public class PostController : Controller
         // Inspiration for how to get the selected tags
         var allTags = await _tags.GetAll();
         if (allTags != null && post.TagsId != null)
-            post.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId))
-                .ToList(); // Correct way to get the selected tags???
+            post.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId)).ToList();
 
         // Update post
         if (!await _postRepository.Update(post)) return NotFound("Post not found, cannot update post");
@@ -334,8 +340,8 @@ public class PostController : Controller
             return RedirectToAction("Post", "Post", new { id }); // Send user back to the post if not owner
 
         // Delete post. If post not found, return NotFound
-        var confimedDeleted = await _postRepository.Delete(id);
-        if (confimedDeleted == false) // TODO: Add error message
+        var confirmedDeleted = await _postRepository.Delete(id);
+        if (confirmedDeleted == false) // TODO: Add error message
             return NotFound();
 
         // Get the current view model from session. Returns Card view by default
@@ -362,7 +368,6 @@ public class PostController : Controller
 
         if (newComment == null)
         {
-            Console.Write("Could not create comment");
             return Redirect(
                 $"{Url.Action("Post", new { id = comment.PostId })}"); // Redirect to the post with the comment
         }
@@ -375,8 +380,6 @@ public class PostController : Controller
         // Updates the user attribute
         await _userManager.UpdateAsync(user);
 
-
-        /* Validation not working, fix later */
         return Redirect(
             $"{Url.Action("Post", new { id = newComment.PostId })}#commentId-{newComment.CommentId}"); // Redirect to the post with the comment
     }
