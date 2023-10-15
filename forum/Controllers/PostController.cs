@@ -47,6 +47,7 @@ public class PostController : Controller
         return User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 
+
     // Method to refresh the post when user presses the like button
     public IActionResult Refresh()
     {
@@ -94,8 +95,7 @@ public class PostController : Controller
     public async Task<IEnumerable<Post>?> GetAllPosts(string sortby = "")
     {
         // Get all posts
-        var posts = await _postRepository.GetAllPosts();
-
+        var posts = await _postRepository.GetAllPosts(GetUserId());
 
         // If no posts, return NotFound
         if (posts == null)
@@ -118,17 +118,18 @@ public class PostController : Controller
         return posts;
     }
 
+
     // Method for fetching post by id
     public async Task<IActionResult> Post(int id)
     {
         // Fetch post based on provided id
-        var post = await _postRepository.GetTById(id);
+        var post = await _postRepository.GetPostById(id, GetUserId());
 
         // If no post for the specified id, return NotFound
         if (post == null) return NotFound();
 
         //Retrieve comments for post
-        await _commentRepository.GetCommentsByPostId(id);
+        //await _commentRepository.GetCommentsByPostId(id);
 
         return View(post);
     }

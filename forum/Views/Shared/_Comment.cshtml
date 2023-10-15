@@ -37,19 +37,26 @@
                 <span class="last-edited">(last edited @CalculateTimeAgo(@Model.DateLastEdited.Value))</span>
             }
         </div>
-        
+
         <div class="content">@Model.Content</div>
-        
+
         <div class="likes-and-comments">@Model.TotalLikes likes<span class="spacer">|</span>@Model.CommentReplies?.Count replies</div>
-        
+
         <div class="bottom">
             <a asp-controller="Post"
                asp-action="LikeComment"
                asp-route-id="@Model.CommentId"
                class="clickable">
-                Like
+                @if (@Model.IsLiked)
+                {
+                    <span style="color: #4CAF50">Liked</span>
+                }
+                else
+                {
+                    <span>Like</span>
+                }
             </a>
-            
+
             @if (signedIn)
             {
                 <button class="reply-btn clickable">Reply</button>
@@ -57,7 +64,7 @@
                     <partial name="_CreateComment" model="new Comment { ParentCommentId = Model.CommentId, PostId = Model.PostId }"/>
                 </div>
             }
-            
+
             <div class="right-side">
                 @* If the user is the owner of the comment show buttons for editing, deleting, signedIn is checked to prevent the buttons to be shown if User.Id is null *@
                 @if (Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) && signedIn)
@@ -66,7 +73,7 @@
                     <div class="edit-div">
                         <partial name="_UpdateComment" model="Model"/>
                     </div>
-                    
+
                     <a asp-controller="Post"
                        asp-action="DeleteComment"
                        asp-route-id="@Model.CommentId"
@@ -77,7 +84,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="sub-comments">
         @if (Model.CommentReplies != null)
         {

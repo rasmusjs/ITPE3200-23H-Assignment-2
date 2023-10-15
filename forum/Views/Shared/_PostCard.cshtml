@@ -61,8 +61,18 @@
             <a asp-controller="Post"
                asp-action="LikePost"
                asp-route-id="@Model.Post.PostId">
-                <i class="fa-solid fa-thumbs-up"></i>@Model.Post.TotalLikes likes
+                @if (@Model.Post.IsLiked)
+                {
+                    <i class="fa-solid fa-thumbs-up" style="color: #4CAF50"></i>
+                }
+                else
+                {
+                    <i class="fa-solid fa-thumbs-up"></i>
+                }
+                @Model.Post.TotalLikes likes
             </a>
+
+
             <a asp-controller="Post"
                asp-action="Post"
                asp-route-id="@Model.Post.PostId">
@@ -83,7 +93,7 @@
                     Delete
                 </a>
             }
-            
+
             @if (!Model.HideGoToPost)
             {
                 <a asp-controller="Post"

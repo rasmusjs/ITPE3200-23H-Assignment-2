@@ -39,6 +39,8 @@ public class Post
     // navigation property
     [NotMapped] [Required] public virtual List<int>? TagsId { get; set; } // ony used for creating a post
 
+    [NotMapped] public bool IsLiked { get; set; } // only used for visualizing a post like in the view
+
     // navigation property
     public virtual List<Tag>? Tags { get; set; }
 

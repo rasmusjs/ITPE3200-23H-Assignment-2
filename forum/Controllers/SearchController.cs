@@ -1,6 +1,8 @@
+using System.Security.Claims;
 using forum.DAL;
 using forum.Models;
 using forum.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace forum.Controllers;
@@ -19,6 +21,14 @@ public class SearchController : Controller
     {
         _postRepository = postRepository;
         _logger = logger;
+    }
+    
+    [HttpGet]
+    [Authorize]
+    public string GetUserId()
+    {
+        //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
+        return User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 
     // Function to refresh
@@ -43,7 +53,7 @@ public class SearchController : Controller
         if (term.Length < 2) return Refresh(); // TODO: Redirect to error page
 
         // Fetch all posts based on the search term
-        var posts = await _postRepository.GetAllPostsByTerm(term);
+        var posts = await _postRepository.GetAllPostsByTerm(term, GetUserId());
 
         // Error handling if the term does not provide any posts
         if (posts == null)

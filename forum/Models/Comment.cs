@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace forum.Models;
 
@@ -29,6 +30,7 @@ public class Comment
     // navigation property
     public virtual ApplicationUser? User { get; set; }
 
+    [NotMapped] public bool IsLiked { get; set; } // only used for visualizing a comment like in the view
     public int? ParentCommentId { get; set; } // Self-referencing foreign key
 
     // navigation property
