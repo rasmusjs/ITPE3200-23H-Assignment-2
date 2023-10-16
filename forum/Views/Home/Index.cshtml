@@ -20,6 +20,12 @@
            asp-route-term="@category.Name"
            class="category" style="background-color: @category.Color">
             @category.Name
+
+            @if (category.PicturePath != "")
+            {
+                <img  style=" max-width: 512px; height: auto;" src="@category.PicturePath" alt="Picture of @category.Name">
+            }
+
         </a>
     }
 

@@ -1,9 +1,20 @@
 @model forum.ViewModels.AdminDashboardViewModel
 
-<h1>Categories</h1>
-<form asp-action="NewCategory">
+<h1 xmlns="http://www.w3.org/1999/html">Categories</h1>
+<form asp-action="NewCategory" enctype="multipart/form-data">
     <input required asp-for="@Model.Category!.Name"/>
     <input required type="color" asp-for="@Model.Category!.Name"/>
+
+    <input type="file" id="CategoryImageInput"
+           accept=".png,.jpg,.jpeg,.gif,.tif"
+           asp-for="@Model.Category!.PictureBytes"
+           class="img-input"
+           onchange="document.getElementById('CategoryImage').src = window.URL.createObjectURL(this.files[0])"/>
+    <span asp-validation-for="@Model.Category!.PictureBytes" class="error"></span>
+
+    <label asp-for="@Model.Category!.PicturePath"></label>
+    <input asp-for="@Model.Category!.PicturePath"/>
+
     <input type="submit" value="Add"/>
 </form>
 
@@ -13,6 +24,11 @@
         <input hidden="" asp-for="@category.CategoryId"/>
         <input onchange="this.form.submit()" asp-for="@category.Name"/>
         <input onchange="this.form.submit()" type="color" asp-for="@category.Color"/>
+
+        @if (category.PicturePath != "")
+        {
+            <img src="@category.PicturePath" alt="Picture of @category.Name">
+        }
     </form>
     <a asp-action="DeleteCategory"
        asp-route-id="@category.CategoryId"

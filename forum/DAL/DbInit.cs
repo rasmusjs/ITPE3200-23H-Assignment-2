@@ -18,7 +18,12 @@ public static class DbInit
         var categoriesList = new List<Category>
         {
             new() { Name = "Entertainment", Color = "#a83432" },
-            new() { Name = "News", Color = "#a85b32" },
+            new()
+            {
+                Name = "News", Color = "#a85b32",
+                PicturePath =
+                    "https://play-lh.googleusercontent.com/OABfRfKxyvf6PUg_6YBJXvbKSbegFsBKvFDEm5jOA0rC5k1la-OwmnWz6GK55vr3EGA"
+            },
             new() { Name = "Politics", Color = "#a89e32" },
             new() { Name = "Science", Color = "#4ca832" },
             new() { Name = "Sports", Color = "#32a85f" },
@@ -28,9 +33,28 @@ public static class DbInit
             new() { Name = "Development", Color = "#3236a8" },
             new() { Name = "Front End", Color = "#6932a8" },
             new() { Name = "Game Development", Color = "#9a32a8" },
-            new() { Name = "Back End", Color = "#a83281" },
+            new()
+            {
+                Name = "Back End", Color = "#a83281",
+                PicturePath = "https://kinsta.com/wp-content/uploads/2021/11/back-end-developer-1024x512.png"
+            },
         };
 
+        /*   var categoriesList = new List<Category>
+           {
+           new() { Name = "Entertainment", Color = "#a83432" },
+           new() { Name = "News", Color = "#a85b32" },
+           new() { Name = "Politics", Color = "#a89e32" },
+           new() { Name = "Science", Color = "#4ca832" },
+           new() { Name = "Sports", Color = "#32a85f" },
+           new() { Name = "Technology", Color = "#32a88c" },
+           new() { Name = "General", Color = "#329ea8" },
+           new() { Name = "Debugging", Color = "#3269a8" },
+           new() { Name = "Development", Color = "#3236a8" },
+           new() { Name = "Front End", Color = "#6932a8" },
+           new() { Name = "Game Development", Color = "#9a32a8" },
+           new() { Name = "Back End", Color = "#a83281" },
+           };*/
         if (!context.Categories.Any())
         {
             context.AddRange(categoriesList);

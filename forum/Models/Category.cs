@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace forum.Models;
 
@@ -15,7 +16,11 @@ public class Category
 
     // Getters and setters for category name
     public string Name { get; set; } = String.Empty;
-    
+
     // Getters and setters for category color
     public string Color { get; set; } = String.Empty;
+
+    // Getters and setters for category PicturePath
+    public string? PicturePath { get; set; } = String.Empty;
+    [NotMapped] public byte[]? PictureBytes { get; set; } = null!;
 }

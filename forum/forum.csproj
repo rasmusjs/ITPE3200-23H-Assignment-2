@@ -19,6 +19,7 @@
     <ItemGroup>
         <Folder Include="Logs\"/>
         <Folder Include="Views\Home\"/>
+        <Folder Include="wwwroot\images\categories\" />
         <Folder Include="wwwroot\lib\fontawesome\"/>
     </ItemGroup>
     <ItemGroup>
