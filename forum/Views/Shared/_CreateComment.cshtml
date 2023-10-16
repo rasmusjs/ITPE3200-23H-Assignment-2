@@ -1,11 +1,12 @@
 @model Comment
 
+
 <form asp-controller="Post" asp-action="CreateComment" class="create-comment">
     <input type="hidden" asp-for="ParentCommentId"/>
     <input type="hidden" asp-for="PostId"/>
     <div class="form-group">
         <label asp-for="Content">Reply/comment</label>
-        <textarea required asp-for="Content" rows="3"></textarea>
+        <textarea id="comment-content" title="The comment can contain numbers or letters and be upto 512 characters." required asp-for="Content" rows="3"></textarea>
         <span asp-validation-for="Content" class="error"></span>
     </div>
     <div class="actions">
