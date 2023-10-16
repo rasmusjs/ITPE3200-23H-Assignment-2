@@ -63,6 +63,25 @@ public static class DbInit
             Console.WriteLine("Tags added");
         }
 
+        if (!context.Roles.Any())
+        {
+            var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var roleNames = new[] { "Admin", "User" };
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExist = await roleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    var result = await roleManager.CreateAsync(new IdentityRole(roleName));
+                    Console.WriteLine(roleName + (result.Succeeded ? " created" : " failed"));
+                }
+            }
+
+            Console.WriteLine("Roles added");
+        }
+
+
         if (!context.Users.Any())
         {
             UserManager<ApplicationUser> userManager =
@@ -95,14 +114,14 @@ public static class DbInit
             // Add users to database via UserManager
             foreach (var applicationUser in userList)
             {
+                // Add user to database
                 var result = await userManager.CreateAsync(applicationUser, password);
-                // Add user to role
                 Console.WriteLine(applicationUser.UserName + (result.Succeeded ? " created" : " failed"));
+                // Add role to the user
+                var resultRole = await userManager.AddToRoleAsync(applicationUser, "User");
+                Console.WriteLine(applicationUser.UserName + (resultRole.Succeeded ? " added" : " failed"));
             }
 
-
-            /*context.AddRange(userList);
-            await context.SaveChangesAsync();*/
             Console.WriteLine("Users added");
         }
 

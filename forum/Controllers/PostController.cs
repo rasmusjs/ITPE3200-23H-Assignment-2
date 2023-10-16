@@ -43,8 +43,14 @@ public class PostController : Controller
     [Authorize]
     public string GetUserId()
     {
-        //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
-        return User.FindFirstValue(ClaimTypes.NameIdentifier);
+        // This is needed to see if the user actually is exist in the database
+        if (_userManager.GetUserAsync(User).Result != null)
+        {
+            //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
+            return User.FindFirstValue(ClaimTypes.NameIdentifier);
+        }
+
+        return "";
     }
 
 

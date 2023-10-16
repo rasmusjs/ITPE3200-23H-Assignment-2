@@ -81,7 +81,7 @@ public class RegisterModel : PageModel
             var user = CreateUser();
 
             Input.UserName = Input.UserName.ToLower(); // Convert username to lowercase
-            
+
 
             await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
             await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -90,6 +90,10 @@ public class RegisterModel : PageModel
             if (result.Succeeded)
             {
                 _logger.LogInformation("User created a new account with password.");
+
+                // Add role to the user
+                var resultRole = await _userManager.AddToRoleAsync(user, "User");
+                if (!resultRole.Succeeded) _logger.LogInformation("User could not be added to role.");
 
                 var userId = await _userManager.GetUserIdAsync(user);
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
