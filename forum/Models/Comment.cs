@@ -10,7 +10,7 @@ public class Comment
     public int CommentId { get; set; }
 
     // Regex for error handling comment content
-    [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ. \-]{2,512}",
+    [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ. ?!\-]{2,512}",
         ErrorMessage = "The comment can contain numbers or letters and be upto 512 characters.")]
 
     // Getters and setters for data in comments

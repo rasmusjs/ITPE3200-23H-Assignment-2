@@ -5,7 +5,7 @@
     <input type="hidden" asp-for="PostId"/>
     <div class="form-group">
         <label asp-for="Content">Reply/comment</label>
-        <textarea asp-for="Content" rows="3"></textarea>
+        <textarea required asp-for="Content" rows="3"></textarea>
         <span asp-validation-for="Content" class="error"></span>
     </div>
     <div class="actions">

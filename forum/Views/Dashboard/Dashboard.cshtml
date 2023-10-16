@@ -23,7 +23,7 @@
                     LimitContent = true,
                     HideGoToPost = false
                 };
-                
+
                 <partial name="_PostCard" model="postCardViewModel"/>
             }
         }
@@ -38,13 +38,15 @@
         {
             @foreach (var post in Model.LikedPosts.OrderByDescending(post => post.DateCreated))
             {
+                // Needed to show the green like mark
+                post.IsLiked = true;
                 var postCardViewModel = new PostCardViewModel
                 {
                     Post = post,
                     LimitContent = true,
                     HideGoToPost = false
                 };
-                
+
                 <partial name="_PostCard" model="postCardViewModel"/>
             }
         }
