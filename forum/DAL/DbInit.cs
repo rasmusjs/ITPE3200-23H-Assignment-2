@@ -122,6 +122,17 @@ public static class DbInit
                 Console.WriteLine(applicationUser.UserName + (resultRole.Succeeded ? " added" : " failed"));
             }
 
+            // Add admin user
+            var adminUser = new ApplicationUser
+            {
+                UserName = "torkratte",
+                Email = "torkrattebol@bracketbros.com",
+                CreationDate = DateTime.Now
+            };
+            await userManager.CreateAsync(adminUser, password);
+            await userManager.AddToRoleAsync(adminUser, "Admin");
+
+
             Console.WriteLine("Users added");
         }
 

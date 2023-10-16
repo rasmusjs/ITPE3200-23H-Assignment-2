@@ -59,7 +59,17 @@
                     <li>
                         <a asp-area="" asp-controller="Dashboard" asp-action="Dashboard" class="@IsActive("Dashboard", "Dashboard") nav-btn-text">Dashboard</a>
                     </li>
+
+                    @* Admin dashboard *@
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>
+                            <a asp-area="" asp-controller="Dashboard" asp-action="AdminDashboard" class="@IsActive("Search", "Index") nav-btn-text">Admin dashboard</a>
+                        </li>
+                    }
                 }
+
+
                 <li>
                     <a asp-area="" asp-controller="Search" asp-action="Index" class="@IsActive("Search", "Index") nav-btn-text">Search</a>
                 </li>

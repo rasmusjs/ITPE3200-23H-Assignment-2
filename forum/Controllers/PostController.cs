@@ -67,6 +67,11 @@ public class PostController : Controller
     }
 
 
+    public bool IsAdmin()
+    {
+        return User.IsInRole("Admin");
+    }
+
     [HttpGet]
     // Method for getting card view
     public async Task<IActionResult> Card(string sortby = "")
@@ -283,9 +288,11 @@ public class PostController : Controller
         var postViewModel = await GetPostViewModel();
 
 
-        if (post.UserId != GetUserId()) // Checks if the user is the owner of the post, // TODO: Add error message
+        // Checks if the user is the owner of the post,
+        if (post.UserId != GetUserId()) // TODO: Add error message
+        {
             return View(postViewModel);
-
+        }
 
         // Sanitizing the post content
         post.Content = new HtmlSanitizer().Sanitize(post.Content);
@@ -326,7 +333,8 @@ public class PostController : Controller
         var post = await _postRepository.GetTById(id);
         if (post == null) return NotFound();
 
-        if (post.UserId != GetUserId()) // Checks if the user is the owner of the post, // TODO: Add error message
+        // Checks if the user is the owner of the post, // TODO: Add error message
+        if (post.UserId != GetUserId() && !IsAdmin())
             // If the user is not the owner of the post, return to the post
             return RedirectToAction("Post", "Post", new { id });
 
@@ -342,7 +350,8 @@ public class PostController : Controller
         var post = await _postRepository.GetTById(id);
         if (post == null) return NotFound();
 
-        if (post.UserId != GetUserId()) // Checks if the user is the owner of the post, // TODO: Add error message
+        // Checks if the user is the owner of the post, // TODO: Add error message
+        if (post.UserId != GetUserId() && !IsAdmin())
             return RedirectToAction("Post", "Post", new { id }); // Send user back to the post if not owner
 
         // Delete post. If post not found, return NotFound
@@ -526,7 +535,7 @@ public class PostController : Controller
             return Refresh();
 
         // Checks if the user is the owner of the comment
-        if (commentFromDb.UserId != GetUserId()) // TODO: Add error message
+        if (commentFromDb.UserId != GetUserId() && !IsAdmin()) // TODO: Add error message
             return Redirect(
                 $"{Url.Action("Post", new { id = commentFromDb.PostId })}#commentId-{id}"); // Redirect to the post with the comment
 

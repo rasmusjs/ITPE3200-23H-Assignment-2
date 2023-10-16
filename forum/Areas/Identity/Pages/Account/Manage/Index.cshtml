@@ -1,4 +1,5 @@
 ﻿@page
+@using System.Security.Claims
 @model IndexModel
 @{
     ViewData["Title"] = "Profile";
@@ -7,6 +8,7 @@
 
 <div id="profile" class="identity-account">
     <h3>@ViewData["Title"]</h3>
+    <p>Role: <b>@User.FindFirstValue(ClaimTypes.Role)</b></p>
     @* <partial name="_StatusMessage" for="StatusMessage"/> *@
     <form id="profile-form" method="post" enctype="multipart/form-data">
         @* <div asp-validation-summary="ModelOnly"></div> *@

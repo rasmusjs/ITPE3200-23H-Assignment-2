@@ -1,0 +1,42 @@
+@model forum.ViewModels.AdminDashboardViewModel
+
+<h1>Categories</h1>
+<form asp-action="NewCategory">
+    <input required asp-for="@Model.Category!.Name"/>
+    <input required type="color" asp-for="@Model.Category!.Name"/>
+    <input type="submit" value="Add"/>
+</form>
+
+@foreach (var category in Model.CategoryList.OrderBy(c => c.Name))
+{
+    <form asp-action="UpdateCategory">
+        <input hidden="" asp-for="@category.CategoryId"/>
+        <input onchange="this.form.submit()" asp-for="@category.Name"/>
+        <input onchange="this.form.submit()" type="color" asp-for="@category.Color"/>
+    </form>
+    <a asp-action="DeleteCategory"
+       asp-route-id="@category.CategoryId"
+       class="clickable">
+        <button>Delete</button>
+    </a>
+}
+
+
+<h1>Tags</h1>
+<form asp-action="NewTag">
+    <input required asp-for="@Model.Tag!.Name"/>
+    <input type="submit" value="Add"/>
+</form>
+
+@foreach (var tag in Model.TagSelectList.OrderBy(c => c.Name))
+{
+    <form asp-action="UpdateTag">
+        <input hidden="" asp-for="@tag.TagId"/>
+        <input onchange="this.form.submit()" asp-for="@tag.Name"/>
+    </form>
+    <a asp-action="DeleteTag"
+       asp-route-id="@tag.TagId"
+       class="clickable">
+        <button>Delete</button>
+    </a>
+}
