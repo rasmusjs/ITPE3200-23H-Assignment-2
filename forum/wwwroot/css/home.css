@@ -1,0 +1,40 @@
+.home {
+    .categories {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        flex-wrap: wrap;
+        
+        .category {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            aspect-ratio: 16/9;
+            height: 150px;  
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            
+            .title {
+                margin: 0;
+                font-size: var(--fs-2xl);
+            }
+            
+            .img-container {
+                display: flex;
+                flex-grow: 1;
+                overflow: hidden;
+                background-color: transparent;
+                
+                & img {
+                    border-radius: 8px;
+                    width: 100%;
+                    object-fit: cover;
+                    object-position: center;
+                    opacity: 0.6;
+                }
+            }
+        }
+    }
+}

@@ -4,39 +4,40 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div>
+<div class="home">
     <h1>Welcome to BracketBros</h1>
-</div>
+    
+    <h2>Categories</h2>
+    <div class="categories">
+        @foreach (var category in Model.CategoryList.OrderBy(c => c.Name))
+        {
+            <a asp-controller="Search"
+               asp-action="Search"
+               asp-route-term="@category.Name"
+               class="category" style="background-color: @category.Color">
+                <span class="title">@category.Name</span>
 
+                @if (category.PicturePath != "")
+                {
+                    <div class="img-container">
+                        <img  style=" max-width: 512px; height: auto;" src="@category.PicturePath" alt="Picture of @category.Name">
+                    </div>
+                }
 
-<h2>Categories</h2>
-
-<div class="chips">
-
-    @foreach (var category in Model.CategoryList.OrderBy(c => c.Name))
-    {
-        <a asp-controller="Search"
-           asp-action="Search"
-           asp-route-term="@category.Name"
-           class="category" style="background-color: @category.Color">
-            @category.Name
-
-            @if (category.PicturePath != "")
-            {
-                <img  style=" max-width: 512px; height: auto;" src="@category.PicturePath" alt="Picture of @category.Name">
-            }
-
-        </a>
-    }
+            </a>
+        }
+    </div>
 
     <h2>Tags</h2>
-    @foreach (var tag in Model.TagSelectList.OrderBy(c => c.Name))
-    {
-        <a asp-controller="Search"
-           asp-action="Search"
-           asp-route-term="@tag.Name"
-           class="tag">
-            @tag.Name
-        </a>
-    }
+    <div class="tags">
+        @foreach (var tag in Model.TagSelectList.OrderBy(c => c.Name))
+        {
+            <a asp-controller="Search"
+               asp-action="Search"
+               asp-route-term="@tag.Name"
+               class="tag">
+                @tag.Name
+            </a>
+        }
+    </div>
 </div>
