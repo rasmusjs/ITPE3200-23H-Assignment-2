@@ -6,10 +6,26 @@
     <input type="hidden" asp-for="PostId"/>
     <div class="form-group">
         <label asp-for="Content">Reply/comment</label>
-        <textarea id="comment-content" title="The comment can contain numbers or letters and be upto 512 characters." required asp-for="Content" rows="3"></textarea>
+        <textarea required asp-for="Content" onsubmit="validateComment(this)" onchange="validateComment(this)" rows="3"></textarea>
         <span asp-validation-for="Content" class="error"></span>
     </div>
     <div class="actions">
         <button type="submit">Submit</button>
     </div>
+
+    <script>
+    
+    // Only create the function if it doesn't already exist              
+    if (typeof validateComment !== validateComment) {
+        function validateComment(element) {
+           // Get the min max length from the element attribute (it's set in the model from Annotations)           
+           const minLength = element.getAttribute("data-val-length-min");
+           const maxLength = element.getAttribute("data-val-length-max");
+           // Source https://stackoverflow.com/questions/62408646/select-an-object-property-within-an-attribute-of-the-dom
+            if (element.value.length > maxLength || element.value.length < minLength){
+                alert("Comment must be between " + minLength + " and " + maxLength + " characters long")
+               }
+         }
+    }
+    </script>
 </form>
