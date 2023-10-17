@@ -30,7 +30,7 @@
 
     <h2>Tags</h2>
     <div class="tags">
-        @foreach (var tag in Model.TagSelectList.OrderBy(c => c.Name))
+        @foreach (var tag in Model.TagList.OrderBy(c => c.Name))
         {
             <a asp-controller="Search"
                asp-action="Search"

@@ -40,8 +40,8 @@ public class ForumDbContext : IdentityDbContext<ApplicationUser>
 
         // Configuring the one-to-many relationship between User and Posts
         modelBuilder.Entity<Post>().HasOne(p => p.User).WithMany(u => u.Posts).HasForeignKey(p => p.UserId)
-            .OnDelete(DeleteBehavior
-                .SetNull); // If the user is deleted, the posts will not be deleted. User will show up a anonymous
+            .OnDelete(DeleteBehavior.SetNull);
+        // If the user is deleted, the posts will not be deleted. User will show up a anonymous
 
 
         // Configuring the self-referencing relationship for Comments (For replies to comments)
@@ -52,8 +52,8 @@ public class ForumDbContext : IdentityDbContext<ApplicationUser>
 
         // Configuring the one-to-many relationship between User and Comments
         modelBuilder.Entity<Comment>().HasOne(p => p.User).WithMany(u => u.Comments).HasForeignKey(p => p.UserId)
-            .OnDelete(DeleteBehavior
-                .SetNull); // If the user is deleted, the posts will not be deleted. User will show up a anonymous
+            .OnDelete(DeleteBehavior.SetNull);
+        // If the user is deleted, the posts will not be deleted. User will show up a anonymous
 
 
         //Fixes

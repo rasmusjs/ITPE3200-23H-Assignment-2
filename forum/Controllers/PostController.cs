@@ -369,10 +369,17 @@ public class PostController : Controller
     [Authorize]
     public async Task<IActionResult> CreateComment(Comment comment)
     {
+        // Sanitizing the post content
+        comment.Content = new HtmlSanitizer().Sanitize(comment.Content);
+
         // Error handling to check if the model is correct
-        if (!ModelState.IsValid) // TODO: Add error message
-            return Redirect(
-                $"{Url.Action("Post", new { id = comment.PostId })}"); // Redirect to the post with the comment
+        if (!ModelState.IsValid)
+        {
+            return Redirect($"{Url.Action("Post", new { id = comment.PostId })} ");
+        } // TODO: Add error message
+
+
+        //return Redirect($"{Url.Action("Post", new { id = comment.PostId })}"); // Redirect to the post with the comment
 
         // Sets current time to comment and creates comment. Returns NotFound with message if there is no comment
         comment.DateCreated = DateTime.Now;
@@ -416,6 +423,9 @@ public class PostController : Controller
         if (commentFromDb.UserId != GetUserId()) // TODO: Add error message
             return Redirect(
                 $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
+
+        // Sanitizing the post content
+        comment.Content = new HtmlSanitizer().Sanitize(comment.Content);
 
         // Checks if the model for comments is valid and returns error message.
         if (!ModelState.IsValid) // TODO: Add error message

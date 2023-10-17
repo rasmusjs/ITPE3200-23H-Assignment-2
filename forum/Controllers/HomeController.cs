@@ -57,6 +57,7 @@ public class HomeController : Controller
 
         // Exception if there are no tags or categories to show the user
         if (categories == null || tags == null)
+            //_logger.LogError("Categories or tags not found, cannot create post in AdminDashboard");
             throw new InvalidOperationException("Categories or tags not found, cannot create post");
 
         // New view model for creating a post
