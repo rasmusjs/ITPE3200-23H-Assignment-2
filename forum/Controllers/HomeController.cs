@@ -63,7 +63,7 @@ public class HomeController : Controller
         var adminDashboardViewModel = new AdminDashboardViewModel
         {
             CategoryList = categories,
-            TagSelectList = tags
+            TagList = tags
         };
 
         return View(adminDashboardViewModel);
