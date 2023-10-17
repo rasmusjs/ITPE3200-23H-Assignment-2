@@ -13,7 +13,7 @@ public class AdminDashboardViewModel
     public IEnumerable<Category> CategoryList { get; set; } = default!;
 
     // List of SelectListItem objects - The different tags a forum post can have
-    public IEnumerable<Tag> TagSelectList { get; set; } = default!;
+    public IEnumerable<Tag> TagList { get; set; } = default!;
 
     public Category? Category { get; set; }
     public Tag? Tag { get; set; }
