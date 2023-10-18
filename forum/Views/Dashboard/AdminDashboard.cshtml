@@ -1,84 +1,138 @@
 @model forum.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
 
-<h1 xmlns="http://www.w3.org/1999/html">Categories</h1>
-<form asp-action="NewCategory" enctype="multipart/form-data">
-    <input required asp-for="@Model.Category!.Name"/>
-    <input required type="color" asp-for="@Model.Category!.Name"/>
+<div class="admin-dashboard">
+    <section class="configure-categories">
+        <h1>Configure categories</h1>
+        <section class="add-category">
+            <div>
+                <h2>Add category</h2>
+                <hr>
+            </div>
+            <form asp-action="NewCategory" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label asp-for="@Model.Category!.Color"></label>
+                    <input required type="color" asp-for="@Model.Category!.Color"/>
+                </div>
 
-    <input type="file" accept=".png,.jpg,.jpeg,.gif,.tif"
-           asp-for="@Model.Category!.PictureBytes"
-           class="img-input"
-           onchange="document.getElementById('CategoryImage').src = window.URL.createObjectURL(this.files[0])"/>
-    <span asp-validation-for="@Model.Category!.PictureBytes" class="error"></span>
+                <div class="form-group">
+                    <label asp-for="@Model.Category!.Name">Name</label>
+                    <input required asp-for="@Model.Category!.Name"/>
+                </div>
 
-    <label asp-for="@Model.Category!.PicturePath"></label>
-    <input asp-for="@Model.Category!.PicturePath"/>
+                <div class="form-group">
+                    <label asp-for="@Model.Category!.PictureBytes">Upload image</label>
+                    <input type="file" accept=".png,.jpg,.jpeg,.gif,.tif"
+                           asp-for="@Model.Category!.PictureBytes"
+                           class="img-input"
+                           onchange="document.getElementById('CategoryImage').src = window.URL.createObjectURL(this.files[0])"/>
+                    <span asp-validation-for="@Model.Category!.PictureBytes" class="error"></span>
+                </div>
 
-    <input type="submit" value="Add"/>
-</form>
+                <input type="submit" value="Add"/>
+            </form>
+        </section>
 
-@foreach (var category in Model.CategoryList.OrderBy(c => c.Name))
-{
-    <form asp-action="UpdateCategory" enctype="multipart/form-data">
-        <input hidden="" asp-for="@category.CategoryId"/>
-        <input onchange="this.form.submit()" asp-for="@category.Name"/>
-        <input onchange="this.form.submit()" type="color" asp-for="@category.Color"/>
+        <section class="change-categories">
+            <div>
+                <h2>Change categories</h2>
+                <hr>
+            </div>
+            @foreach (var category in Model.CategoryList.OrderBy(c => c.Name))
+            {
+                <div class="category-changer">
+                    <form asp-action="UpdateCategory" enctype="multipart/form-data">
+                        <input hidden="" asp-for="@category.CategoryId"/>
+                    
+                        <div class="form-group">
+                            <label asp-for="@Model.Category!.Color"></label>
+                            <input required type="color" asp-for="@Model.Category!.Color"/>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label asp-for="@Model.Category!.Name">Name</label>
+                            <input required asp-for="@Model.Category!.Name"/>
+                        </div>
+        
+                        <div class="form-group">
+                            <label asp-for="@Model.Category!.PictureBytes">Upload image</label>
+                            <input type="file" accept=".png,.jpg,.jpeg,.gif,.tif"
+                                   asp-for="@Model.Category!.PictureBytes"
+                                   class="img-input"
+                                   onchange="document.getElementById('CategoryImage').src = window.URL.createObjectURL(this.files[0])"/>
+                            <span asp-validation-for="@Model.Category!.PictureBytes" class="error"></span>
+                        </div>
+                        
+                        @*<input onchange="this.form.submit()" asp-for="@category.Name"/>
+                        <input onchange="this.form.submit()" type="color" asp-for="@category.Color"/>
+                        
+                        <input type="file" accept=".png,.jpg,.jpeg,.gif,.tif"
+                               asp-for="@Model.Category!.PictureBytes"
+                               class="img-input"
+                               onchange="document.getElementById('CategoryImage').src = window.URL.createObjectURL(this.files[0])"/>
+                        <span asp-validation-for="@Model.Category!.PictureBytes" class="error"></span>
+                        
+                        <label asp-for="@Model.Category!.PicturePath"></label>
+                        
+                        <input asp-for="@Model.Category!.PicturePath"/>*@
 
-        <input type="file" accept=".png,.jpg,.jpeg,.gif,.tif"
-               asp-for="@Model.Category!.PictureBytes"
-               class="img-input"
-               onchange="document.getElementById('CategoryImage').src = window.URL.createObjectURL(this.files[0])"/>
-        <span asp-validation-for="@Model.Category!.PictureBytes" class="error"></span>
+                        @*@if (category.PicturePath != "")
+                        {
+                            <label> Current Path:
+                                <input disabled value="@category.PicturePath"/>
+                            </label>
+                            <img src="@category.PicturePath" alt="Picture of @category.Name">
+                        }*@
 
-        <label asp-for="@Model.Category!.PicturePath"></label>
+                        <input type="submit" value="Submit" />
+                    </form>
+                    
+                    <img src="@category.PicturePath" alt="Category image - @category.Name">
+                    
+                    <a asp-action="DeleteCategory"
+                       asp-route-id="@category.CategoryId"
+                       class="clickable">
+                        Delete
+                    </a>
+                </div>
 
-        <input asp-for="@Model.Category!.PicturePath"/>
+            }
+        </section>
+    </section>
 
-        @if (category.PicturePath != "")
+
+    <section>
+        <h1>Configure tags</h1>
+        <form asp-action="NewTag">
+            <input required asp-for="@Model.Tag!.Name"/>
+            <input type="submit" value="Add"/>
+        </form>
+
+        @foreach (var tag in Model.TagList.OrderBy(c => c.Name))
         {
-            <label> Current Path:
-                <input disabled value="@category.PicturePath"/>
-            </label>
-            <img src="@category.PicturePath" alt="Picture of @category.Name">
+            <form asp-action="UpdateTag">
+                <input hidden="" asp-for="@tag.TagId"/>
+                <input onchange="this.form.submit()" asp-for="@tag.Name"/>
+            </form>
+            <a asp-action="DeleteTag"
+               asp-route-id="@tag.TagId"
+               class="clickable">
+                <button>Delete</button>
+            </a>
         }
-
-        <button type="submit">Update</button>
-    </form>
-    <a asp-action="DeleteCategory"
-       asp-route-id="@category.CategoryId"
-       class="clickable">
-        <button>Delete</button>
-    </a>
-}
-
-
-<h1>Tags</h1>
-<form asp-action="NewTag">
-    <input required asp-for="@Model.Tag!.Name"/>
-    <input type="submit" value="Add"/>
-</form>
-
-@foreach (var tag in Model.TagList.OrderBy(c => c.Name))
-{
-    <form asp-action="UpdateTag">
-        <input hidden="" asp-for="@tag.TagId"/>
-        <input onchange="this.form.submit()" asp-for="@tag.Name"/>
-    </form>
-    <a asp-action="DeleteTag"
-       asp-route-id="@tag.TagId"
-       class="clickable">
-        <button>Delete</button>
-    </a>
-}
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
-    </div>
-}
-@if (TempData["TestMessage"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["TestMessage"]
-    </div>
-}
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+        @if (TempData["TestMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["TestMessage"]
+            </div>
+        }
+    </section>
+</div>
