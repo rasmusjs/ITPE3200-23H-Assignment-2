@@ -25,9 +25,7 @@
         <input onchange="this.form.submit()" type="color" asp-for="@category.Color"/>
 
         <input type="file" accept=".png,.jpg,.jpeg,.gif,.tif"
-               asp-for="@Model.Category!.PictureBytes"
-               class="img-input"
-               onchange="document.getElementById('CategoryImage').src = window.URL.createObjectURL(this.files[0])"/>
+               asp-for="@Model.Category!.PictureBytes"/>
         <span asp-validation-for="@Model.Category!.PictureBytes" class="error"></span>
 
         <label asp-for="@Model.Category!.PicturePath"></label>
@@ -36,7 +34,8 @@
 
         @if (category.PicturePath != "")
         {
-            <label> Current Path:
+            <label>
+                Current Path:
                 <input disabled value="@category.PicturePath"/>
             </label>
             <img src="@category.PicturePath" alt="Picture of @category.Name">
