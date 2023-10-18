@@ -59,18 +59,12 @@
     <div class="bottom">
         <div class="likes-comments">
             <a asp-controller="Post"
-               asp-action="LikePost"
-               asp-route-id="@Model.Post.PostId">
-                @if (@Model.Post.IsLiked)
-                {
-                    <i class="fa-solid fa-thumbs-up" style="color: #4CAF50"></i>
-                }
-                else
-                {
-                    <i class="fa-solid fa-thumbs-up"></i>
-                }
-                @Model.Post.TotalLikes likes
-            </a>
+                   asp-action="LikePost"
+                   asp-route-id="@Model.Post.PostId"
+                   class="@(Model.Post.IsLiked ? "liked" : "")">
+                   <i class="fa-solid fa-thumbs-up"></i>
+                   @Model.Post.TotalLikes Likes
+                </a>
 
 
             <a asp-controller="Post"

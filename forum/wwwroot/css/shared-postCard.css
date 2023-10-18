@@ -123,13 +123,16 @@
                     margin-right: 6px;
                     transition: var(--tr-default);
                 }
+                
+                &.liked {
+                    & i {
+                        color: var(--primary);
+                        transform: scale(1.125);
+                    }
+                }
 
                 &:hover {
                     color: var(--txt-1);
-
-                    & i {
-                        transform: scale(1.125);
-                    }
                 }
 
 
@@ -142,6 +145,8 @@
                     &:hover {
                         background-color: var(--fg-1);
                     }
+                    
+                    
                 }
             }
 

@@ -6,114 +6,109 @@
 }
 
 
-<div id="post-card">
-    <div class="main-header">
-        <span class="title">Posts</span>
-    </div>
-    <div class="posts">
-        @if (Model.Posts == null)
-        {
-            <div class="no-posts">
-                <span>You haven't posted anything yet.</span>
-            </div>
-        }
-        else
-        {
-            @foreach (var post in Model.Posts.OrderByDescending(post => post.DateCreated))
+<div class="dashboard">
+    <h1 class="title">Dashboard</h1>
+    
+    <section>
+        <h2>Posts</h2>
+        <hr>
+        
+        <section>
+            <h3>My posts:</h3>
+            @if (Model.Posts == null || Model.Posts.Count == 0)
             {
-                var postCardViewModel = new PostCardViewModel
-                {
-                    Post = post,
-                    LimitContent = true,
-                    HideGoToPost = false
-                };
-
-                <partial name="_PostCard" model="postCardViewModel"/>
+                <p>You have no posts.</p>
+                <a asp-area="" asp-controller="Post" asp-action="Create">Create your first post!</a>
             }
-        }
-        <p>Liked posts</p>
-        @if (Model.LikedPosts == null)
-        {
-            <div class="no-posts">
-                <span>You haven't liked anything yet.</span>
-            </div>
-        }
-        else
-        {
-            @foreach (var post in Model.LikedPosts.OrderByDescending(post => post.DateCreated))
+            else
             {
-                // Needed to show the green like mark
-                post.IsLiked = true;
-                var postCardViewModel = new PostCardViewModel
-                {
-                    Post = post,
-                    LimitContent = true,
-                    HideGoToPost = false
-                };
-
-                <partial name="_PostCard" model="postCardViewModel"/>
-            }
-        }
-    </div>
-
-    <div>
-
-        <span class="title">Comments</span>
-        <b>Your comments</b>
-
-        @if (Model.Comments == null)
-        {
-            <div class="no-posts">
-                <span>You haven't created any comments.</span>
-            </div>
-        }
-        else
-        {
-            @foreach (var comment in Model.Comments.OrderByDescending(comment => comment.DateCreated))
-            {
-                <div>
-                    "@comment.Content" Likes @comment.TotalLikes
-
-                    <a asp-controller="Post"
-                       asp-action="Post"
-                       asp-route-id="@comment.PostId">
-                        View post
-                    </a>
+                <div class="posts">
+                    @foreach (var post in Model.Posts.OrderByDescending(post => post.DateCreated))
+                    {
+                        <partial name="_PostCompact" model="post"/>
+                    }
                 </div>
             }
-        }
-        <b>Liked comments</b>
-
-        @if (Model.LikedComments == null)
-        {
-            <div class="no-posts">
-                <span>You haven't liked any comments.</span>
-            </div>
-        }
-        else
-        {
-            @foreach (var comment in Model.LikedComments.OrderByDescending(comment => comment.DateCreated))
+        </section>
+        
+        <sections>
+            <h3>Liked posts:</h3>
+            @if (Model.LikedPosts == null || Model.LikedPosts.Count == 0)
             {
-                <div>
-                    "@comment.Content" Likes @comment.TotalLikes
-
-                    <a asp-controller="Post"
-                       asp-action="LikeComment"
-                       asp-route-id="@comment.CommentId">
-                        Unlike
-                    </a>
-
-
-                    <a asp-controller="Post"
-                       asp-action="Post"
-                       asp-route-id="@comment.PostId">
-                        View post
-                    </a>
-
+                <p>You have not liked any posts.</p>
+                <a asp-area="" asp-controller="Post" asp-action="Card">Have a look at whats out there!</a>
+            }
+            else
+            {
+                <div class="posts">
+                    @foreach (var post in Model.LikedPosts.OrderByDescending(post => post.DateCreated))
+                    {
+                        <partial name="_PostCompact" model="post"/>
+                    }
                 </div>
             }
-        }
-    </div>
+        </sections>
+    </section>
+        
+    <section>
+        <h2>Comments</h2>
+        <hr>
+        
+        <section>
+            <h3>My comments:</h3>
+            @if (Model.Comments == null || Model.Comments.Count == 0)
+            {
+                <p>You have not made any comments.</p>
+                <a asp-area="" asp-controller="Post" asp-action="Card">Explore and comment if something interests you!</a>
+            }
+            else
+            {
+                <div class="comments">
+                    @foreach (var comment in Model.Comments.OrderByDescending(comment => comment.DateCreated))
+                    {
+                        <div class="comment">
+                            <span class="comment-content">"@comment.Content"</span>
+                            <span class="likes">@comment.TotalLikes <i class="fa-solid fa-thumbs-up"></i></span>
+                            <a asp-controller="Post"
+                               asp-action="Post"
+                               asp-route-id="@comment.PostId">
+                                View post
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+        </section>
+        
+        <section>
+            <h3>Liked comments:</h3>
+            @if (Model.LikedComments == null || Model.LikedComments.Count == 0)
+            {
+                <p>You have not liked any comments.</p>
+            }
+            else
+            {
+                <div class="comments">
+                    @foreach (var comment in Model.LikedComments.OrderByDescending(comment => comment.DateCreated))
+                    {
+                        <div>
+                            "@comment.Content" | @comment.TotalLikes Likes
 
+                            <a asp-controller="Post"
+                               asp-action="LikeComment"
+                               asp-route-id="@comment.CommentId">
+                                Unlike
+                            </a>
 
+                            <a asp-controller="Post"
+                               asp-action="Post"
+                               asp-route-id="@comment.PostId">
+                                View post
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+        </section>
+    </section>
 </div>
