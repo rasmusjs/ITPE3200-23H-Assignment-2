@@ -370,12 +370,14 @@ body {
         justify-content: space-around;
         align-items: center;
         margin-top: auto;
-        padding: 24px 0;
+        padding: 24px;
         background-color: var(--fg-1);
         
         .social-media-links {
             display: flex;
             flex-direction: row;
+            justify-content: center;
+            flex-wrap: wrap;
             
             & a {
                 display: flex;
@@ -397,6 +399,10 @@ body {
             }
         }
         
+        .fixed-width {
+            width: 150px;
+        }
+        
         & address {
             text-align: right;
             
@@ -407,6 +413,17 @@ body {
                 &:hover {
                     text-decoration: underline;
                 }
+            }
+        }
+
+        @media screen and (max-width: 848px) {
+            flex-direction: column;
+            justify-content: unset;
+            gap: 24px;
+            padding: 36px 0;
+            
+            > * {
+                text-align: center !important;
             }
         }
     }
