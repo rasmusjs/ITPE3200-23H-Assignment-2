@@ -276,7 +276,8 @@ public class DashBoardController : Controller
                 _logger.LogWarning("[Dashboard controller] Tag update failed for {@tag}", tag); 
             }
         }
-        
+
+        TempData["TestMessage"] = "This is a test, babe.";
         // Redirects to admin dashboard
         return RedirectToAction("AdminDashboard"); 
     }
