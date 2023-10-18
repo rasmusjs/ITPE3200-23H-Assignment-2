@@ -61,7 +61,7 @@ public class HomeController : Controller
             throw new InvalidOperationException("Categories or tags not found, cannot create post");
 
         // New view model for creating a post
-        var adminDashboardViewModel = new AdminDashboardViewModel
+        var adminDashboardViewModel = new DashboardViewModel
         {
             CategoryList = categories,
             TagList = tags
