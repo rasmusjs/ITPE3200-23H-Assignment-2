@@ -4,14 +4,7 @@
     ViewData["Title"] = "Search";
 }
 
-<form method="get" asp-action="Search">
-    <div>
-        <label for="term">Search Term:</label>
-        <input type="text" id="term" name="term" placeholder="Enter a search term"/>
-        <partial name="_SortBy"/>
-        <button type="submit">Search</button>
-    </div>
-</form>
+<partial name="_SearchField"/>
 
 <h1>Results:</h1>
 <div>
