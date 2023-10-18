@@ -366,8 +366,49 @@ body {
     }
     
     & footer {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
         margin-top: auto;
         padding: 24px;
         background-color: var(--fg-1);
+        
+        .social-media-links {
+            display: flex;
+            flex-direction: row;
+            
+            & a {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                aspect-ratio: 1/1;
+                height: 40px;
+                border-radius: 40px;
+                transition: var(--tr-default);
+                text-decoration: none;
+                
+                & i {
+                    font-size: var(--fs-xl);
+                }
+                
+                &:hover {
+                    background-color: var(--fg-2);
+                }
+            }
+        }
+        
+        & address {
+            text-align: right;
+            
+            & a {
+                color: var(--primary);
+                text-decoration: none;
+                
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
     }
 }
