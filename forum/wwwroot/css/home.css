@@ -1,6 +1,4 @@
 .home {
-    padding-bottom: 48px;
-    
     & h2 {
         font-size: var(--fs-2xl);
         margin-top: 40px;
