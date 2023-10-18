@@ -272,6 +272,7 @@ public class DashBoardController : Controller
             bool updated = await _tagsRepository.Update(tag);
             if (!updated)
             {
+                TempData["ErrorMessage"] = "Tag update failed.";
                 _logger.LogWarning("[Dashboard controller] Tag update failed for {@tag}", tag); 
             }
         }

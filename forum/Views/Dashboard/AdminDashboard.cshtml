@@ -65,3 +65,9 @@
         <button>Delete</button>
     </a>
 }
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
