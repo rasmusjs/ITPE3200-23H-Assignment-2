@@ -349,14 +349,25 @@ nav {
     }
 }
 
-main {
-    width: 100%;
-    padding-top: var(--nav-height);
-
-    #main-inner-container {
-        max-width: 948px;
-        margin: 0 auto;
-        padding: 48px 24px 24px 24px;
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    
+    & main {
+        width: 100%;
+        padding-top: var(--nav-height);
+    
+        #main-inner-container {
+            max-width: 948px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+    }
+    
+    & footer {
+        margin-top: auto;
+        padding: 24px;
+        background-color: var(--fg-1);
     }
 }
-

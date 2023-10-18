@@ -16,5 +16,5 @@ public class PostViewModel
     public List<SelectListItem> CategorySelectList { get; set; } = default!;
 
     // List of SelectListItem objects - The different tags a forum post can have
-    public List<SelectListItem> TagSelectList { get; set; } = default!;
+    public List<SelectListItem> TagList { get; set; } = default!;
 }

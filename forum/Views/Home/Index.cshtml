@@ -5,9 +5,16 @@
 }
 
 <div class="home">
-    <h1>Welcome to BracketBros</h1>
-    
-    <h2>Categories</h2>
+    <h1 class="title">Introducing BracketBros:
+        <br/>Your Go-To Platform for All Things Programming!</h1>
+    <ul>
+        <li>💬 Dive deep into discussions on languages, frameworks, and tools.</li>
+        <li>📂 Share your latest projects, code snippets, or challenges.</li>
+        <li>👥 Collaborate with fellow developers to solve problems and learn new techniques.</li>
+        <li>📚 Curated content to keep you updated on industry trends.</li>
+    </ul>
+    <p>Join the BracketBros community now and elevate your coding game!</p>
+    <h2>Categories:</h2>
     <div class="categories">
         @foreach (var category in Model.CategoryList.OrderBy(c => c.Name))
         {
@@ -28,7 +35,7 @@
         }
     </div>
 
-    <h2>Tags</h2>
+    <h2>Tags:</h2>
     <div class="tags">
         @foreach (var tag in Model.TagList.OrderBy(c => c.Name))
         {
