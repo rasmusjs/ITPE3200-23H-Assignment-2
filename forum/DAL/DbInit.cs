@@ -11,9 +11,8 @@ public static class DbInit
         using var serviceScope = app.ApplicationServices.CreateScope();
         var context = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
 
-        //await context.Database.EnsureDeletedAsync();
+        // await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
-
 
         var categoriesList = new List<Category>
         {
