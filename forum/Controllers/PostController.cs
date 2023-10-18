@@ -227,7 +227,7 @@ public class PostController : Controller
                 Text = category.Name
             }).ToList(),
             // Fetching the tag list
-            TagSelectList = tags.Select(tag => new SelectListItem
+            TagList = tags.Select(tag => new SelectListItem
             {
                 Value = tag.TagId.ToString(),
                 Text = tag.Name
@@ -268,7 +268,7 @@ public class PostController : Controller
                 Text = category.Name
             }).ToList(),
             // Fetches the tag select list
-            TagSelectList = tags.Select(tag => new SelectListItem
+            TagList = tags.Select(tag => new SelectListItem
             {
                 Value = tag.TagId.ToString(),
                 Text = tag.Name,

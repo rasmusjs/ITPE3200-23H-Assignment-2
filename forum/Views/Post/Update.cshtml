@@ -25,7 +25,7 @@
     </div>
     <div>
         <label asp-for="Post.Tags"></label><span>*</span>
-        <select multiple asp-for="Post.TagsId" asp-items="Model.TagSelectList"></select>
+        <select multiple asp-for="Post.TagsId" asp-items="Model.TagList"></select>
         <span asp-validation-for="Post.TagsId"></span>
     </div>
     <button type="submit">Save</button>
