@@ -96,13 +96,73 @@ public class DashBoardController : Controller
         return View(adminDashboardViewModel);
     }
 
-    [HttpPost]
+     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateCategory(Category category)
     {
-        if (ModelState.IsValid)
+        var dbCategory = await _categoryRepository.GetTById(category.CategoryId);
+
+        if (dbCategory == null)
         {
-            await _categoryRepository.Update(category);
+            _logger.LogError($"[Dashboard controller] UpdateCategory() failed, error message: oldCategory is null");
+            return NotFound("Category not found");
+        }
+
+        // Save the old picture path
+        string pictureDeletePath = dbCategory.PicturePath ?? String.Empty;
+        string newPicturePath = "";
+
+
+        Console.WriteLine("Path to delete" + pictureDeletePath);
+
+        // If the user has selected a file
+        if (Request.Form.Files.Count > 0) // If the user has selected a file
+        {
+            newPicturePath = await FileUpload(category);
+
+            if (newPicturePath.IsNullOrEmpty())
+            {
+                _logger.LogError($"[Dashboard controller] UpdateCategory() failed, error message: fileUpload failed");
+                return StatusCode(500, "Could not upload new file");
+            }
+        }
+
+        if (!ModelState.IsValid)
+        {
+            _logger.LogError($"[Dashboard controller] UpdateCategory() failed, error message: modelState is invalid");
+            return StatusCode(406, "Model state is invalid");
+        }
+
+        // Update the category
+        dbCategory.Name = category.Name;
+        dbCategory.Color = category.Color;
+
+        // Update the picture path if the user has used the text field
+        if (!category.PicturePath.IsNullOrEmpty())
+        {
+            dbCategory.PicturePath = category.PicturePath;
+        }
+
+
+        // If the user has selected a new file, set the new picture path, else keep the old one
+        if (!newPicturePath.IsNullOrEmpty())
+        {
+            dbCategory.PicturePath = newPicturePath;
+        }
+
+
+        // Update the category
+        await _categoryRepository.Update(dbCategory);
+
+        // Delete the old picture if it exists
+        if (!pictureDeletePath.IsNullOrEmpty())
+        {
+            if (!DeleteFile(pictureDeletePath))
+            {
+                _logger.LogError(
+                    $"[Dashboard controller] DeleteCategory() failed, error message: deleteFile failed");
+                return StatusCode(500, "Internal server error, could not delete file");
+            }
         }
 
         return RedirectToAction("AdminDashboard");
@@ -113,18 +173,26 @@ public class DashBoardController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> NewCategory(Category category)
     {
-        if (ModelState.IsValid)
+        // If the user has selected a file
+        if (Request.Form.Files.Count > 0) // If the user has selected a file
         {
-            // If the user has selected a file
-            if (Request.Form.Files.Count > 0) // If the user has selected a file
+            string filePath = await FileUpload(category);
+
+            if (filePath.IsNullOrEmpty())
             {
-                if (!await FileUpload(category))
-                {
-                    _logger.LogError($"[Dashboard controller] NewCategory() failed, error message: fileUpload failed");
-                    return NotFound("Category not found");
-                }
+                _logger.LogError(
+                    $"[Dashboard controller] UpdateCategory() failed, error message: fileUpload failed");
+                return StatusCode(500, "Could not upload new file");
             }
 
+            // Set the new picture path
+            category.PicturePath = filePath;
+            //Set the PictureBytes to null
+            category.PictureBytes = null;
+        }
+
+        if (ModelState.IsValid)
+        {
             var result = await _categoryRepository.Create(category);
 
             if (result == null)
@@ -143,7 +211,6 @@ public class DashBoardController : Controller
     public async Task<IActionResult> DeleteCategory(int id)
     {
         var category = await _categoryRepository.GetTById(id);
-
 
         if (category == null)
         {
@@ -173,29 +240,6 @@ public class DashBoardController : Controller
 
     public async Task<string> FileUpload(Category category)
     {
-        // Delete the old picture if it exists
-        if (category.PicturePath != null)
-        {
-            try
-            {
-                string deletePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "categories",
-                    category.PicturePath);
-
-                // Check if the file exists
-                if (Directory.Exists(Path.GetDirectoryName(deletePath)))
-                {
-                    // Delete the file
-                    Directory.Delete(Path.GetDirectoryName(deletePath) ?? throw new InvalidOperationException(), true);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e); // TODO: Logg exception
-                return false;
-            }
-        }
-
-
         // Get the file
         var file = Request.Form.Files.FirstOrDefault();
 
