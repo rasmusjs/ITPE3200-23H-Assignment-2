@@ -88,7 +88,7 @@ p {
 }
 
 a {
-    color: var(--info);
+    color: var(--primary);
 }
 
 input, textarea, select, button, .input, #file-upload-button {
@@ -405,9 +405,9 @@ body {
         
         & address {
             text-align: right;
+            font-style: normal;
             
             & a {
-                color: var(--primary);
                 text-decoration: none;
                 
                 &:hover {
