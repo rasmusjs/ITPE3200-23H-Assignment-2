@@ -18,9 +18,9 @@ public class Category
     public string Name { get; set; } = String.Empty;
 
     // Getters and setters for category color
-    public string Color { get; set; } = String.Empty;
+    [Display(Name = "Color")] public string Color { get; set; } = String.Empty;
 
     // Getters and setters for category PicturePath
-    public string? PicturePath { get; set; } = String.Empty;
-    [NotMapped] public byte[]? PictureBytes { get; set; } = null!;
+    [Display(Name = "URL")] public string? PicturePath { get; set; } = String.Empty;
+    [NotMapped] public byte[]? PictureBytes { get; set; } // used for file upload
 }
