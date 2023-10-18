@@ -371,7 +371,7 @@ body {
         justify-content: space-around;
         align-items: center;
         margin-top: auto;
-        padding: 24px;
+        padding: 24px 0;
         background-color: var(--fg-1);
         
         .social-media-links {
