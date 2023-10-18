@@ -11,7 +11,7 @@
     "forum": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "Post/Card",
+      "launchUrl": "",
       "applicationUrl": "https://localhost:7205;http://localhost:5112",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

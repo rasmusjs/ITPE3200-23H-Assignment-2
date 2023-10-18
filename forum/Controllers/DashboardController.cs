@@ -30,6 +30,7 @@ public class DashBoardController : Controller
         _logger = logger;
     }
 
+    // Get request to fetch user identity
     [HttpGet]
     [Authorize]
     public string GetUserId()
@@ -38,7 +39,7 @@ public class DashBoardController : Controller
         return User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 
-
+    // Get request to fetch the Dashboard view
     [HttpGet]
     [Authorize]
     public async Task<IActionResult> Dashboard()
@@ -46,28 +47,45 @@ public class DashBoardController : Controller
         // Get all activity for the user
         var userActivity = await _userRepository.GetUserActivity(GetUserId());
 
-        // If no posts, return NotFound
+        // If no posts, return NotFound and log error
         if (userActivity == null)
         {
             _logger.LogError($"[Dashboard controller] Dashboard() failed, error message: userActivity is null");
-            return NotFound("Post list not found");
+            return NotFound("User data not found");
         }
 
         return View(userActivity);
     }
-
-
+    
+    // Method for fetching the admin dashboard view
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AdminDashboard()
     {
-        // Fetching the categories and tags data
-        IEnumerable<Category>? categories = await _categoryRepository.GetAll();
-        IEnumerable<Tag>? tags = await _tagsRepository.GetAll();
+        // Initialize categories and tags
+        IEnumerable<Category>? categories = null;
+        IEnumerable<Tag>? tags = null;
 
-        // Exception if there are no tags or categories to show the user
+        try
+        {
+            // Fetching the categories and tags data
+            categories = await _categoryRepository.GetAll();
+            tags = await _tagsRepository.GetAll();
+        }
+        catch (Exception e)
+        {
+            // Exception and error logging if the server can't fetch the data
+            _logger.LogError("[Dashboard controller] An exception occurred while fetching categories or tags: {e}", e.Message);
+            return StatusCode(500, "Internal server error. Please try again later.");
+        }
+        
+        // Exception and error logging if there are no tags or categories to show the user
         if (categories == null || tags == null)
-            throw new InvalidOperationException("Categories or tags not found, cannot create post");
-
+        {
+            _logger.LogError(
+                "[Dashboard controller] _categoryRepository.GetAll() and/or _tagsRepository.GetAll() returned null");
+            return NotFound("Categories or tags not found, cannot create post"); 
+        }
+        
         // New view model for creating a post
         var adminDashboardViewModel = new DashboardViewModel
         {
@@ -82,69 +100,9 @@ public class DashBoardController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateCategory(Category category)
     {
-        var dbCategory = await _categoryRepository.GetTById(category.CategoryId);
-
-        if (dbCategory == null)
+        if (ModelState.IsValid)
         {
-            _logger.LogError($"[Dashboard controller] UpdateCategory() failed, error message: oldCategory is null");
-            return NotFound("Category not found");
-        }
-
-        // Save the old picture path
-        string pictureDeletePath = dbCategory.PicturePath ?? String.Empty;
-        string newPicturePath = "";
-
-
-        Console.WriteLine("Path to delete" + pictureDeletePath);
-
-        // If the user has selected a file
-        if (Request.Form.Files.Count > 0) // If the user has selected a file
-        {
-            newPicturePath = await FileUpload(category);
-
-            if (newPicturePath.IsNullOrEmpty())
-            {
-                _logger.LogError($"[Dashboard controller] UpdateCategory() failed, error message: fileUpload failed");
-                return StatusCode(500, "Could not upload new file");
-            }
-        }
-
-        if (!ModelState.IsValid)
-        {
-            _logger.LogError($"[Dashboard controller] UpdateCategory() failed, error message: modelState is invalid");
-            return StatusCode(406, "Model state is invalid");
-        }
-
-        // Update the category
-        dbCategory.Name = category.Name;
-        dbCategory.Color = category.Color;
-
-        // Update the picture path if the user has used the text field
-        if (!category.PicturePath.IsNullOrEmpty())
-        {
-            dbCategory.PicturePath = category.PicturePath;
-        }
-
-
-        // If the user has selected a new file, set the new picture path, else keep the old one
-        if (!newPicturePath.IsNullOrEmpty())
-        {
-            dbCategory.PicturePath = newPicturePath;
-        }
-
-
-        // Update the category
-        await _categoryRepository.Update(dbCategory);
-
-        // Delete the old picture if it exists
-        if (!pictureDeletePath.IsNullOrEmpty())
-        {
-            if (!DeleteFile(pictureDeletePath))
-            {
-                _logger.LogError(
-                    $"[Dashboard controller] DeleteCategory() failed, error message: deleteFile failed");
-                return StatusCode(500, "Internal server error, could not delete file");
-            }
+            await _categoryRepository.Update(category);
         }
 
         return RedirectToAction("AdminDashboard");
@@ -155,26 +113,18 @@ public class DashBoardController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> NewCategory(Category category)
     {
-        // If the user has selected a file
-        if (Request.Form.Files.Count > 0) // If the user has selected a file
-        {
-            string filePath = await FileUpload(category);
-
-            if (filePath.IsNullOrEmpty())
-            {
-                _logger.LogError(
-                    $"[Dashboard controller] UpdateCategory() failed, error message: fileUpload failed");
-                return StatusCode(500, "Could not upload new file");
-            }
-
-            // Set the new picture path
-            category.PicturePath = filePath;
-            //Set the PictureBytes to null
-            category.PictureBytes = null;
-        }
-
         if (ModelState.IsValid)
         {
+            // If the user has selected a file
+            if (Request.Form.Files.Count > 0) // If the user has selected a file
+            {
+                if (!await FileUpload(category))
+                {
+                    _logger.LogError($"[Dashboard controller] NewCategory() failed, error message: fileUpload failed");
+                    return NotFound("Category not found");
+                }
+            }
+
             var result = await _categoryRepository.Create(category);
 
             if (result == null)
@@ -193,6 +143,7 @@ public class DashBoardController : Controller
     public async Task<IActionResult> DeleteCategory(int id)
     {
         var category = await _categoryRepository.GetTById(id);
+
 
         if (category == null)
         {
@@ -222,6 +173,29 @@ public class DashBoardController : Controller
 
     public async Task<string> FileUpload(Category category)
     {
+        // Delete the old picture if it exists
+        if (category.PicturePath != null)
+        {
+            try
+            {
+                string deletePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "categories",
+                    category.PicturePath);
+
+                // Check if the file exists
+                if (Directory.Exists(Path.GetDirectoryName(deletePath)))
+                {
+                    // Delete the file
+                    Directory.Delete(Path.GetDirectoryName(deletePath) ?? throw new InvalidOperationException(), true);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e); // TODO: Logg exception
+                return false;
+            }
+        }
+
+
         // Get the file
         var file = Request.Form.Files.FirstOrDefault();
 
@@ -289,34 +263,52 @@ public class DashBoardController : Controller
     }
 
 
+    // Post request to update an existing tag in the repo and redirects to the admin dashboard
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateTag(Tag tag)
     {
+        // Checks if the submitted form values passes validation
         if (ModelState.IsValid)
         {
-            await _tagsRepository.Update(tag);
+            // Tries to update tag in repo, logs error if it cannot update tag
+            bool updated = await _tagsRepository.Update(tag);
+            if (!updated)
+            {
+                TempData["ErrorMessage"] = "Tag update failed.";
+                _logger.LogWarning("[Dashboard controller] Tag update failed for {@tag}", tag); 
+            }
         }
 
-        return RedirectToAction("AdminDashboard");
+        TempData["TestMessage"] = "This is a test, babe.";
+        // Redirects to admin dashboard
+        return RedirectToAction("AdminDashboard"); 
     }
 
+    // Post request to create a new tag in the repo and redirect to admin dashboard
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> NewTag(Category tag)
     {
+        // Checks if the submitted form values passes validation
         if (ModelState.IsValid)
         {
-            await _categoryRepository.Create(tag);
+            // Tries to create tag in repo, logs error if it cannot create tag 
+            var newCategory = await _categoryRepository.Create(tag);
+            if (newCategory == null)
+                _logger.LogWarning("[Dashboard controller] Tag creation failed for {@tag}", tag);
         }
-
+        
+        // Redirects to admin dashboard
         return RedirectToAction("AdminDashboard");
     }
 
+    // Get request to delete a tag in the repo
     [HttpGet]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteTag(int id)
     {
+        // Tries to delete the tag, logs and returns error if there is no category to delete
         var result = await _tagsRepository.Delete(id);
         if (!result)
         {
@@ -324,6 +316,7 @@ public class DashBoardController : Controller
             return NotFound("Category not found");
         }
 
+        // Redirects to admin dashboard
         return RedirectToAction("AdminDashboard");
     }
 }
