@@ -103,36 +103,52 @@
     </section>
 
 
-    <section>
+    <section class="configure-tags">
         <h1>Configure tags</h1>
-        <form asp-action="NewTag">
-            <input required asp-for="@Model.Tag!.Name"/>
-            <input type="submit" value="Add"/>
-        </form>
-
-        @foreach (var tag in Model.TagList.OrderBy(c => c.Name))
-        {
-            <form asp-action="UpdateTag">
-                <input hidden="" asp-for="@tag.TagId"/>
-                <input onchange="this.form.submit()" asp-for="@tag.Name"/>
+        <section class="add-tag">
+            <div>
+                <h2>Add tag</h2>
+                <hr>
+            </div>
+            <form asp-action="NewTag">
+                <input required asp-for="@Model.Tag!.Name"/>
+                <input type="submit" value="Add"/>
             </form>
-            <a asp-action="DeleteTag"
-               asp-route-id="@tag.TagId"
-               class="clickable">
-                <button>Delete</button>
-            </a>
-        }
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="alert alert-danger">
-                @TempData["ErrorMessage"]
+        </section>
+
+        <section class="change-tags">
+            <div>
+                <h2>Change/delete tags</h2>
+                <hr>
             </div>
-        }
-        @if (TempData["TestMessage"] != null)
-        {
-            <div class="alert alert-danger">
-                @TempData["TestMessage"]
+            <div class="tags">
+                @foreach (var tag in Model.TagList.OrderBy(c => c.Name))
+                {
+                    <div class="tag">
+                        <form asp-action="UpdateTag">
+                            <input hidden="" asp-for="@tag.TagId"/>
+                            <input onchange="this.form.submit()" asp-for="@tag.Name"/>
+                        </form>
+                        <a asp-action="DeleteTag"
+                           asp-route-id="@tag.TagId"
+                           class="clickable">
+                            <button>Delete</button>
+                        </a>
+                    </div>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
+                @if (TempData["TestMessage"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["TestMessage"]
+                    </div>
+                }
             </div>
-        }
+        </section>
     </section>
 </div>

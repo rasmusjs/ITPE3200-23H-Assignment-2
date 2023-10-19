@@ -30,6 +30,7 @@
         .change-categories {
             display: flex;
             flex-direction: column;
+            margin-top: 12px;
             
             .category-changer {
                 display: flex;
@@ -68,6 +69,41 @@
                 & img {
                     max-height: 400px;
                     max-width: 400px;
+                }
+            }
+        }
+    }
+    
+    .configure-tags {    
+        margin-top: 24px;
+        
+        .add-tag {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            & form {
+                display: flex;
+                align-items: end;
+                gap: 4px;
+            }
+        }
+        
+        .change-tags {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+            
+            .tags {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                
+                .tag {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 4px;
                 }
             }
         }
