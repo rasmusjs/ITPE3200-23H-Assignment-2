@@ -1,7 +1,9 @@
-<form method="get" asp-controller="Search" asp-action="Search">
-    <div>
-        <label for="term">Search Term:</label>
-        <input type="text" id="term" required minlength="2" maxlength="64" name="term" placeholder="Enter a search term"/>
+<form method="get" asp-controller="Search" asp-action="Search" class="search-field">
+    <div class="search-field-inner-container">
+        <span>
+            <label for="term">Search Term:</label>
+            <input type="text" id="term" required minlength="2" maxlength="64" name="term" placeholder="Enter a search term"/>
+        </span>
         <partial name="_SortBy"/>
         <button type="submit">Search</button>
     </div>

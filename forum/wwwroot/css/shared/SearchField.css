@@ -1,0 +1,8 @@
+.search-field {
+    .search-field-inner-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 24px;
+    }
+}
