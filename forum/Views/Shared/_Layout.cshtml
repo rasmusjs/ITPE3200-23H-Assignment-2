@@ -73,7 +73,7 @@
                     @if (User.IsInRole("Admin"))
                     {
                         <li>
-                            <a asp-area="" asp-controller="Dashboard" asp-action="AdminDashboard" class="@IsActive("Search", "Index") nav-btn-text">Admin Dashboard</a>
+                            <a asp-area="" asp-controller="Dashboard" asp-action="AdminDashboard" class="@IsActive("Dashboard", "AdminDashboard") nav-btn-text">Admin Dashboard</a>
                         </li>
                     }
                 }
