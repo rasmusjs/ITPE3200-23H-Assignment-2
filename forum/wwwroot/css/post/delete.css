@@ -1,0 +1,55 @@
+.post-delete {
+    & table {
+        margin-top: 12px;
+        background-color: var(--fg-2);
+        
+        & thead, & tbody {
+            background-color: var(--fg-1);
+            margin-bottom: 1px;
+            
+            & tr {
+                & td {
+                    padding: 12px 16px;
+                    
+                    &:first-child {
+                        font-weight: bold;
+                    }
+                    
+                    .tags {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 4px;
+                        
+                        .tag {
+                            padding: 4px 8px;
+                            border-radius: 24px;
+                            white-space: nowrap;
+                            background-color: var(--fg-2);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    .actions-container {
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+        margin-top: 12px;
+        
+        & i {
+            margin-right: 4px;
+        }
+        
+        .delete {
+            color: var(--txt-1);
+            background-color: var(--error) !important;
+            transition: var(--tr-default);
+            
+            &:hover {
+                filter: brightness(125%);
+            }
+        }
+    }
+}
