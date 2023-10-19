@@ -1,15 +1,29 @@
 ﻿@page
 @model EmailModel
 @{
+    /*
     ViewData["Title"] = "Manage Email";
+    */
+    ViewData["Title"] = "Email";
     ViewData["ActivePage"] = ManageNavPages.Email;
 }
 
 <div class="identity-account">
     <h3>@ViewData["Title"]</h3>
-    <partial name="_StatusMessage" for="StatusMessage"/>
+
+    <div class="form-group">
+        @*
+        <label asp-for="Email"></label>
+        *@
+        <input asp-for="Email" disabled/>
+    </div>
+
+@*Disabled because we have not setup a mailserver for actually   s*@
+    @*<partial name="_StatusMessage" for="StatusMessage"/>
     <form id="email-form" method="post">
         <div asp-validation-summary="All"></div>
+        
+         
         @if (Model.IsEmailConfirmed)
         {
             <div class="form-group">
@@ -31,7 +45,7 @@
             <span asp-validation-for="Input.NewEmail" class="error"></span>
         </div>
         <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="submit-btn">Change email</button>
-    </form>
+    </form>*@
 </div>
 
 @section Scripts {
