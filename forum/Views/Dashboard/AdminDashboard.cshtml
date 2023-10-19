@@ -33,7 +33,6 @@
                             <i class="fa fa-upload" aria-hidden="true"></i>
                             File upload
                         </summary>
-                        <label asp-for="@Model.Category!.PictureBytes"></label>
                         <input type="file" accept=".png,.jpg,.jpeg,.gif,.tif"
                                asp-for="@Model.Category!.PictureBytes"
                                class="img-input"/>
@@ -44,7 +43,6 @@
                             <i class="fa fa-link" aria-hidden="true"></i>
                             URL
                         </summary>
-                        <label asp-for="@Model.Category!.PicturePath"></label>
                         <input required asp-for="@Model.Category!.PicturePath"/>
                     </details>
                 </div>
@@ -125,8 +123,8 @@
 
                     <a asp-action="DeleteCategory"
                        asp-route-id="@category.CategoryId"
-                       class="clickable">
-                        Delete
+                       class="clickable input delete-input">
+                        <i class="fa-solid fa-trash-can"></i> Delete
                     </a>
                 </div>
             }
@@ -162,8 +160,8 @@
                         </form>
                         <a asp-action="DeleteTag"
                            asp-route-id="@tag.TagId"
-                           class="clickable">
-                            <button>Delete</button>
+                           class="clickable input delete-input">
+                            <i class="fa-solid fa-trash-can"></i> Delete
                         </a>
                     </div>
                 }
