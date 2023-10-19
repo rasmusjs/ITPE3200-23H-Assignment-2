@@ -19,62 +19,62 @@ public static class DbInit
             new()
             {
                 Name = "Entertainment", Color = "#a83432",
-                PicturePath = "./images/categories/entertainment-cover.png"
+                PicturePath = "../images/categories/entertainment-cover.png"
             },
             new()
             {
                 Name = "News", Color = "#a85b32",
-                PicturePath = "./images/categories/news-cover.png"
+                PicturePath = "../images/categories/news-cover.png"
             },
             new()
             {
                 Name = "Politics", Color = "#a89e32",
-                PicturePath = "./images/categories/politics-cover.png"
+                PicturePath = "../images/categories/politics-cover.png"
             },
             new()
             {
                 Name = "Science", Color = "#4ca832",
-                PicturePath = "./images/categories/science-cover.png"
+                PicturePath = "../images/categories/science-cover.png"
             },
             new()
             {
                 Name = "Sports", Color = "#32a85f",
-                PicturePath = "./images/categories/sports-cover.png"
+                PicturePath = "../images/categories/sports-cover.png"
             },
             new()
             {
                 Name = "Technology", Color = "#32a88c",
-                PicturePath = "./images/categories/technology-cover.png"
+                PicturePath = "../images/categories/technology-cover.png"
             },
             new()
             {
                 Name = "General", Color = "#329ea8",
-                PicturePath = "./images/categories/general-cover.png"
+                PicturePath = "../images/categories/general-cover.png"
             },
             new()
             {
                 Name = "Debugging", Color = "#3269a8",
-                PicturePath = "./images/categories/debugging-cover.png"
+                PicturePath = "../images/categories/debugging-cover.png"
             },
             new()
             {
                 Name = "Development", Color = "#3236a8",
-                PicturePath = "./images/categories/development-cover.png"
+                PicturePath = "../images/categories/development-cover.png"
             },
             new()
             {
                 Name = "Front End", Color = "#6932a8",
-                PicturePath = "./images/categories/frontend-cover.png"
+                PicturePath = "../images/categories/frontend-cover.png"
             },
             new()
             {
                 Name = "Game Development", Color = "#9a32a8",
-                PicturePath = "./images/categories/gamedevelopment-cover.png"
+                PicturePath = "../images/categories/gamedevelopment-cover.png"
             },
             new()
             {
                 Name = "Back End", Color = "#a83281",
-                PicturePath = "./images/categories/backend-cover.png"
+                PicturePath = "../images/categories/backend-cover.png"
             },
         };
 
