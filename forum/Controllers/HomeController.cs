@@ -3,7 +3,6 @@ using forum.DAL;
 using forum.Models;
 using forum.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace forum.Controllers;
@@ -11,7 +10,8 @@ namespace forum.Controllers;
 // Controller for the search function
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger; // Ikke satt opp enda!
+    
+    private readonly ILogger<HomeController> _logger;
 
     // Connect the controller to the different models
     private readonly IForumRepository<Category> _categoryRepository;
@@ -35,19 +35,6 @@ public class HomeController : Controller
         return User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 
-    // Function to refresh
-    // NOT USED?????
-    public IActionResult Refresh()
-    {
-        return Redirect(Request.Headers["Referer"].ToString());
-    }
-
-    // Function to go to post based on id
-    public IActionResult GoToPost(int id)
-    {
-        return RedirectToAction("Post", "Post", new { id });
-    }
-
     // Sends user to index
     public async Task<IActionResult> Index()
     {
@@ -57,8 +44,10 @@ public class HomeController : Controller
 
         // Exception if there are no tags or categories to show the user
         if (categories == null || tags == null)
-            //_logger.LogError("Categories or tags not found, cannot create post in AdminDashboard");
-            throw new InvalidOperationException("Categories or tags not found, cannot create post");
+        {
+            _logger.LogError($"[Home controller] Index() failed, error message: Categories or tags not found");
+            return NotFound("Categories or tags not found, cannot show view");
+        }
 
         // New view model for creating a post
         var adminDashboardViewModel = new DashboardViewModel
