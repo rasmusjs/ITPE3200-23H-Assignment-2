@@ -489,8 +489,10 @@ public class PostController : Controller
     // Get request for adding likes to a comment
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> LikeComment(int id)
+    public async Task<IActionResult> LikeComment(int id, bool redirect = true)
     {
+        Console.WriteLine("LikeComment" + id + redirect);
+
         // Fetches comment based on id
         var comment = await _commentRepository.GetTById(id);
 
@@ -510,8 +512,14 @@ public class PostController : Controller
             user.LikedComments.Remove(comment); // Removes the comment from the user's liked comments
             await _userManager.UpdateAsync(user); // Updates the user
             await _commentRepository.Update(comment); // Updates the comment
-            return Redirect(
-                $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
+            if (redirect)
+            {
+                return Redirect(
+                    $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
+            }
+
+            // Refreshes the site
+            return Refresh();
         }
 
         // Increments like on the comment
@@ -527,9 +535,14 @@ public class PostController : Controller
         // Updates the comment
         await _commentRepository.Update(comment);
 
-        // Refreshes the post
-        return Redirect(
-            $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
+        if (redirect)
+        {
+            // Refreshes the post
+            return Redirect(
+                $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
+        }
+
+        return Refresh();
     }
     // Get request for adding likes to a comment
 
