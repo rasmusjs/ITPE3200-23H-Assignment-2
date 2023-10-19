@@ -3,6 +3,12 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
+<style>
+     details summary {
+         list-style-type: ' ';
+     }
+</style>
+
 <div class="admin-dashboard">
     <section class="configure-categories">
         <h1>Configure categories</h1>
@@ -18,17 +24,29 @@
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="@Model.Category!.Name">Name</label>
+                    <label asp-for="@Model.Category!.Name"></label>
                     <input required asp-for="@Model.Category!.Name"/>
                 </div>
-
                 <div class="form-group">
-                    <label asp-for="@Model.Category!.PictureBytes">Upload image</label>
-                    <input type="file" accept=".png,.jpg,.jpeg,.gif,.tif"
-                           asp-for="@Model.Category!.PictureBytes"
-                           class="img-input"
-                           onchange="document.getElementById('CategoryImage').src = window.URL.createObjectURL(this.files[0])"/>
-                    <span asp-validation-for="@Model.Category!.PictureBytes" class="error"></span>
+                    <details>
+                        <summary>
+                            <i class="fa fa-upload" aria-hidden="true"></i>
+                            File upload
+                        </summary>
+                        <label asp-for="@Model.Category!.PictureBytes"></label>
+                        <input type="file" accept=".png,.jpg,.jpeg,.gif,.tif"
+                               asp-for="@Model.Category!.PictureBytes"
+                               class="img-input"/>
+                        <span asp-validation-for="@Model.Category!.PictureBytes" class="error"></span>
+                    </details>
+                    <details>
+                        <summary>
+                            <i class="fa fa-link" aria-hidden="true"></i>
+                            URL
+                        </summary>
+                        <label asp-for="@Model.Category!.PicturePath"></label>
+                        <input required asp-for="@Model.Category!.PicturePath"/>
+                    </details>
                 </div>
 
                 <input type="submit" value="Add"/>
@@ -45,26 +63,40 @@
                 <div class="category-changer">
                     <form asp-action="UpdateCategory" enctype="multipart/form-data">
                         <input hidden="" asp-for="@category.CategoryId"/>
-                    
+
                         <div class="form-group">
-                            <label asp-for="@Model.Category!.Color"></label>
-                            <input required type="color" asp-for="@Model.Category!.Color"/>
+                            <label asp-for="@category.Color"></label>
+                            <input required type="color" asp-for="@category.Color"/>
                         </div>
-                        
+
                         <div class="form-group">
-                            <label asp-for="@Model.Category!.Name">Name</label>
-                            <input required asp-for="@Model.Category!.Name"/>
+                            <label asp-for="@category.Name"></label>
+                            <input required asp-for="@category.Name"/>
                         </div>
-        
+
                         <div class="form-group">
-                            <label asp-for="@Model.Category!.PictureBytes">Upload image</label>
-                            <input type="file" accept=".png,.jpg,.jpeg,.gif,.tif"
-                                   asp-for="@Model.Category!.PictureBytes"
-                                   class="img-input"
-                                   onchange="document.getElementById('CategoryImage').src = window.URL.createObjectURL(this.files[0])"/>
-                            <span asp-validation-for="@Model.Category!.PictureBytes" class="error"></span>
+                            <details>
+                                <summary>
+                                    <i class="fa fa-upload" aria-hidden="true"></i>
+                                    File upload
+                                </summary>
+                                <label asp-for="@category!.PictureBytes">Upload image</label>
+                                <input type="file" accept=".png,.jpg,.jpeg,.gif,.tif"
+                                       asp-for="@category!.PictureBytes"
+                                       class="img-input"/>
+                                <span asp-validation-for="@Model.Category!.PictureBytes" class="error"></span>
+                            </details>
+                            <details>
+                                <summary>
+                                    <i class="fa fa-link" aria-hidden="true"></i>
+                                    URL
+                                </summary>
+                                <label asp-for="@category.PicturePath"></label>
+                                <input required asp-for="@category.PicturePath"/>
+                            </details>
+
                         </div>
-                        
+
                         @*<input onchange="this.form.submit()" asp-for="@category.Name"/>
                         <input onchange="this.form.submit()" type="color" asp-for="@category.Color"/>
                         
@@ -86,18 +118,17 @@
                             <img src="@category.PicturePath" alt="Picture of @category.Name">
                         }*@
 
-                        <input type="submit" value="Submit" />
+                        <input type="submit" value="Update"/>
                     </form>
-                    
+
                     <img src="@category.PicturePath" alt="Category image - @category.Name">
-                    
+
                     <a asp-action="DeleteCategory"
                        asp-route-id="@category.CategoryId"
                        class="clickable">
                         Delete
                     </a>
                 </div>
-
             }
         </section>
     </section>
