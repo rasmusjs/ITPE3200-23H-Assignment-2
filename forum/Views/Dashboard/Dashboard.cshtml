@@ -91,15 +91,14 @@
                 <div class="comments">
                     @foreach (var comment in Model.LikedComments.OrderByDescending(comment => comment.DateCreated))
                     {
-                        <div>
-                            "@comment.Content" | @comment.TotalLikes Likes
-
+                        <div class="comment">
+                            <span class="comment-content">"@comment.Content"</span>
                             <a asp-controller="Post"
                                asp-action="LikeComment"
                                asp-route-id="@comment.CommentId">
-                                Unlike
+                                Remove like
                             </a>
-
+                            <span class="likes">@comment.TotalLikes <i class="fa-solid fa-thumbs-up"></i></span>
                             <a asp-controller="Post"
                                asp-action="Post"
                                asp-route-id="@comment.PostId">
