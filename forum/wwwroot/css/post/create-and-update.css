@@ -1,8 +1,12 @@
-.create {
+.create, 
+.update {
     & form {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
         
         .tags {
             & select {
