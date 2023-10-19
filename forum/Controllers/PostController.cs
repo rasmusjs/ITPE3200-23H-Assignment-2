@@ -255,7 +255,7 @@ public class PostController : Controller
 
         // Fetches the tags and checks if the post has category and tags
         var selectedTags = post.Tags;
-        if (categories == null || tags == null) return NotFound("Post not found, cannot update post");
+        if (categories == null || tags == null) return NotFound("Categories or tags not found, cannot update post");
 
         // Creates a new view model
         var postViewModel = new PostViewModel
@@ -288,37 +288,50 @@ public class PostController : Controller
         var postViewModel = await GetPostViewModel();
 
 
-        // Checks if the user is the owner of the post,
-        if (post.UserId != GetUserId()) // TODO: Add error message
-        {
-            return View(postViewModel);
-        }
-
         // Sanitizing the post content
         post.Content = new HtmlSanitizer().Sanitize(post.Content);
 
         // Check if model is valid before updating
-        if (!ModelState.IsValid) return View(postViewModel);
+        if (!ModelState.IsValid || post.TagsId == null) return View(postViewModel);
 
-
-        // Remove all the olds tags from post, this is done since we could not find a way to use CASCADE update in EF Core
-        if (!await _postRepository.RemoveAllPostTags(post.PostId))
-            return NotFound("Post not found, cannot update post");
 
         /*var postFromDb = await _postRepository.GetTById(post.PostId);
-        post.UserId = postFromDb.UserId;
+
+
+        post.UserId = postFromDb?.UserId;
         post.DateCreated = postFromDb.DateCreated;
         post.DateLastEdited = DateTime.Now;*/
+
+
+        // Checks if the user is the owner of the post,
+        if (!GetUserId().Equals(post.UserId)) // TODO: Add error message
+        {
+            return StatusCode(403, "You are not the owner of the post");
+        }
+
+        // Remove all the olds tags from post, this is done since we could not find a way to use CASCADE update in EF Core
+        await _postRepository.RemoveAllPostTags(post.PostId);
+
 
         // Adds the required tags again 
         // Source: https://stackoverflow.com/questions/62783700/asp-net-core-razor-pages-select-multiple-items-from-ienumerable-dropdownlist
         // Inspiration for how to get the selected tags
         var allTags = await _tags.GetAll();
-        if (allTags != null && post.TagsId != null)
-            post.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId)).ToList();
+
+        if (allTags == null)
+        {
+            return NotFound("Tags not found, cannot update post");
+        }
+
+        // Link tags to post
+        post.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId)).ToList();
+
 
         // Update post
-        if (!await _postRepository.Update(post)) return NotFound("Post not found, cannot update post");
+        if (!await _postRepository.Update(post))
+        {
+            return NotFound("Post not found, cannot update post");
+        }
 
         // Sends user back to the updated post 
         return GoToPost(post.PostId);

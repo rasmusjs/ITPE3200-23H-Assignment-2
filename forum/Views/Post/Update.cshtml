@@ -8,6 +8,9 @@
 <form asp-action="Update" asp-method="post">
     <div asp-validation-summary="All"></div>
     <input type="hidden" asp-for="Post.PostId"/>
+    <input type="hidden" asp-for="Post.UserId"/>
+    <input type="hidden" asp-for="Post.DateCreated"/>
+
     <div>
         <label asp-for="Post.Title"></label><span>*</span>
         <input asp-for="Post.Title"/>
