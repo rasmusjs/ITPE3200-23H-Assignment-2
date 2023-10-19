@@ -1,0 +1,22 @@
+.create {
+    & form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        
+        .tags {
+            & select {
+                min-height: 150px;
+            }
+            
+            .explanation {
+                color: var(--txt-2);
+                
+                .ctrl {
+                    color: var(--txt-2);
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+}

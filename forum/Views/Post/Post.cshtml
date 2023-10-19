@@ -4,7 +4,7 @@
     ViewData["Title"] = Model.Title;
 }
 
-<div>
+<div class="post-post">
     @{
         var postCardViewModel = new PostCardViewModel
         {
@@ -15,16 +15,15 @@
     }
     
     <partial name="_PostCard" model="postCardViewModel"/>
-    <div>
-        <details>
-            <summary>Add comment</summary>
-            <div>
-                <partial name="_CreateComment" model="new Comment { PostId = Model.PostId }"/>
-            </div>
-        </details>
-        @if (Model.Comments != null)
-        {
-            <partial name="_Comments" model="Model.Comments"/>
-        }
-    </div>
+    
+    <details class="add-comment-container">
+        <summary>Add comment</summary>
+        <div class="comment-view-container">
+            <partial name="_CreateComment" model="new Comment { PostId = Model.PostId }"/>
+        </div>
+    </details>
+    @if (Model.Comments != null)
+    {
+        <partial name="_Comments" model="Model.Comments"/>
+    }
 </div>

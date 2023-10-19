@@ -46,15 +46,8 @@
             <a asp-controller="Post"
                asp-action="LikeComment"
                asp-route-id="@Model.CommentId"
-               class="clickable">
-                @if (@Model.IsLiked)
-                {
-                    <span style="color: #4CAF50">Liked</span>
-                }
-                else
-                {
-                    <span>Like</span>
-                }
+               class="clickable @(Model.IsLiked ? "liked" : "")">
+                @(Model.IsLiked ? "Liked" : "Like")
             </a>
 
             @if (signedIn)
@@ -88,15 +81,15 @@
         </div>
     </div>
 
+    @if (Model.CommentReplies != null && Model.CommentReplies.Count != 0)
+    {
     <div class="sub-comments">
-        @if (Model.CommentReplies != null)
+        @foreach (var comment in Model.CommentReplies)
         {
-            foreach (var comment in Model.CommentReplies)
-            {
-                <partial name="_Comment" model="comment"/>
-            }
+            <partial name="_Comment" model="comment"/>
         }
     </div>
+    }
 </div>
 
 @functions {
