@@ -69,7 +69,7 @@
                 @* If the user is the owner of the comment show buttons for editing, deleting, signedIn is checked to prevent the buttons to be shown if User.Id is null *@
                 @if (Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) && signedIn || User.IsInRole("Admin"))
                 {
-                    if (User.IsInRole("User"))
+                    if (Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
                     {
                         <button class="edit-btn clickable">Edit</button>
                         <div class="edit-div">

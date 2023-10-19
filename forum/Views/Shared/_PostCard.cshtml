@@ -76,7 +76,7 @@
         <div class="links">
             @if (Model.Post.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) || User.IsInRole("Admin"))
             {
-                if (User.IsInRole("User"))
+                if (Model.Post.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
                 {
                     <a asp-controller="Post"
                        asp-action="Update"
