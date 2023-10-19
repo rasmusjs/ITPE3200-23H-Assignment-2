@@ -2,7 +2,7 @@
     .search-field-inner-container {
         display: flex;
         flex-direction: row;
-        align-items: center;
+        align-items: end;
         gap: 24px;
     }
 }
