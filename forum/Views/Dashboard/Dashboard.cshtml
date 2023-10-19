@@ -8,11 +8,11 @@
 
 <div class="dashboard">
     <h1 class="title">Dashboard</h1>
-    
+
     <section>
         <h2>Posts</h2>
         <hr>
-        
+
         <section>
             <h3>My posts:</h3>
             @if (Model.Posts == null || Model.Posts.Count == 0)
@@ -30,7 +30,7 @@
                 </div>
             }
         </section>
-        
+
         <sections>
             <h3>Liked posts:</h3>
             @if (Model.LikedPosts == null || Model.LikedPosts.Count == 0)
@@ -49,11 +49,11 @@
             }
         </sections>
     </section>
-        
+
     <section>
         <h2>Comments</h2>
         <hr>
-        
+
         <section>
             <h3>My comments:</h3>
             @if (Model.Comments == null || Model.Comments.Count == 0)
@@ -68,7 +68,9 @@
                     {
                         <div class="comment">
                             <span class="comment-content">"@comment.Content"</span>
-                            <span class="likes">@comment.TotalLikes <i class="fa-solid fa-thumbs-up"></i></span>
+                            <span class="likes">
+                                @comment.TotalLikes <i class="fa-solid fa-thumbs-up"></i>
+                            </span>
                             <a asp-controller="Post"
                                asp-action="Post"
                                asp-route-id="@comment.PostId">
@@ -79,7 +81,7 @@
                 </div>
             }
         </section>
-        
+
         <section>
             <h3>Liked comments:</h3>
             @if (Model.LikedComments == null || Model.LikedComments.Count == 0)
@@ -95,10 +97,12 @@
                             <span class="comment-content">"@comment.Content"</span>
                             <a asp-controller="Post"
                                asp-action="LikeComment"
-                               asp-route-id="@comment.CommentId">
+                               asp-route-id="@comment.CommentId" asp-route-redirect="false">
                                 Remove like
                             </a>
-                            <span class="likes">@comment.TotalLikes <i class="fa-solid fa-thumbs-up"></i></span>
+                            <span class="likes">
+                                @comment.TotalLikes <i class="fa-solid fa-thumbs-up"></i>
+                            </span>
                             <a asp-controller="Post"
                                asp-action="Post"
                                asp-route-id="@comment.PostId">
