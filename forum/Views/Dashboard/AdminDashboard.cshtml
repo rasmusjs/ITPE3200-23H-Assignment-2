@@ -20,7 +20,7 @@
             <form asp-action="NewCategory" enctype="multipart/form-data">
                 <div class="form-group">
                     <label asp-for="@Model.Category!.Color"></label>
-                    <input required type="color" asp-for="@Model.Category!.Color"/>
+                    <input required type="color" id="NewCategory-color-field" asp-for="@Model.Category!.Color"/>
                 </div>
 
                 <div class="form-group">
@@ -183,3 +183,9 @@
         </section>
     </section>
 </div>
+
+<script defer>
+// Random color generator for new category
+document.getElementById("NewCategory-color-field").value= '#'+Math.floor(Math.random()*16777215).toString(16);
+// Source: https://www.paulirish.com/2009/random-hex-color-code-snippets/
+</script>
