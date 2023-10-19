@@ -2,33 +2,31 @@
 @{
     ViewData["Title"] = "Create Post";
 }
-<h1>Create Post</h1>
 
-<form asp-action="Create">
-    <div>
-        <label asp-for="Post.Title"></label><span>*</span>
-        <input asp-for="Post.Title"/>
-        <span asp-validation-for="Post.Title"></span>
-    </div>
-    <div>
-        <label asp-for="Post.Content"></label><span>*</span>
-        <textarea asp-for="Post.Content"></textarea>
-        <span asp-validation-for="Post.Content"></span>
-    </div>
-    <div>
-        <label asp-for="Post.Category"></label><span>*</span>
-        <select asp-for="Post.CategoryId" asp-items="Model.CategorySelectList"></select>
-        <span asp-validation-for="Post.CategoryId"></span>
-    </div>
-    <div>
-        <label asp-for="Post.Tags"></label><span>*</span>
-        <select multiple asp-for="Post.TagsId" asp-items="Model.TagList"></select>
-        <span asp-validation-for="Post.TagsId"></span>
-    </div>
-    <div>
+<div class="create">
+    <h1>Create Post</h1>
+    
+    <form asp-action="Create">
+        <div class="form-group">
+            <label asp-for="Post.Title">Title*</label>
+            <input asp-for="Post.Title"/>
+            <span asp-validation-for="Post.Title" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Post.Category">Category*</label>
+            <select asp-for="Post.CategoryId" asp-items="Model.CategorySelectList"></select>
+            <span asp-validation-for="Post.CategoryId" class="error"></span>
+        </div>
+        <div class="form-group tags">
+            <label asp-for="Post.Tags">Tags* <span class="explanation">(hold <span class="ctrl">Ctrl</span> to select multiple)</span></label>
+            <select multiple asp-for="Post.TagsId" asp-items="Model.TagList"></select>
+            <span asp-validation-for="Post.TagsId" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Post.Content">Content*</label>
+            <textarea asp-for="Post.Content"></textarea>
+            <span asp-validation-for="Post.Content" class="error"></span>
+        </div>
         <button type="submit">Create</button>
-    </div>
-    <div>
-        <a href="javascript:history.go(-1)">Cancel</a>
-    </div>
-</form>
+    </form>
+</div>
