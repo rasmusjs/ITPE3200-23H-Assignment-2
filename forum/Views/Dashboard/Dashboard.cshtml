@@ -31,12 +31,12 @@
             }
         </section>
 
-        <sections>
+        <section>
             <h3>Liked posts:</h3>
             @if (Model.LikedPosts == null || Model.LikedPosts.Count == 0)
             {
                 <p>You have not liked any posts.</p>
-                <a asp-area="" asp-controller="Post" asp-action="Card">Have a look at whats out there!</a>
+                <a asp-area="" asp-controller="Post" asp-action="Card">Have a look at what's out there!</a>
             }
             else
             {
@@ -47,7 +47,7 @@
                     }
                 </div>
             }
-        </sections>
+        </section>
     </section>
 
     <section>
