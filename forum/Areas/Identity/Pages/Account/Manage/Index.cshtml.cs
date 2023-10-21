@@ -92,27 +92,35 @@ public class IndexModel : PageModel
 
         if (Request.Form.Files.Count > 0) // If the user has selected a file
         {
+            // Set the max size of the files
+            long maxSize = 1 * 1024 * 1024; // 1Mb
+
+            // Get the file from the form
             var file = Request.Form.Files.FirstOrDefault();
-            using (var dataStream = new MemoryStream())
+
+            if (file == null || file.Length == 0)
             {
-                if (file == null || file.Length == 0)
-                {
-                    StatusMessage = "File not selected";
-                    return RedirectToPage();
-                }
-
-                long maxSize = 1 * 1024 * 1024; // 1Mb
-
-                if (file.Length > maxSize) // If the file is greater than 1Mb
-                {
-                    StatusMessage = "File size must be less than 1Mb";
-                    return RedirectToPage();
-                }
-
-                await file.CopyToAsync(dataStream);
-                user.ProfilePicture = dataStream.ToArray();
+                StatusMessage = "File not selected";
+                return RedirectToPage();
             }
+
+            // If the file is greater than 1Mb
+            if (file.Length > maxSize)
+            {
+                StatusMessage = "File size must be less than 1Mb";
+                return RedirectToPage();
+            }
+
+            // Store the file temporarily before saving it to the database
+            using var dataStream = new MemoryStream();
+
+            // Copy the file to the data stream
+            await file.CopyToAsync(dataStream);
+
+            // Update the user's profile picture
+            user.ProfilePicture = dataStream.ToArray();
         }
+        // Based on https://codewithmukesh.com/blog/user-management-in-aspnet-core-mvc/ 
 
         // If RemoveProfilePicture is true, then remove the profile picture
         if (Input.RemoveProfilePicture)
