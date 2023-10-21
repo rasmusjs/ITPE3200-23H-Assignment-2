@@ -266,13 +266,6 @@ nav {
                 }
             }
         }
-
-        #nav-login-container {
-            #logout-btn:hover {
-                color: var(--bg-1);
-                background-color: var(--warning);
-            }
-        }
     }
 
     .nav-btn-text {
