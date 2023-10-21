@@ -47,6 +47,10 @@
         </div>
         <button id="update-profile-button" type="submit" class="submit-btn">Save</button>
     </form>
+    <hr>
+    <form id="logout-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+        <button id="logout-btn" class="nav-btn-text" type="submit">Logout</button>
+    </form>
 </div>
 
 @section Scripts {

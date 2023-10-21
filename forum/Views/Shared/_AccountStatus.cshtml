@@ -2,15 +2,14 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-
-<ul>
+<ul class="account-status">
     @* Check if user is signed in and if the user exists *@
     @if (SignInManager.IsSignedIn(User) && UserManager.GetUserAsync(User).Result != null)
     {
         <li>
             <a id="manage-link" class="nav-btn-text" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
         </li>
-        <li>
+        <li class="img-container">
             @{
                 var user = await UserManager.GetUserAsync(User);
 
