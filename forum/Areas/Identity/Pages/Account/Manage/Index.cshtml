@@ -23,6 +23,7 @@
         </div>
         <div class="profile-container">
             <label asp-for="Input.ProfilePicture"></label>
+            <label asp-for="Input.ProfilePicture">(Max image size is 1 Mb)</label>
             @if (Model.Input.ProfilePicture != null)
             {
                 <img id="profilePicture" src="data:image/*;base64,@(Convert.ToBase64String(Model.Input.ProfilePicture))" alt="Profile ">
@@ -31,12 +32,12 @@
             {
                 <p class="no-profile-picture-selected">No profile picture selected</p>
             }
-            <input type="file" id="profilePictureInput"
-                   accept=".png,.jpg,.jpeg,.gif,.tif"
-                   asp-for="Input.ProfilePicture"
-                   class="img-input"
-                   onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])"/>
-            <span asp-validation-for="Input.ProfilePicture" class="error"></span>
+                <input type="file" id="profilePictureInput"
+                       accept=".png,.jpg,.jpeg,.gif,.tif"
+                       asp-for="Input.ProfilePicture"
+                       class="img-input"
+                       onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])"/>
+                <span asp-validation-for="Input.ProfilePicture" class="error"></span>
         </div>
         <div class="checkbox-group">
             <label asp-for="Input.RemoveProfilePicture">
