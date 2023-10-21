@@ -2,15 +2,14 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-
-<ul>
+<ul class="account-status">
     @* Check if user is signed in and if the user exists *@
     @if (SignInManager.IsSignedIn(User) && UserManager.GetUserAsync(User).Result != null)
     {
         <li>
             <a id="manage-link" class="nav-btn-text" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
         </li>
-        <li>
+        <li class="img-container">
             @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
             {
                 <img style="width:40px;height:40px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))" alt="Picture of @UserManager.GetUserName(User)">
@@ -19,11 +18,6 @@
             {
                 <img src="@Url.Identicon(UserManager.GetUserName(User), 40)" alt="Identicon of @UserManager.GetUserName(User)" width="40" height="40"/>
             }
-        </li>
-        <li>
-            <form id="logout-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button id="logout-btn" class="nav-btn-text" type="submit">Logout</button>
-            </form>
         </li>
     }
     else
@@ -35,7 +29,4 @@
             <a id="login-link" class="nav-btn-text" asp-area="Identity" asp-page="/Account/Login">Login</a>
         </li>
     }
-
-
-
 </ul>
