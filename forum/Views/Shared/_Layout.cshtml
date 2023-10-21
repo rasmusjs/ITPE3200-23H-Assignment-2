@@ -101,7 +101,7 @@
 <main>
     <div id="main-inner-container">
         @RenderBody()
-        @RenderSection("scripts", false)
+        @await RenderSectionAsync("scripts", false)
     </div>
 </main>
 <footer>
