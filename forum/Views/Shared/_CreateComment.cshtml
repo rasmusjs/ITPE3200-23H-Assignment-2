@@ -5,11 +5,11 @@
     <input type="hidden" asp-for="PostId"/>
     <div class="form-group">
         <label asp-for="Content">Reply/comment</label>
-        <textarea required asp-for="Content" onchange="validateComment(this)" rows="3"></textarea>
+        <textarea required asp-for="Content" onkeyup="validateComment(this)" rows="3"></textarea>
         <span asp-validation-for="Content" class="error"></span>
     </div>
     <div class="actions">
-        <button type="submit">Submit</button>
+        <button type="submit" disabled>Submit</button>
     </div>
 
     <script>
