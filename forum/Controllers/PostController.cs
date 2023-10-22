@@ -14,7 +14,7 @@ public class PostController : Controller
 {
     private readonly IForumRepository<Category> _categoryRepository;
     private readonly IForumRepository<Comment> _commentRepository;
-    
+
     private readonly ILogger<PostController> _logger; // Ikke satt opp enda!
 
     // Connect the controller to the different models
@@ -36,21 +36,19 @@ public class PostController : Controller
         _userManager = userManager;
         _logger = logger;
     }
-    
+
     [HttpGet]
     [Authorize]
     public string GetUserId()
     {
         // This is needed to see if the user actually is exist in the database
         if (_userManager.GetUserAsync(User).Result != null)
-        {
             //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
             return User.FindFirstValue(ClaimTypes.NameIdentifier);
-        }
 
         return "";
     }
-    
+
     // Method to refresh the post when user presses the like button
     public IActionResult Refresh()
     {
@@ -62,7 +60,13 @@ public class PostController : Controller
     {
         return RedirectToAction("Post", "Post", new { id });
     }
-    
+
+    // A method to go to comment based on id, when the user create or update a comment
+    public IActionResult GoToPostComment(int postId, int commentId)
+    {
+        return Redirect($"{Url.Action("Post", new { id = postId })}#commentId-{commentId}");
+    }
+
     public bool IsAdmin()
     {
         return User.IsInRole("Admin");
@@ -124,7 +128,7 @@ public class PostController : Controller
 
         return posts;
     }
-    
+
     // Method for fetching post by id
     public async Task<IActionResult> Post(int id)
     {
@@ -300,9 +304,7 @@ public class PostController : Controller
 
         // Checks if the user is the owner of the post,
         if (!GetUserId().Equals(post.UserId)) // TODO: Add error message
-        {
             return StatusCode(403, "You are not the owner of the post");
-        }
 
         // Remove all the olds tags from post, this is done since we could not find a way to use CASCADE update in EF Core
         await _postRepository.RemoveAllPostTags(post.PostId);
@@ -313,20 +315,14 @@ public class PostController : Controller
         // Inspiration for how to get the selected tags
         var allTags = await _tags.GetAll();
 
-        if (allTags == null)
-        {
-            return NotFound("Tags not found, cannot update post");
-        }
+        if (allTags == null) return NotFound("Tags not found, cannot update post");
 
         // Link tags to post
         post.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId)).ToList();
 
 
         // Update post
-        if (!await _postRepository.Update(post))
-        {
-            return NotFound("Post not found, cannot update post");
-        }
+        if (!await _postRepository.Update(post)) return NotFound("Post not found, cannot update post");
 
         // Sends user back to the updated post 
         return GoToPost(post.PostId);
@@ -344,7 +340,7 @@ public class PostController : Controller
         // Checks if the user is the owner of the post, // TODO: Add error message
         if (post.UserId != GetUserId() && !IsAdmin())
             // If the user is not the owner of the post, return to the post
-            return RedirectToAction("Post", "Post", new { id });
+            return GoToPost(id);
 
         // Return the post to be deleted
         return View(post);
@@ -360,7 +356,7 @@ public class PostController : Controller
 
         // Checks if the user is the owner of the post, // TODO: Add error message
         if (post.UserId != GetUserId() && !IsAdmin())
-            return RedirectToAction("Post", "Post", new { id }); // Send user back to the post if not owner
+            return GoToPost(id); // Send user back to the post if not owner
 
         // Delete post. If post not found, return NotFound
         var confirmedDeleted = await _postRepository.Delete(id);
@@ -382,9 +378,7 @@ public class PostController : Controller
 
         // Error handling to check if the model is correct
         if (!ModelState.IsValid)
-        {
-            return Redirect($"{Url.Action("Post", new { id = comment.PostId })} ");
-        } // TODO: Add error message
+            return GoToPost(comment.PostId); // TODO: Add error message
 
 
         //return Redirect($"{Url.Action("Post", new { id = comment.PostId })}"); // Redirect to the post with the comment
@@ -393,14 +387,10 @@ public class PostController : Controller
         comment.DateCreated = DateTime.Now;
         comment.UserId = GetUserId();
 
-
         var newComment = await _commentRepository.Create(comment);
 
-        if (newComment == null)
-        {
-            return Redirect(
-                $"{Url.Action("Post", new { id = comment.PostId })}"); // Redirect to the post with the comment
-        }
+        // TODO: Add error message
+        if (newComment == null) return GoToPost(comment.PostId); // Redirect to the post with the comment 
 
         // Fetches the user
         var user = await _userManager.FindByIdAsync(comment.UserId);
@@ -410,8 +400,7 @@ public class PostController : Controller
         // Updates the user attribute
         await _userManager.UpdateAsync(user);
 
-        return Redirect(
-            $"{Url.Action("Post", new { id = newComment.PostId })}#commentId-{newComment.CommentId}"); // Redirect to the post with the comment
+        return GoToPostComment(newComment.PostId, newComment.PostId);
     }
 
     // Post request for updating a comment
@@ -422,32 +411,25 @@ public class PostController : Controller
         // Fetch the comment from database, based on id
         var commentFromDb = await _commentRepository.GetTById(comment.CommentId);
 
-        // Error handling if no comment is found
-        if (commentFromDb == null) // TODO: Add error message
-            return Redirect(
-                $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
+        // Error handling if no comment is found // TODO: Add error message
+        if (commentFromDb == null) return GoToPostComment(comment.PostId, comment.CommentId);
 
-        // Checks if the user is the owner of the comment
-        if (commentFromDb.UserId != GetUserId()) // TODO: Add error message
-            return Redirect(
-                $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
-
+        // Checks if the user is the owner of the comment  // TODO: Add error message
+        if (commentFromDb.UserId != GetUserId()) return GoToPostComment(comment.PostId, comment.CommentId);
+        
         // Sanitizing the post content
         comment.Content = new HtmlSanitizer().Sanitize(comment.Content);
 
-        // Checks if the model for comments is valid and returns error message.
-        if (!ModelState.IsValid) // TODO: Add error message
-            return Redirect(
-                $"{Url.Action("Post", new { id = commentFromDb.PostId })}#commentId-{commentFromDb.CommentId}"); // Redirect to the post with the comment
+        // Checks if the model for comments is valid and returns error message.  // TODO: Add error message
+        if (!ModelState.IsValid) return GoToPostComment(comment.PostId, comment.CommentId);
 
         // Updates the comment in the database
         commentFromDb.DateLastEdited = DateTime.Now;
         commentFromDb.Content = comment.Content;
         await _commentRepository.Update(commentFromDb);
 
-        /* Validation not working, fix later */
-        return Redirect(
-            $"{Url.Action("Post", new { id = commentFromDb.PostId })}#commentId-{commentFromDb.CommentId}"); // Redirect to the post with the comment
+        /* Validation not working, fix later */ // TODO: Remove or fix?
+        return GoToPostComment(comment.PostId, comment.CommentId);
     }
 
     // Get request for adding likes to a post
@@ -459,7 +441,7 @@ public class PostController : Controller
         var post = await _postRepository.GetTById(id);
 
         // Error handling if the post is not found
-        if (post == null) return RedirectToAction(nameof(Refresh)); // TODO: Add error message
+        if (post == null) return Refresh(); // TODO: Add error message
 
         // Fetches the user
         var user = await _userManager.FindByIdAsync(GetUserId());
@@ -474,7 +456,7 @@ public class PostController : Controller
             user.LikedPosts.Remove(post); // Removes the post from the user's liked posts
             await _userManager.UpdateAsync(user); // Updates the user
             await _postRepository.Update(post); // Updates the post
-            return RedirectToAction(nameof(Refresh)); // Refreshes the post
+            return Refresh(); // Refreshes the post
         }
 
         // Increments like on the post
@@ -491,7 +473,7 @@ public class PostController : Controller
         await _postRepository.Update(post);
 
         // Refreshes the post
-        return RedirectToAction(nameof(Refresh));
+        return Refresh();
     }
 
     // Get request for adding likes to a comment
@@ -499,8 +481,6 @@ public class PostController : Controller
     [Authorize]
     public async Task<IActionResult> LikeComment(int id, bool redirect = true)
     {
-        Console.WriteLine("LikeComment" + id + redirect);
-
         // Fetches comment based on id
         var comment = await _commentRepository.GetTById(id);
 
@@ -520,11 +500,7 @@ public class PostController : Controller
             user.LikedComments.Remove(comment); // Removes the comment from the user's liked comments
             await _userManager.UpdateAsync(user); // Updates the user
             await _commentRepository.Update(comment); // Updates the comment
-            if (redirect)
-            {
-                return Redirect(
-                    $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
-            }
+            if (redirect) return GoToPostComment(comment.PostId, comment.CommentId);
 
             // Refreshes the site
             return Refresh();
@@ -543,13 +519,9 @@ public class PostController : Controller
         // Updates the comment
         await _commentRepository.Update(comment);
 
-        if (redirect)
-        {
-            // Refreshes the post
-            return Redirect(
-                $"{Url.Action("Post", new { id = comment.PostId })}#commentId-{comment.CommentId}"); // Redirect to the post with the comment
-        }
+        if (redirect) return GoToPostComment(comment.PostId, comment.CommentId);
 
+        // Refreshes the post
         return Refresh();
     }
     // Get request for adding likes to a comment
@@ -562,25 +534,20 @@ public class PostController : Controller
         var commentFromDb = await _commentRepository.GetTById(id);
 
         // Error handling if no comment is found
-        if (commentFromDb == null) // TODO: Add error message
-            return Refresh();
+        if (commentFromDb == null) return Refresh(); // TODO: Add error message
 
-        // Checks if the user is the owner of the comment
+        // Checks if the user is the owner of the comment, if not, return to the post
         if (commentFromDb.UserId != GetUserId() && !IsAdmin()) // TODO: Add error message
-            return Redirect(
-                $"{Url.Action("Post", new { id = commentFromDb.PostId })}#commentId-{id}"); // Redirect to the post with the comment
+            return GoToPostComment(commentFromDb.PostId, commentFromDb.PostId);
 
-        // Checks if the model for comments is valid and returns error message.
+        // Checks if the model for comments is valid and returns error message, if not, return to the post
         if (!ModelState.IsValid)
-        {
-            return Redirect(
-                $"{Url.Action("Post", new { id = commentFromDb.PostId })}#commentId-{commentFromDb.CommentId}"); // Redirect to the post with the comment
-        }
+            return GoToPostComment(commentFromDb.PostId, commentFromDb.PostId);
 
         // Checks if the comment has replies, if not, delete the comment
         if (commentFromDb.CommentReplies == null || commentFromDb.CommentReplies.Count == 0)
         {
-           await _commentRepository.Delete(commentFromDb.CommentId);
+            await _commentRepository.Delete(commentFromDb.CommentId);
         }
         else
         {
@@ -590,8 +557,7 @@ public class PostController : Controller
             await _commentRepository.Update(commentFromDb);
         }
 
-        /* Validation not working, fix later */
-        return Redirect(
-            $"{Url.Action("Post", new { id = commentFromDb.PostId })}"); // Redirect to the post
+        // Redirect to the post
+        return GoToPost(commentFromDb.PostId);
     }
 }

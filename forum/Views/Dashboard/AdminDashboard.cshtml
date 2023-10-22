@@ -32,7 +32,7 @@
                     <label asp-for="@Model.Category!.Name"></label>
                     <input required asp-for="@Model.Category!.Name"/>
                 </div>
-                
+
                 @* Image *@
                 <div class="form-group">
                     <details>
@@ -107,7 +107,7 @@
                                 <input required asp-for="@category.PicturePath"/>
                             </details>
                         </div>
-                        
+
                         @* Submit button (update) *@
                         <input type="submit" value="Update"/>
                     </form>
@@ -129,7 +129,7 @@
     @* Tags *@
     <section class="configure-tags">
         <h1>Configure tags</h1>
-        
+
         @* Add new tag *@
         <section class="add-tag">
             <div>
@@ -158,7 +158,7 @@
                             <input hidden="" asp-for="@tag.TagId"/>
                             <input onchange="this.form.submit()" asp-for="@tag.Name"/>
                         </form>
-                        
+
                         @* Delete button (delete tag) *@
                         <a asp-action="DeleteTag"
                            asp-route-id="@tag.TagId"

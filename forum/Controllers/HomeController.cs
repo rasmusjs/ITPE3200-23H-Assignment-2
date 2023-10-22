@@ -10,10 +10,9 @@ namespace forum.Controllers;
 // Controller for the search function
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
     // Connect the controller to the different models
     private readonly IForumRepository<Category> _categoryRepository;
+    private readonly ILogger<HomeController> _logger;
     private readonly IForumRepository<Tag> _tagsRepository;
 
     // Constructor for Dependency Injection to the Data Access Layer from the different repositories
@@ -38,13 +37,13 @@ public class HomeController : Controller
     public async Task<IActionResult> Index()
     {
         // Fetching the categories and tags data
-        IEnumerable<Category>? categories = await _categoryRepository.GetAll();
-        IEnumerable<Tag>? tags = await _tagsRepository.GetAll();
+        var categories = await _categoryRepository.GetAll();
+        var tags = await _tagsRepository.GetAll();
 
         // Exception if there are no tags or categories to show the user
         if (categories == null || tags == null)
         {
-            _logger.LogError($"[Home controller] Index() failed, error message: Categories or tags not found");
+            _logger.LogError("[Home controller] Index() failed, error message: Categories or tags not found");
             return NotFound("Categories or tags not found, cannot show view");
         }
 

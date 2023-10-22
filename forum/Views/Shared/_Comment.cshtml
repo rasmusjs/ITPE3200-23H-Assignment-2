@@ -1,13 +1,13 @@
 @using System.Security.Claims
-@using Microsoft.AspNetCore.Identity
 @using Microsoft.IdentityModel.Tokens
+@using Microsoft.AspNetCore.Identity
 @model Comment
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
 @{
-    bool signedIn = SignInManager.IsSignedIn(User) && UserManager.GetUserAsync(User).Result != null;
-    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
+    var signedIn = SignInManager.IsSignedIn(User) && UserManager.GetUserAsync(User).Result != null;
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
 }
 
 <div id="commentId-@Model.CommentId" class="comment">
@@ -42,14 +42,14 @@
                     <span class="deleted-user" title="Deleted user">[deleted user]</span>
                 }
             </span>
-            
+
             @* Shows how long ago the comment was created *@
             <span>Created @CalculateTimeAgo(Model.DateCreated)</span>
-            
+
             @* If comment has been edited/changed, shows how long ago this happened *@
             @if (Model.DateLastEdited != null)
             {
-                <span class="last-edited">(last edited @CalculateTimeAgo(@Model.DateLastEdited.Value))</span>
+                <span class="last-edited">(last edited @CalculateTimeAgo(Model.DateLastEdited.Value))</span>
             }
         </div>
 
@@ -89,7 +89,7 @@
                 @* If the user is admin, show button for deleting. *@
                 @* If the user is the owner of the comment, show buttons for editing and deleting. *@
                 @* signedIn is checked to prevent the buttons to be shown if User.Id is null *@
-                @if ((Model.UserId == userId && signedIn || User.IsInRole("Admin")) && !Model.Content.IsNullOrEmpty())
+                @if (((Model.UserId == userId && signedIn) || User.IsInRole("Admin")) && !Model.Content.IsNullOrEmpty())
                 {
                     if (Model.UserId == userId)
                     {
@@ -123,8 +123,9 @@
 </div>
 
 @functions {
-    @* Calculates how much time has passed since "date" and until the current moment. 
+        @* Calculates how much time has passed since "date" and until the current moment. 
     It then returns a string describing this time difference in a human-readable format. *@
+
     static string CalculateTimeAgo(DateTime date)
     {
         var timeDifference = DateTime.Now - date;

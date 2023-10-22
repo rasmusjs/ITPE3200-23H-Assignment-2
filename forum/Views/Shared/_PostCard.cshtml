@@ -5,7 +5,7 @@
 <div class="shared-postCard">
     <div class="top">
         <div class="chips">
-            
+
             @* Category *@
             <a asp-controller="Search"
                asp-action="Search"
@@ -46,10 +46,10 @@
                         <span class="deleted-user" title="Deleted user">[deleted user]</span>
                     }
                 </span>
-                
+
                 @* Shows how long ago the post was created *@
                 @CalculateTimeAgo(Model.Post.DateCreated)
-                
+
                 @* If the post has been edited, show how long ago this happened *@
                 @if (Model.Post.DateLastEdited != null)
                 {
@@ -74,7 +74,7 @@
     <div class="content">
         @* Title *@
         <div class="title">@Model.Post.Title</div>
-        
+
         @* Content *@
         <div class="@(Model.LimitContent ? "limit-content" : "")">
             @Html.Raw(Markdown.ToHtml(Model.Post.Content))
@@ -91,7 +91,7 @@
                 <i class="fa-solid fa-thumbs-up"></i>
                 @Model.Post.TotalLikes Likes
             </a>
-            
+
             @* Total likes. Navigates to post to see comments if clicked *@
             <a asp-controller="Post"
                asp-action="Post"
@@ -99,7 +99,7 @@
                 <i class="fa-solid fa-comment"></i>@Model.Post.Comments?.Count comments
             </a>
         </div>
-        
+
         @* Edit, Delete, Go to post *@
         <div class="links">
             @* If the user is admin, show button for deleting. *@
@@ -134,8 +134,9 @@
 </div>
 
 @functions {
-    @* Calculates how much time has passed since "date" and until the current moment. 
+        @* Calculates how much time has passed since "date" and until the current moment. 
     It then returns a string describing this time difference in a human-readable format. *@
+
     static string CalculateTimeAgo(DateTime date)
     {
         var timeDifference = DateTime.Now - date;

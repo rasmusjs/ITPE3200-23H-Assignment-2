@@ -7,7 +7,7 @@
         height: 40px;
         border-radius: 80px;
         overflow: hidden;
-        
+
         & img {
             height: 100%;
             aspect-ratio: 1/1;

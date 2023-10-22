@@ -22,7 +22,7 @@ public class SearchController : Controller
         _postRepository = postRepository;
         _logger = logger;
     }
-    
+
     [HttpGet]
     [Authorize]
     public string GetUserId()
@@ -61,7 +61,7 @@ public class SearchController : Controller
             _logger.LogError("[ItemController] Item list not found while executing _itemRepository.GetAll()");
             return NotFound("Item list not found");
         }
-        
+
         posts = sortby switch
         {
             "newest" => posts.OrderByDescending(post => post.DateCreated),

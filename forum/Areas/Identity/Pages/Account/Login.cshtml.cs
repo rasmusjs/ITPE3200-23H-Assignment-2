@@ -83,14 +83,12 @@ public class LoginModel : PageModel
                              @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
             var re = new Regex(emailRegex);
             if (!re.IsMatch(Input.Email))
-            {
                 ModelState.AddModelError("Email", "Email is not valid");
-            }
             else
-            {
                 // If the email is valid, try to find the username associated with the email
-                Input.Email = _userManager.FindByEmailAsync(Input.Email).Result.UserName ?? Input.Email; // If the email is not found, then the username is the email
-            }
+                Input.Email =
+                    _userManager.FindByEmailAsync(Input.Email).Result.UserName ??
+                    Input.Email; // If the email is not found, then the username is the email
         }
         else // If the username does not contain an @ symbol, then it is a username
         {

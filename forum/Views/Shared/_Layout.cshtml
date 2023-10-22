@@ -76,7 +76,7 @@
                 <li>
                     <a asp-area="" asp-controller="Post" asp-action="Card" class="@IsActive("Post", "Card") or @IsActive("Post", "Compact") nav-btn-text">Posts</a>
                 </li>
-                
+
                 @if (signedIn)
                 {
                     @* User dashboard *@
@@ -96,7 +96,7 @@
                 <li>
                     <a asp-area="" asp-controller="Search" asp-action="Index" class="@IsActive("Search", "Index") nav-btn-text">Search</a>
                 </li>
-                
+
                 @if (signedIn)
                 {
                     <li>
@@ -104,7 +104,7 @@
                     </li>
                 }
             </ul>
-            
+
             @* Contains Register and Login (if not signed in) or profile-link and profile-picture (if logged in) *@
             <partial name="_AccountStatus"/>
         </div>
@@ -122,26 +122,41 @@
 <footer>
     @* Fake copyright info *@
     <div class="fixed-width copyright-info">BracketBros © 2023</div>
-    
+
     @* Fake social media links. Directs user to the main page, not to any real accounts. *@
     <div class="social-media-links">
-        <a href="https://www.twitter.com/" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
-        <a href="https://www.facebook.com/" target="_blank"><i class="fa-brands fa-facebook"></i></a>
-        <a href="https://www.instagram.com/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-        <a href="https://www.youtube.com/" target="_blank"><i class="fa-brands fa-youtube"></i></a>
-        <a href="https://www.tiktok.com/" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
-        <a href="https://www.linkedin.com/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+        <a href="https://www.twitter.com/" target="_blank">
+            <i class="fa-brands fa-x-twitter"></i>
+        </a>
+        <a href="https://www.facebook.com/" target="_blank">
+            <i class="fa-brands fa-facebook"></i>
+        </a>
+        <a href="https://www.instagram.com/" target="_blank">
+            <i class="fa-brands fa-instagram"></i>
+        </a>
+        <a href="https://www.youtube.com/" target="_blank">
+            <i class="fa-brands fa-youtube"></i>
+        </a>
+        <a href="https://www.tiktok.com/" target="_blank">
+            <i class="fa-brands fa-tiktok"></i>
+        </a>
+        <a href="https://www.linkedin.com/" target="_blank">
+            <i class="fa-brands fa-linkedin"></i>
+        </a>
     </div>
 
     @* Fake address info *@
-    <address class="fixed-width">Office: <a href="https://maps.app.goo.gl/Cyb3aW4xv7TZAmKQ9" target="_blank">Pilestredet 35 0166, Oslo, Norway</a>
+    <address class="fixed-width">
+        Office: <a href="https://maps.app.goo.gl/Cyb3aW4xv7TZAmKQ9" target="_blank">Pilestredet 35 0166, Oslo, Norway</a>
     </address>
 </footer>
 </body>
 </html>
 
 @* Sets "active" class to links that match the currently used controller and action *@
+
 @functions {
+
     public string IsActive(string controller, string action)
     {
         var currentController = ViewContext.RouteData.Values["controller"] as string;

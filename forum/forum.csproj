@@ -55,9 +55,9 @@
         <PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.0"/>
     </ItemGroup>
     <ItemGroup>
-      <Content Update="wwwroot\package-lock.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <Content Remove="wwwroot\package.json" />
+        <Content Update="wwwroot\package-lock.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Remove="wwwroot\package.json"/>
     </ItemGroup>
 </Project>

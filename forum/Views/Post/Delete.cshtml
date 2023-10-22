@@ -6,7 +6,7 @@
 <div class="post-delete">
     <h1>Delete Post</h1>
     <h2>Are you sure you want to delete this post?</h2>
-    
+
     <table>
         <thead>
         <tr>
@@ -39,11 +39,11 @@
         </tr>
         </tbody>
     </table>
-    
+
     @* Actions: Cancel or confirm deletion *@
     <div class="actions-container">
         <a href="javascript:history.go(-1)" class="input"><i class="fa-solid fa-arrow-left"></i> Cancel</a>
-        
+
         <form asp-action="DeleteConfirmed" asp-route-id="@Model.PostId">
             <button type="submit" class="delete"><i class="fa-solid fa-trash-can"></i> Delete</button>
         </form>

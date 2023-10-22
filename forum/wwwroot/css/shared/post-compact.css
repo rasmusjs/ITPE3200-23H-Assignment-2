@@ -6,25 +6,25 @@
     padding: 5px;
     border-radius: 5px;
     background-color: var(--fg-2);
-    
+
     & .top {
         display: flex;
         flex-direction: row;
         gap: 5px;
         justify-content: space-between;
         align-items: center;
-        
+
         & * {
             font-size: var(--fs-s);
             color: var(--txt-2);
         }
-        
+
         & .chips {
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
             gap: 5px;
-            
+
             & a {
                 padding: 3px 10px;
                 border-radius: 20px;
@@ -32,7 +32,7 @@
                 text-decoration: none;
                 background-color: var(--fg-1);
                 transition: var(--tr-default);
-                
+
                 &.category {
                     font-weight: bold;
 
@@ -40,7 +40,7 @@
                         filter: brightness(120%);
                     }
                 }
-                
+
                 &.tag {
                     &:hover {
                         background-color: var(--fg-3);
@@ -48,7 +48,7 @@
                 }
             }
         }
-        
+
         & .creation-info {
             & .user {
                 & a {
@@ -64,29 +64,29 @@
         flex-direction: row;
         gap: 5px;
         width: 100%;
-        
+
         & .left-side {
             width: 100%;
             padding: 10px;
             background-color: var(--fg-1);
             border-radius: 5px;
-            
+
             & .title {
                 font-size: var(--fs-l);
                 margin: 2px 0 1px 0;
             }
-            
+
             & .content {
                 position: relative;
                 width: 100%;
                 height: 20px;
                 overflow: hidden;
-                
+
                 & * {
                     color: var(--txt-2);
                     font-size: var(--fs-s);
                 }
-                
+
                 &:after {
                     content: "";
                     position: absolute;
@@ -98,11 +98,11 @@
                 }
             }
         }
-        
+
         & .right-side {
             display: flex;
-            flex-grow: 1;   
-            
+            flex-grow: 1;
+
             & a {
                 display: flex;
                 justify-content: center;
@@ -113,11 +113,11 @@
                 text-decoration: none;
                 background-color: var(--fg-1);
                 transition: var(--tr-default);
-                
+
                 &:hover {
                     background-color: var(--fg-3);
                 }
-                
+
                 & i {
                     font-size: var(--fs-xl);
                 }

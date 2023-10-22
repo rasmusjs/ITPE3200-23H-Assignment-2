@@ -15,12 +15,12 @@ public class Category
     [Display(Name = "Category name")]
 
     // Getters and setters for category name
-    public string Name { get; set; } = String.Empty;
+    public string Name { get; set; } = string.Empty;
 
     // Getters and setters for category color
-    [Display(Name = "Color")] public string Color { get; set; } = String.Empty;
+    [Display(Name = "Color")] public string Color { get; set; } = string.Empty;
 
     // Getters and setters for category PicturePath
-    [Display(Name = "URL")] public string? PicturePath { get; set; } = String.Empty;
+    [Display(Name = "URL")] public string? PicturePath { get; set; } = string.Empty;
     [NotMapped] public byte[]? PictureBytes { get; set; } // used for file upload
 }

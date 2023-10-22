@@ -1,25 +1,25 @@
-.comment {    
+.comment {
     & .main-content {
         position: relative;
         border-radius: 6px;
         background-color: var(--fg-2);
-        
+
         .creation-info {
             display: flex;
             flex-direction: row;
             padding: 8px 8px 0 8px;
             border-radius: 6px 6px 0 0;
             background-color: var(--fg-1);
-    
+
             & * {
                 font-size: var(--fs-s);
                 color: var(--txt-2);
             }
-    
+
             & .user {
                 font-weight: bold;
                 margin-right: auto;
-                
+
                 & img {
                     display: inline;
                     height: 14px;
@@ -27,21 +27,21 @@
                     object-fit: cover;
                     border-radius: 28px;
                     transition: var(--tr-default);
-                    
+
                     &:hover {
                         transform: scale(3);
                         box-shadow: 0 0 4px 1px var(--fg-1);
                     }
                 }
-                
+
                 & a {
                     text-decoration: none;
-                    
+
                     &:hover {
                         text-decoration: underline;
                     }
                 }
-                
+
                 .existing-user {
                     display: flex;
                     flex-direction: row;
@@ -49,37 +49,37 @@
                     gap: 4px;
                 }
             }
-    
+
             & .last-edited {
                 font-style: italic;
                 margin-left: 4px;
             }
         }
-        
+
         .content {
             padding: 8px;
             background-color: var(--fg-1);
         }
-        
+
         .likes-and-comments {
             padding: 0 8px 8px 8px;
             background-color: var(--fg-1);
             border-radius: 0 0 6px 6px;
             font-size: var(--fs-s);
             color: var(--txt-2);
-            
+
             .spacer {
                 margin: 0 8px;
                 font-size: var(--fs-s);
                 color: var(--txt-2);
             }
         }
-        
+
         .bottom {
             display: flex;
             flex-direction: row;
             padding: 4px 6px;
-            
+
             & .clickable {
                 text-decoration: none;
                 color: var(--txt-2);
@@ -89,20 +89,20 @@
                 font-size: var(--fs-s);
                 font-weight: bold;
                 line-height: 20px;
-                
+
                 &.liked {
                     color: var(--primary) !important;
                 }
-                
+
                 &:hover {
                     background-color: var(--fg-1) !important;
                 }
             }
-            
+
             & .right-side {
                 margin-left: auto;
             }
-            
+
             & .reply-div,
             & .edit-div {
                 position: absolute;
@@ -113,15 +113,15 @@
                 width: 100%;
                 z-index: 100;
                 border-radius: 6px;
-                box-shadow: 0 2px 12px 6px rgba(0,0,0,0.5);
-                
+                box-shadow: 0 2px 12px 6px rgba(0, 0, 0, 0.5);
+
                 &.active {
                     display: block;
                 }
             }
         }
     }
-    
+
     .sub-comments {
         position: relative;
         display: flex;

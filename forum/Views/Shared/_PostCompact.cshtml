@@ -1,15 +1,17 @@
-@model forum.Models.Post
 @using Markdig
+@model Post
 
 <div class="shared-postCompact">
     <div class="top">
         <div class="chips">
-            
+
             @* Category *@
             <a asp-controller="Search"
                asp-action="Search"
                asp-route-term="@Model.Category?.Name"
-               class="category" style="background-color: @Model.Category?.Color">@Model.Category?.Name</a>
+               class="category" style="background-color: @Model.Category?.Color">
+                @Model.Category?.Name
+            </a>
 
             @* Tags *@
             @if (Model.Tags != null)
@@ -25,7 +27,7 @@
                 }
             }
         </div>
-        
+
         <div class="creation-info">
             By
             <span class="user">
@@ -33,30 +35,32 @@
                 {
                     <a asp-controller="Search"
                        asp-action="Search"
-                       asp-route-term="@Model.User.UserName">@Model.User.UserName</a>
+                       asp-route-term="@Model.User.UserName">
+                        @Model.User.UserName
+                    </a>
                 }
                 else
                 {
                     <span class="deleted-user" title="Deleted user">[deleted user]</span>
                 }
             </span>
-            
+
             @* Shows how long ago the post was created *@
             @CalculateTimeAgo(Model.DateCreated)
-            
+
             @* If the post has been edited, show how long ago this happened *@
             @if (Model.DateLastEdited != null)
             {
                 <span class="last-edited">(edited @CalculateTimeAgo(Model.DateLastEdited.Value))</span>
             }
         </div>
-        
+
         @* Shows number of likes and comments *@
         <div class="likes-comments">
             @Model.TotalLikes likes | @Model.Comments?.Count comments
         </div>
     </div>
-    
+
     <div class="bottom">
         <div class="left-side">
             @* Title *@
@@ -76,8 +80,9 @@
 </div>
 
 @functions {
-    @* Calculates how much time has passed since "date" and until the current moment. 
+        @* Calculates how much time has passed since "date" and until the current moment. 
     It then returns a string describing this time difference in a human-readable format. *@
+
     static string CalculateTimeAgo(DateTime date)
     {
         var timeDifference = DateTime.Now - date;

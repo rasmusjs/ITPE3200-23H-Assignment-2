@@ -9,8 +9,8 @@
         navLinkList.classList.toggle("active");
     })
 
-    document.querySelectorAll(".reply-btn").forEach(function(button) {
-        button.addEventListener("click", function() {
+    document.querySelectorAll(".reply-btn").forEach(function (button) {
+        button.addEventListener("click", function () {
             // Toggle the "active" class on the related div
             this.nextElementSibling.classList.toggle("active");
 
@@ -23,8 +23,8 @@
         });
     });
 
-    document.querySelectorAll(".edit-btn").forEach(function(button) {
-        button.addEventListener("click", function() {
+    document.querySelectorAll(".edit-btn").forEach(function (button) {
+        button.addEventListener("click", function () {
             // Toggle the "active" class on the related div
             this.nextElementSibling.classList.toggle("active");
 

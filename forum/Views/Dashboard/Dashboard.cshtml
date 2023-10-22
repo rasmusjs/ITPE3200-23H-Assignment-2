@@ -61,7 +61,7 @@
         @* User's comments *@
         <section>
             <h3>My comments:</h3>
-            
+
             @* If no comments have been made, show text and link to posts *@
             @if (Model.Comments == null || Model.Comments.Count == 0)
             {
@@ -86,11 +86,11 @@
                                     @comment.Content
                                 }
                             </span>
-                            
+
                             <span class="likes">
                                 @comment.TotalLikes <i class="fa-solid fa-thumbs-up"></i>
                             </span>
-                            
+
                             @* Link that directs user to the post the comment was made on *@
                             <a asp-controller="Post"
                                asp-action="Post"
@@ -118,17 +118,17 @@
                     {
                         <div class="comment">
                             <span class="comment-content">"@comment.Content"</span>
-                            
+
                             <a asp-controller="Post"
                                asp-action="LikeComment"
                                asp-route-id="@comment.CommentId" asp-route-redirect="false">
                                 Remove like
                             </a>
-                            
+
                             <span class="likes">
                                 @comment.TotalLikes <i class="fa-solid fa-thumbs-up"></i>
                             </span>
-                            
+
                             @* Link that directs user to the post the comment was made on *@
                             <a asp-controller="Post"
                                asp-action="Post"

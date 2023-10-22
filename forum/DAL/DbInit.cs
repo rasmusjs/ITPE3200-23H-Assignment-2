@@ -76,16 +76,16 @@ public static class DbInit
             {
                 Name = "Back End", Color = "#a83281",
                 PicturePath = "../images/categories/backend-cover.png"
-            },
+            }
         };
-        
+
         if (!context.Categories.Any())
         {
             context.AddRange(categoriesList);
             await context.SaveChangesAsync();
             Console.WriteLine("Categories added");
         }
-        
+
         // Sets tags
         if (!context.Tags.Any())
         {
@@ -107,7 +107,7 @@ public static class DbInit
                 new() { Name = "Windows" },
                 new() { Name = "Java" }
             };
-            
+
             // Add tags
             context.AddRange(tagsList);
             await context.SaveChangesAsync();
@@ -132,11 +132,11 @@ public static class DbInit
 
             Console.WriteLine("Roles added");
         }
-        
+
         // Sets users
         if (!context.Users.Any())
         {
-            UserManager<ApplicationUser> userManager =
+            var userManager =
                 serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             var userList = new List<ApplicationUser>
@@ -161,7 +161,7 @@ public static class DbInit
                 }
             };
 
-            string password = "Password123!";
+            var password = "Password123!";
 
             // Add users to database via UserManager
             foreach (var applicationUser in userList)
@@ -199,7 +199,7 @@ public static class DbInit
         {
             return addedUsers[random.Next(1, addedUsers.Count())].Id;
         }
-        
+
         // Sets posts
         var postsList = new List<Post>
         {
@@ -215,7 +215,7 @@ public static class DbInit
                 CategoryId = random.Next(1, categoriesList.Count),
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "JavaScript"),
+                    tags.First(t => t.Name == "JavaScript")
                 }
             },
             new()
@@ -372,10 +372,10 @@ public static class DbInit
         if (context.Posts.Any() && addedUsers.Count > 0 &&
             !context.Comments.Any()) // If there are no posts in the database and there are users
         {
-            List<Comment> comments = new List<Comment>();
+            var comments = new List<Comment>();
 
             //Taken from https://www.cardenhall.com/wp-content/uploads/2016/10/POSITIVE-COMMENTS-List.pdf
-            List<String> commentContent = new List<string>()
+            var commentContent = new List<string>
             {
                 "A powerful argument! I commend you for your quick thinking.",
                 "A splendid job! I commend you for your thorough work.",
@@ -419,18 +419,16 @@ public static class DbInit
                 "Your style has spark.", "This is something special.", "Your work has such personality.",
                 "This kind of work pleases me very much.", "This paper has pizzazz!", "This really has flair."
             };
-            
+
             foreach (var content in commentContent)
-            {
-                comments.Add(new Comment()
+                comments.Add(new Comment
                 {
-                    Content = content, 
-                    DateCreated = DateTime.Now, 
+                    Content = content,
+                    DateCreated = DateTime.Now,
                     UserId = RandomUser(),
-                    PostId = random.Next(1, postsList.Count), 
+                    PostId = random.Next(1, postsList.Count),
                     TotalLikes = random.Next(999)
                 });
-            }
 
             // Add comments to the database
             context.Comments.AddRange(comments);

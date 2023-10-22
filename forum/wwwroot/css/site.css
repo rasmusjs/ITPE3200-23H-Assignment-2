@@ -345,18 +345,18 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100dvh;
-    
+
     & main {
         width: 100%;
         padding-top: var(--nav-height);
-    
+
         #main-inner-container {
             max-width: 948px;
             margin: 0 auto;
             padding: 48px 24px;
         }
     }
-    
+
     & footer {
         display: flex;
         flex-direction: row;
@@ -365,13 +365,13 @@ body {
         margin-top: auto;
         padding: 24px;
         background-color: var(--fg-1);
-        
+
         .social-media-links {
             display: flex;
             flex-direction: row;
             justify-content: center;
             flex-wrap: wrap;
-            
+
             & a {
                 display: flex;
                 justify-content: center;
@@ -381,28 +381,28 @@ body {
                 border-radius: 40px;
                 transition: var(--tr-default);
                 text-decoration: none;
-                
+
                 & i {
                     font-size: var(--fs-xl);
                 }
-                
+
                 &:hover {
                     background-color: var(--fg-2);
                 }
             }
         }
-        
+
         .fixed-width {
             width: 150px;
         }
-        
+
         & address {
             text-align: right;
             font-style: normal;
-            
+
             & a {
                 text-decoration: none;
-                
+
                 &:hover {
                     text-decoration: underline;
                 }
@@ -414,7 +414,7 @@ body {
             justify-content: unset;
             gap: 24px;
             padding: 36px 0;
-            
+
             > * {
                 text-align: center !important;
             }

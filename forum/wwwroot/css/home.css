@@ -3,30 +3,30 @@
         font-size: var(--fs-2xl);
         margin-top: 40px;
     }
-    
+
     & ul {
         margin: 16px 0;
         list-style-type: none;
-        
+
         & li {
             font-size: var(--fs-l);
             margin: 6px 0;
         }
     }
-    
+
     & p {
         font-size: var(--fs-l);
         font-style: italic;
         font-weight: bold;
     }
-    
+
     .categories {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         gap: 24px;
         flex-wrap: wrap;
         margin-top: 12px;
-        
+
         .category {
             display: flex;
             flex-direction: column;
@@ -38,20 +38,20 @@
             text-align: center;
             text-decoration: none;
             transition: var(--tr-default);
-            
+
             .title {
                 margin: 0;
                 font-size: var(--fs-2xl);
                 transition: var(--tr-default);
             }
-            
+
             .img-container {
                 display: flex;
                 flex-grow: 1;
                 border-radius: 8px;
                 overflow: hidden;
                 background-color: transparent;
-                
+
                 & img {
                     width: 100%;
                     object-fit: cover;
@@ -60,14 +60,14 @@
                     transition: var(--tr-default);
                 }
             }
-            
+
             &:hover {
                 transform: scale(1.05);
-                
+
                 .title {
                     transform: scale(1.05);
                 }
-                
+
                 .img-container {
                     & img {
                         opacity: 0.85;
@@ -82,7 +82,7 @@
 
             .category {
                 padding: 8px;
-                
+
                 .title {
                     font-size: var(--fs-xl);
                 }
@@ -94,13 +94,13 @@
             gap: 12px;
         }
     }
-    
+
     .tags {
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
         margin-top: 12px;
-        
+
         .tag {
             font-size: var(--fs-l);
             color: var(--txt-1);
@@ -109,7 +109,7 @@
             background-color: var(--fg-1);
             text-decoration: none;
             transition: var(--tr-default);
-            
+
             &:hover {
                 background-color: var(--fg-2);
                 transform: scale(1.05);

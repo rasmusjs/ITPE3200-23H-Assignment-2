@@ -10,13 +10,13 @@ namespace forum.Controllers;
 
 public class DashBoardController : Controller
 {
-    private readonly ILogger<ApplicationUser> _logger; // Ikke satt opp enda!
+    private readonly IForumRepository<Category> _categoryRepository;
+    private readonly ILogger<ApplicationUser> _logger;
+    private readonly IForumRepository<Tag> _tagsRepository;
 
     // Connect the controller to the different models
     private readonly IForumRepository<ApplicationUser> _userRepository;
-    private readonly IForumRepository<Category> _categoryRepository;
-    private readonly IForumRepository<Tag> _tagsRepository;
-    
+
     // Constructor for Dependency Injection to the Data Access Layer from the different repositories
     public DashBoardController(
         IForumRepository<ApplicationUser> userRepository, IForumRepository<Category> categoryRepository
@@ -49,7 +49,7 @@ public class DashBoardController : Controller
         // If no posts, return NotFound and log error
         if (userActivity == null)
         {
-            _logger.LogError($"[Dashboard controller] Dashboard() failed, error message: userActivity is null");
+            _logger.LogError("[Dashboard controller] Dashboard() failed, error message: userActivity is null");
             return NotFound("User data not found");
         }
 
@@ -105,13 +105,13 @@ public class DashBoardController : Controller
 
         if (dbCategory == null)
         {
-            _logger.LogError($"[Dashboard controller] UpdateCategory() failed, error message: oldCategory is null");
+            _logger.LogError("[Dashboard controller] UpdateCategory() failed, error message: oldCategory is null");
             return NotFound("Category not found");
         }
 
         // Save the old picture path
-        string pictureDeletePath = dbCategory.PicturePath ?? String.Empty;
-        string newPicturePath = "";
+        var pictureDeletePath = dbCategory.PicturePath ?? string.Empty;
+        var newPicturePath = "";
 
 
         var file = Request.Form.Files.FirstOrDefault();
@@ -122,14 +122,14 @@ public class DashBoardController : Controller
 
             if (newPicturePath.IsNullOrEmpty())
             {
-                _logger.LogError($"[Dashboard controller] UpdateCategory() failed, error message: fileUpload failed");
+                _logger.LogError("[Dashboard controller] UpdateCategory() failed, error message: fileUpload failed");
                 return StatusCode(500, "Could not upload new file");
             }
         }
 
         if (!ModelState.IsValid)
         {
-            _logger.LogError($"[Dashboard controller] UpdateCategory() failed, error message: modelState is invalid");
+            _logger.LogError("[Dashboard controller] UpdateCategory() failed, error message: modelState is invalid");
             return StatusCode(406, "Model state is invalid");
         }
 
@@ -147,10 +147,7 @@ public class DashBoardController : Controller
 
 
         // If the user has selected a new file, set the new picture path, else keep the old one
-        if (!newPicturePath.IsNullOrEmpty())
-        {
-            dbCategory.PicturePath = newPicturePath;
-        }
+        if (!newPicturePath.IsNullOrEmpty()) dbCategory.PicturePath = newPicturePath;
 
 
         // Update the category
@@ -164,14 +161,14 @@ public class DashBoardController : Controller
             if (!DeleteFile(pictureDeletePath))
             {
                 _logger.LogError(
-                    $"[Dashboard controller] DeleteCategory() failed, error message: deleteFile failed");
+                    "[Dashboard controller] DeleteCategory() failed, error message: deleteFile failed");
                 return StatusCode(500, "Internal server error, could not delete file");
             }
         }
 
         return RedirectToAction("AdminDashboard");
     }
-    
+
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> NewCategory(Category category)
@@ -181,12 +178,12 @@ public class DashBoardController : Controller
         // If the user has selected a file
         if (file != null)
         {
-            string filePath = await FileUpload(file);
+            var filePath = await FileUpload(file);
 
             if (filePath.IsNullOrEmpty())
             {
                 _logger.LogError(
-                    $"[Dashboard controller] UpdateCategory() failed, error message: fileUpload failed");
+                    "[Dashboard controller] UpdateCategory() failed, error message: fileUpload failed");
                 return StatusCode(500, "Could not upload new file");
             }
 
@@ -202,7 +199,7 @@ public class DashBoardController : Controller
 
             if (createCategory == null)
             {
-                _logger.LogError($"[Dashboard controller] NewCategory() failed, error message: result is null");
+                _logger.LogError("[Dashboard controller] NewCategory() failed, error message: result is null");
                 return NotFound("Category not found");
             }
         }
@@ -221,7 +218,7 @@ public class DashBoardController : Controller
         // If the category does not exist, return not found
         if (category == null)
         {
-            _logger.LogError($"[Dashboard controller] DeleteCategory() failed, error message: category is null");
+            _logger.LogError("[Dashboard controller] DeleteCategory() failed, error message: category is null");
             return NotFound("Category not found");
         }
 
@@ -229,7 +226,7 @@ public class DashBoardController : Controller
         // DeleteFile will return true if the file does not exist
         if (category.PicturePath != null && !DeleteFile(category.PicturePath))
         {
-            _logger.LogError($"[Dashboard controller] DeleteCategory() failed, error message: deleteFile failed");
+            _logger.LogError("[Dashboard controller] DeleteCategory() failed, error message: deleteFile failed");
             return StatusCode(500, "Internal server error, could not delete file");
         }
 
@@ -237,7 +234,7 @@ public class DashBoardController : Controller
         var deleteCategory = await _categoryRepository.Delete(id);
         if (!deleteCategory)
         {
-            _logger.LogError($"[Dashboard controller] DeleteCategory() failed, error message: result is null");
+            _logger.LogError("[Dashboard controller] DeleteCategory() failed, error message: result is null");
             return NotFound("Category not found");
         }
 
@@ -252,37 +249,37 @@ public class DashBoardController : Controller
         // If the file is null or empty
         if (file.Length == 0)
         {
-            _logger.LogError($"[Dashboard controller] FileUpload() failed, error message: file is empty");
+            _logger.LogError("[Dashboard controller] FileUpload() failed, error message: file is empty");
             return "";
         }
 
         // If the file is greater than 8MB
         if (file.Length > maxSize)
         {
-            _logger.LogError($"[Dashboard controller] FileUpload() failed, error message: file to large");
+            _logger.LogError("[Dashboard controller] FileUpload() failed, error message: file to large");
             return "";
         }
 
         // Create a new file name with a GUID and the file extension
-        string fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+        var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
 
         // Create the path to the file
-        string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "categories", fileName);
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "categories", fileName);
 
         // Get the directory name
-        string? dirName = Path.GetDirectoryName(filePath);
+        var dirName = Path.GetDirectoryName(filePath);
 
         // If the directory does not exist, create it
         if (!Directory.Exists(dirName))
         {
             // Try to create the directory if it does not exist
             if (dirName != null) Directory.CreateDirectory(dirName);
-            _logger.LogError($"[Dashboard controller] FileUpload() failed, error message: could not create directory");
+            _logger.LogError("[Dashboard controller] FileUpload() failed, error message: could not create directory");
             return "";
         }
 
         // Copy the file to the path
-        await using (FileStream fs = System.IO.File.Create(filePath))
+        await using (var fs = System.IO.File.Create(filePath))
         {
             await file.CopyToAsync(fs);
         }
@@ -306,7 +303,7 @@ public class DashBoardController : Controller
             if (System.IO.File.Exists(deletePath))
             {
                 _logger.LogError(
-                    $"[Dashboard controller] DeleteCategory() failed, error message: could not delete file");
+                    "[Dashboard controller] DeleteCategory() failed, error message: could not delete file");
                 return false;
             }
             //Source: https://learn.microsoft.com/en-us/dotnet/api/system.io.file.delete?view=net-6.0
@@ -324,7 +321,7 @@ public class DashBoardController : Controller
         if (ModelState.IsValid)
         {
             // Tries to update tag in repo, logs error if it cannot update tag
-            bool updateTag = await _tagsRepository.Update(tag);
+            var updateTag = await _tagsRepository.Update(tag);
             if (!updateTag)
             {
                 TempData["ErrorMessage"] = "Tag update failed.";
@@ -332,7 +329,7 @@ public class DashBoardController : Controller
             }
         }
 
-        TempData["TestMessage"] = "This is a test, babe.";
+        TempData["TestMessage"] = "This is a test, babe."; // TODO: Remove this line
         // Redirects to admin dashboard
         return RedirectToAction("AdminDashboard");
     }
@@ -364,7 +361,7 @@ public class DashBoardController : Controller
         var deleteTag = await _tagsRepository.Delete(id);
         if (!deleteTag)
         {
-            _logger.LogError($"[Dashboard controller] DeleteTag() failed, error message: result is null");
+            _logger.LogError("[Dashboard controller] DeleteTag() failed, error message: result is null");
             return NotFound("Category not found");
         }
 

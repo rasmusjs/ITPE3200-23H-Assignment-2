@@ -6,10 +6,10 @@ namespace forum.ViewModels;
 public class PostCardViewModel
 {
     public Post Post { get; set; } = null!;
-    
+
     // Limits the amount of visible content and places a shadow above overflowing text
-    public bool LimitContent { get; set; } 
-    
+    public bool LimitContent { get; set; }
+
     // Removed the "Go to post" button
-    public bool HideGoToPost { get; set; } 
+    public bool HideGoToPost { get; set; }
 }

@@ -67,7 +67,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
             term = term.ToLower();
 
             // Search in title, content, tags and comments (might be costly)
-            List<Post> posts = await _db.Posts
+            var posts = await _db.Posts
                 .Include(post => post.Tags)
                 .Include(post => post.Category)
                 .Include(post => post.Comments)
@@ -100,7 +100,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         try
         {
             // Query the database for posts by id. Includes tags and categories (eagerly loading)
-            Post post = await _db.Posts.Include(post => post.Tags).Include(post => post.Category)
+            var post = await _db.Posts.Include(post => post.Tags).Include(post => post.Category)
                 .Include(post => post.Comments)
                 .Where(post => post.PostId == id).FirstAsync();
 
@@ -141,7 +141,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         try
         {
             // Query the database for all posts. Includes tags and categories (eagerly loading)
-            List<Post> posts = await _db.Posts.Include(post => post.Tags).Include(post => post.Category).ToListAsync();
+            var posts = await _db.Posts.Include(post => post.Tags).Include(post => post.Category).ToListAsync();
 
             // If user is logged in, add likes to posts
             if (userId != "") posts = await AddLikeToPosts(posts, userId);
@@ -156,52 +156,13 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         }
     }
 
-
-    private async Task<List<Post>> AddLikeToPosts(List<Post> posts, string userId)
-    {
-        // Fetches the user activity
-        var user = await GetUserActivity(userId);
-
-        if (user != null && user.LikedPosts != null)
-        {
-            // Loops through all posts
-            foreach (var post in posts)
-            {
-                // Checks if the user has liked the post
-                if (user.LikedPosts.Any(t => t.PostId == post.PostId))
-                    post.IsLiked = true;
-            }
-        }
-
-        return posts;
-    }
-
-    private async Task<List<Comment>> AddLikeToComments(List<Comment> comments, string userId)
-    {
-        // Fetches the user activity
-        var user = await GetUserActivity(userId);
-
-        if (user != null && user.LikedComments != null)
-        {
-            // Loops through all posts
-            foreach (var comment in comments)
-            {
-                // Checks if the user has liked the comment
-                if (user.LikedComments.Any(t => t.CommentId == comment.CommentId))
-                    comment.IsLiked = true;
-            }
-        }
-
-        return comments;
-    }
-
 // Fetches comments from the database, based on the comment id
     public async Task<IEnumerable<Comment>?> GetCommentsByPostId(int postId, string userId = "")
     {
         try
         {
             // Query the database for comments by id. Includes tags and categories (eagerly loading)
-            List<Comment> comments = await _db.Comments.Include(comment => comment.CommentReplies)
+            var comments = await _db.Comments.Include(comment => comment.CommentReplies)
                 .Where(comment => comment.PostId == postId).ToListAsync();
 
             // If user is logged in, add likes to comments
@@ -273,6 +234,12 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
 // Generic method to delete an entity based on id
     public async Task<bool> Delete(int id)
     {
+        if (id < 0) // id is not valid (negative)
+        {
+            LogError($"Delete, entity not found for id {id}", new Exception("Entity not found"));
+            return false;
+        }
+
         try
         {
             // Finds the entity in the database
@@ -328,25 +295,39 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         catch (Exception e)
         {
             LogError("RemoveAllPostTags", e);
-
             return false;
         }
     }
 
-// Generic method to fetch any entity based on id
-    public async Task<ApplicationUser?> GetUserById(string id)
+
+    private async Task<List<Post>> AddLikeToPosts(List<Post> posts, string userId)
     {
-        try
-        {
-            // Query the database for all entities with primary key as id
-            return await _db.Set<ApplicationUser>().FindAsync(id);
-        }
-        // Error handling if it can't fetch entities
-        catch (Exception e)
-        {
-            LogError("GetUserById", e);
-            return null;
-        }
+        // Fetches the user activity
+        var user = await GetUserActivity(userId);
+
+        if (user != null && user.LikedPosts != null)
+            // Loops through all posts
+            foreach (var post in posts)
+                // Checks if the user has liked the post
+                if (user.LikedPosts.Any(t => t.PostId == post.PostId))
+                    post.IsLiked = true;
+
+        return posts;
+    }
+
+    private async Task<List<Comment>> AddLikeToComments(List<Comment> comments, string userId)
+    {
+        // Fetches the user activity
+        var user = await GetUserActivity(userId);
+
+        if (user != null && user.LikedComments != null)
+            // Loops through all posts
+            foreach (var comment in comments)
+                // Checks if the user has liked the comment
+                if (user.LikedComments.Any(t => t.CommentId == comment.CommentId))
+                    comment.IsLiked = true;
+
+        return comments;
     }
 
 // Common method for logging errors

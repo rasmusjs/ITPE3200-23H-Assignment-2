@@ -41,7 +41,7 @@
                         filter: brightness(120%);
                     }
                 }
-                
+
                 &.tag {
                     transition: var(--tr-default);
 
@@ -57,30 +57,30 @@
             flex-direction: row;
             align-items: center;
             gap: 8px;
-            
+
             .user-info {
                 text-align: right;
-                
+
                 .user {
                     text-decoration: none;
                     font-weight: bold;
-        
+
                     & a {
                         text-decoration: none;
-                        
+
                         &:hover {
                             text-decoration: underline;
                         }
                     }
                 }
-        
+
                 .last-edited {
                     display: block;
                     font-style: italic;
                 }
-                
+
             }
-            
+
             & img {
                 height: 28px;
                 aspect-ratio: 1/1;
@@ -141,7 +141,7 @@
                     margin-right: 6px;
                     transition: var(--tr-default);
                 }
-                
+
                 &.liked {
                     & i {
                         color: var(--primary);
@@ -163,8 +163,8 @@
                     &:hover {
                         background-color: var(--fg-1);
                     }
-                    
-                    
+
+
                 }
             }
 
