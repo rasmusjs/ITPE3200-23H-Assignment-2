@@ -17,10 +17,13 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - BracketBros</title>
+    @* Favicon *@
     <link rel="icon" href="~/images/BracketBros-logo.svg" type="image/svg">
+    @* Font Awesome icons *@
     <link href="~/lib/fontawesome/css/fontawesome.css" rel="stylesheet">
     <link href="~/lib/fontawesome/css/brands.css" rel="stylesheet">
     <link href="~/lib/fontawesome/css/solid.css" rel="stylesheet">
+    @* CSS styling *@
     <link href="~/css/site.css" rel="stylesheet">
     <link href="~/css/home.css" rel="stylesheet">
     <link href="~/css/dashboard/dashboard.css" rel="stylesheet">
@@ -42,23 +45,29 @@
     <link href="~/css/shared/create-comment.css" rel="stylesheet">
     <link href="~/css/shared/update-comment.css" rel="stylesheet">
     <link href="~/css/shared/search-field.css" rel="stylesheet">
-    <!-- jQuery for input validation -->
+    @* jQuery for input validation *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+    @* Global JavaScript *@
     <script src="~/js/site.js"></script>
 </head>
 <body>
 <header>
     <nav>
+        @* Logo *@
         <a asp-area="" asp-controller="Home" asp-action="Index" id="brand">
             <i class="fa-solid fa-laptop-code"></i>
             <span>BracketBros</span>
         </a>
+
+        @* Burger button (mobile) *@
         <button id="burger-btn" class="nav-btn-icon">
             <i class="fa-solid fa-bars"></i>
             <i class="fa-solid fa-xmark"></i>
         </button>
+
+        @* Navigation links *@
         <div id="nav-links-container">
             <ul>
                 <li>
@@ -67,8 +76,10 @@
                 <li>
                     <a asp-area="" asp-controller="Post" asp-action="Card" class="@IsActive("Post", "Card") or @IsActive("Post", "Compact") nav-btn-text">Posts</a>
                 </li>
+                
                 @if (signedIn)
                 {
+                    @* User dashboard *@
                     <li>
                         <a asp-area="" asp-controller="Dashboard" asp-action="Dashboard" class="@IsActive("Dashboard", "Dashboard") nav-btn-text">Dashboard</a>
                     </li>
@@ -82,10 +93,10 @@
                     }
                 }
 
-
                 <li>
                     <a asp-area="" asp-controller="Search" asp-action="Index" class="@IsActive("Search", "Index") nav-btn-text">Search</a>
                 </li>
+                
                 @if (signedIn)
                 {
                     <li>
@@ -93,18 +104,26 @@
                     </li>
                 }
             </ul>
+            
+            @* Contains Register and Login (if not signed in) or profile-link and profile-picture (if logged in) *@
             <partial name="_AccountStatus"/>
         </div>
     </nav>
 </header>
+
 <main>
     <div id="main-inner-container">
         @RenderBody()
         @await RenderSectionAsync("scripts", false)
     </div>
 </main>
+
+@* Footer content does not contain real information. It is there mainly to make the website feel more real and authentic. *@
 <footer>
+    @* Fake copyright info *@
     <div class="fixed-width copyright-info">BracketBros © 2023</div>
+    
+    @* Fake social media links. Directs user to the main page, not to any real accounts. *@
     <div class="social-media-links">
         <a href="https://www.twitter.com/" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
         <a href="https://www.facebook.com/" target="_blank"><i class="fa-brands fa-facebook"></i></a>
@@ -113,14 +132,16 @@
         <a href="https://www.tiktok.com/" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
         <a href="https://www.linkedin.com/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
     </div>
+
+    @* Fake address info *@
     <address class="fixed-width">Office: <a href="https://maps.app.goo.gl/Cyb3aW4xv7TZAmKQ9" target="_blank">Pilestredet 35 0166, Oslo, Norway</a>
     </address>
 </footer>
 </body>
 </html>
 
+@* Sets "active" class to links that match the currently used controller and action *@
 @functions {
-
     public string IsActive(string controller, string action)
     {
         var currentController = ViewContext.RouteData.Values["controller"] as string;
