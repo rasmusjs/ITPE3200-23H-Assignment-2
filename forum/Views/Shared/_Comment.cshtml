@@ -20,11 +20,24 @@
             <span class="user">
                 @if (Model.User != null)
                 {
-                    <a asp-controller="Search"
-                       asp-action="Search"
-                       asp-route-term="@Model.User.UserName">
-                        @Model.User.UserName
-                    </a>
+                    <div class="existing-user">
+                        @{
+                            string? profilePictureBase64 = null;
+            
+                            // If the user has a profile picture, convert it to base64
+                            if (Model.User.ProfilePicture != null)
+                            {
+                                profilePictureBase64 = Convert.ToBase64String(Model.User.ProfilePicture);
+                            }
+                        }
+                        <img src="@(profilePictureBase64 != null ? $"data:image/*;base64,{profilePictureBase64}" : Url.Identicon(Model.User.UserName, 40))" alt=""/>
+
+                        <a asp-controller="Search"
+                           asp-action="Search"
+                           asp-route-term="@Model.User?.UserName">
+                            @Model.User?.UserName
+                        </a>
+                    </div>
                 }
                 else
                 {

@@ -20,8 +20,33 @@
                 font-weight: bold;
                 margin-right: auto;
                 
+                & img {
+                    display: inline;
+                    height: 14px;
+                    aspect-ratio: 1/1;
+                    object-fit: cover;
+                    border-radius: 28px;
+                    transition: var(--tr-default);
+                    
+                    &:hover {
+                        transform: scale(3);
+                        box-shadow: 0 0 4px 1px var(--fg-1);
+                    }
+                }
+                
                 & a {
                     text-decoration: none;
+                    
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+                
+                .existing-user {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 4px;
                 }
             }
     
