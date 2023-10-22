@@ -27,11 +27,6 @@
                  src="@(profilePictureBase64 != null ? $"data:image/*;base64,{profilePictureBase64}" : Url.Identicon(user.UserName, 40))"
                  alt="@($"Avatar of {user.UserName}")"/>
         </li>
-        <li>
-            <form id="logout-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button id="logout-btn" class="nav-btn-text" type="submit">Logout</button>
-            </form>
-        </li>
     }
     else
     {
