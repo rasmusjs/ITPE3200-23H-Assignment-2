@@ -2,9 +2,14 @@ using forum.Models;
 
 namespace forum.ViewModels;
 
+// ViewModel used on PostCard (partial view) to conditionally change it's appearance and functionality instead of creating multiple, nearly identical, partial views.
 public class PostCardViewModel
 {
     public Post Post { get; set; } = null!;
-    public bool LimitContent { get; set; }
-    public bool HideGoToPost { get; set; }
+    
+    // Limits the amount of visible content and places a shadow above overflowing text
+    public bool LimitContent { get; set; } 
+    
+    // Removed the "Go to post" button
+    public bool HideGoToPost { get; set; } 
 }

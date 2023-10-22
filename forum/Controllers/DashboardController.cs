@@ -16,8 +16,7 @@ public class DashBoardController : Controller
     private readonly IForumRepository<ApplicationUser> _userRepository;
     private readonly IForumRepository<Category> _categoryRepository;
     private readonly IForumRepository<Tag> _tagsRepository;
-
-
+    
     // Constructor for Dependency Injection to the Data Access Layer from the different repositories
     public DashBoardController(
         IForumRepository<ApplicationUser> userRepository, IForumRepository<Category> categoryRepository
@@ -172,8 +171,7 @@ public class DashBoardController : Controller
 
         return RedirectToAction("AdminDashboard");
     }
-
-
+    
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> NewCategory(Category category)
@@ -316,7 +314,6 @@ public class DashBoardController : Controller
 
         return true;
     }
-
 
     // Post request to update an existing tag in the repo and redirects to the admin dashboard
     [HttpPost]

@@ -10,7 +10,6 @@ namespace forum.Controllers;
 // Controller for the search function
 public class HomeController : Controller
 {
-    
     private readonly ILogger<HomeController> _logger;
 
     // Connect the controller to the different models

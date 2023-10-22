@@ -14,8 +14,7 @@ public class PostController : Controller
 {
     private readonly IForumRepository<Category> _categoryRepository;
     private readonly IForumRepository<Comment> _commentRepository;
-
-
+    
     private readonly ILogger<PostController> _logger; // Ikke satt opp enda!
 
     // Connect the controller to the different models
@@ -37,8 +36,7 @@ public class PostController : Controller
         _userManager = userManager;
         _logger = logger;
     }
-
-
+    
     [HttpGet]
     [Authorize]
     public string GetUserId()
@@ -52,8 +50,7 @@ public class PostController : Controller
 
         return "";
     }
-
-
+    
     // Method to refresh the post when user presses the like button
     public IActionResult Refresh()
     {
@@ -65,8 +62,7 @@ public class PostController : Controller
     {
         return RedirectToAction("Post", "Post", new { id });
     }
-
-
+    
     public bool IsAdmin()
     {
         return User.IsInRole("Admin");
@@ -128,8 +124,7 @@ public class PostController : Controller
 
         return posts;
     }
-
-
+    
     // Method for fetching post by id
     public async Task<IActionResult> Post(int id)
     {

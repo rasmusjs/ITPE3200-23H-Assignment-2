@@ -14,6 +14,7 @@ public static class DbInit
         //await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
 
+        // Sets categories
         var categoriesList = new List<Category>
         {
             new()
@@ -77,29 +78,15 @@ public static class DbInit
                 PicturePath = "../images/categories/backend-cover.png"
             },
         };
-
-        /*   var categoriesList = new List<Category>
-           {
-           new() { Name = "Entertainment", Color = "#a83432" },
-           new() { Name = "News", Color = "#a85b32" },
-           new() { Name = "Politics", Color = "#a89e32" },
-           new() { Name = "Science", Color = "#4ca832" },
-           new() { Name = "Sports", Color = "#32a85f" },
-           new() { Name = "Technology", Color = "#32a88c" },
-           new() { Name = "General", Color = "#329ea8" },
-           new() { Name = "Debugging", Color = "#3269a8" },
-           new() { Name = "Development", Color = "#3236a8" },
-           new() { Name = "Front End", Color = "#6932a8" },
-           new() { Name = "Game Development", Color = "#9a32a8" },
-           new() { Name = "Back End", Color = "#a83281" },
-           };*/
+        
         if (!context.Categories.Any())
         {
             context.AddRange(categoriesList);
             await context.SaveChangesAsync();
             Console.WriteLine("Categories added");
         }
-
+        
+        // Sets tags
         if (!context.Tags.Any())
         {
             var tagsList = new List<Tag>
@@ -120,11 +107,14 @@ public static class DbInit
                 new() { Name = "Windows" },
                 new() { Name = "Java" }
             };
+            
+            // Add tags
             context.AddRange(tagsList);
             await context.SaveChangesAsync();
             Console.WriteLine("Tags added");
         }
 
+        // Sets roles
         if (!context.Roles.Any())
         {
             var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -142,8 +132,8 @@ public static class DbInit
 
             Console.WriteLine("Roles added");
         }
-
-
+        
+        // Sets users
         if (!context.Users.Any())
         {
             UserManager<ApplicationUser> userManager =
@@ -209,8 +199,8 @@ public static class DbInit
         {
             return addedUsers[random.Next(1, addedUsers.Count())].Id;
         }
-
-
+        
+        // Sets posts
         var postsList = new List<Post>
         {
             new()
@@ -378,6 +368,7 @@ public static class DbInit
             Console.WriteLine("Temp posts added");
         }
 
+        // Sets different comments or random posts
         if (context.Posts.Any() && addedUsers.Count > 0 &&
             !context.Comments.Any()) // If there are no posts in the database and there are users
         {
@@ -428,17 +419,18 @@ public static class DbInit
                 "Your style has spark.", "This is something special.", "Your work has such personality.",
                 "This kind of work pleases me very much.", "This paper has pizzazz!", "This really has flair."
             };
-
-
+            
             foreach (var content in commentContent)
             {
                 comments.Add(new Comment()
                 {
-                    Content = content, DateCreated = DateTime.Now, UserId = RandomUser(),
-                    PostId = random.Next(1, postsList.Count), TotalLikes = random.Next(999)
+                    Content = content, 
+                    DateCreated = DateTime.Now, 
+                    UserId = RandomUser(),
+                    PostId = random.Next(1, postsList.Count), 
+                    TotalLikes = random.Next(999)
                 });
             }
-
 
             // Add comments to the database
             context.Comments.AddRange(comments);
