@@ -26,26 +26,38 @@
             }
         </div>
         <div class="creation-info">
-            Posted by
-            <span class="user">
-                @if (Model.Post.User != null)
+            <div class="user-info">
+                Posted by
+                <span class="user">
+                    @if (Model.Post.User != null)
+                    {
+                        <a asp-controller="Search"
+                           asp-action="Search"
+                           asp-route-term="@Model.Post.User.UserName">
+                            @Model.Post.User.UserName
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="deleted-user" title="Deleted user">[deleted user]</span>
+                    }
+                </span>
+                @CalculateTimeAgo(Model.Post.DateCreated)
+                @if (Model.Post.DateLastEdited != null)
                 {
-                    <a asp-controller="Search"
-                       asp-action="Search"
-                       asp-route-term="@Model.Post.User.UserName">
-                        @Model.Post.User.UserName
-                    </a>
+                    <span class="last-edited">Last edited @CalculateTimeAgo(Model.Post.DateLastEdited.Value)</span>
                 }
-                else
+            </div>
+            @{
+                string? profilePictureBase64 = null;
+
+                // If the user has a profile picture, convert it to base64
+                if (Model.Post.User?.ProfilePicture != null)
                 {
-                    <span class="deleted-user" title="Deleted user">[deleted user]</span>
+                    profilePictureBase64 = Convert.ToBase64String(Model.Post.User.ProfilePicture);
                 }
-            </span>
-            @CalculateTimeAgo(Model.Post.DateCreated)
-            @if (Model.Post.DateLastEdited != null)
-            {
-                <span class="last-edited">Last edited @CalculateTimeAgo(Model.Post.DateLastEdited.Value)</span>
             }
+            <img src="@(profilePictureBase64 != null ? $"data:image/*;base64,{profilePictureBase64}" : Url.Identicon(Model.Post.User?.UserName, 40))" alt="@($"Avatar of {Model.Post.User?.UserName}")"/>
         </div>
     </div>
 

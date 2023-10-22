@@ -53,20 +53,38 @@
         }
 
         & .creation-info {
-            text-align: right;
-
-            & .user {
-                text-decoration: none;
-                font-weight: bold;
-
-                & a {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 8px;
+            
+            .user-info {
+                text-align: right;
+                
+                .user {
                     text-decoration: none;
+                    font-weight: bold;
+        
+                    & a {
+                        text-decoration: none;
+                        
+                        &:hover {
+                            text-decoration: underline;
+                        }
+                    }
                 }
+        
+                .last-edited {
+                    display: block;
+                    font-style: italic;
+                }
+                
             }
-
-            & .last-edited {
-                display: block;
-                font-style: italic;
+            
+            & img {
+                height: 28px;
+                aspect-ratio: 1/1;
+                border-radius: 48px;
             }
         }
     }
