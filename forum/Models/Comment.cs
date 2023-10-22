@@ -12,7 +12,7 @@ public class Comment
     // Getters and setters for data in comments
 
     [StringLength(512, MinimumLength = 2, ErrorMessage = "The content must be between 2 to 512 characters.")]
-    public string Content { get; set; } = string.Empty;
+    public string Content { get; set; } = string.Empty; // if set to empty, the comment is "deleted"
 
     public int TotalLikes { get; set; }
     public DateTime DateCreated { get; set; }

@@ -1,3 +1,4 @@
+@using Microsoft.IdentityModel.Tokens
 @model ApplicationUser
 
 @{
@@ -66,7 +67,16 @@
                     @foreach (var comment in Model.Comments.OrderByDescending(comment => comment.DateCreated))
                     {
                         <div class="comment">
-                            <span class="comment-content">"@comment.Content"</span>
+                            <span class="comment-content">
+                                @if (comment.Content.IsNullOrEmpty())
+                                {
+                                    <p>[Deleted comment]</p>
+                                }
+                                else
+                                {
+                                    @comment.Content
+                                }
+                            </span>
                             <span class="likes">
                                 @comment.TotalLikes <i class="fa-solid fa-thumbs-up"></i>
                             </span>

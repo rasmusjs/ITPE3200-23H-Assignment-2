@@ -577,13 +577,23 @@ public class PostController : Controller
 
         // Checks if the model for comments is valid and returns error message.
         if (!ModelState.IsValid)
+        {
             return Redirect(
                 $"{Url.Action("Post", new { id = commentFromDb.PostId })}#commentId-{commentFromDb.CommentId}"); // Redirect to the post with the comment
+        }
 
-        // Updates the comment in the database
-        commentFromDb.DateLastEdited = DateTime.Now;
-        commentFromDb.Content = "[Deleted]";
-        await _commentRepository.Update(commentFromDb);
+        // Checks if the comment has replies, if not, delete the comment
+        if (commentFromDb.CommentReplies == null || commentFromDb.CommentReplies.Count == 0)
+        {
+           await _commentRepository.Delete(commentFromDb.CommentId);
+        }
+        else
+        {
+            // Updates the comment in the database
+            commentFromDb.DateLastEdited = DateTime.Now;
+            commentFromDb.Content = "";
+            await _commentRepository.Update(commentFromDb);
+        }
 
         /* Validation not working, fix later */
         return Redirect(
