@@ -5,6 +5,8 @@
 <div class="shared-postCard">
     <div class="top">
         <div class="chips">
+            
+            @* Category *@
             <a asp-controller="Search"
                asp-action="Search"
                asp-route-term="@Model.Post.Category?.Name"
@@ -12,6 +14,7 @@
                 @Model.Post.Category?.Name
             </a>
 
+            @* Tags *@
             @if (Model.Post.Tags != null)
             {
                 foreach (var tag in Model.Post.Tags)
@@ -25,6 +28,7 @@
                 }
             }
         </div>
+
         <div class="creation-info">
             <div class="user-info">
                 Posted by
@@ -42,12 +46,18 @@
                         <span class="deleted-user" title="Deleted user">[deleted user]</span>
                     }
                 </span>
+                
+                @* Shows how long ago the post was created *@
                 @CalculateTimeAgo(Model.Post.DateCreated)
+                
+                @* If the post has been edited, show how long ago this happened *@
                 @if (Model.Post.DateLastEdited != null)
                 {
                     <span class="last-edited">Last edited @CalculateTimeAgo(Model.Post.DateLastEdited.Value)</span>
                 }
             </div>
+
+            @* Profile picture *@
             @{
                 string? profilePictureBase64 = null;
 
@@ -62,7 +72,10 @@
     </div>
 
     <div class="content">
+        @* Title *@
         <div class="title">@Model.Post.Title</div>
+        
+        @* Content *@
         <div class="@(Model.LimitContent ? "limit-content" : "")">
             @Html.Raw(Markdown.ToHtml(Model.Post.Content))
         </div>
@@ -70,22 +83,27 @@
 
     <div class="bottom">
         <div class="likes-comments">
+            @* Totals likes. Likes post if clicked *@
             <a asp-controller="Post"
-                   asp-action="LikePost"
-                   asp-route-id="@Model.Post.PostId"
-                   class="@(Model.Post.IsLiked ? "liked" : "")">
-                   <i class="fa-solid fa-thumbs-up"></i>
-                   @Model.Post.TotalLikes Likes
-                </a>
-
-
+               asp-action="LikePost"
+               asp-route-id="@Model.Post.PostId"
+               class="@(Model.Post.IsLiked ? "liked" : "")">
+                <i class="fa-solid fa-thumbs-up"></i>
+                @Model.Post.TotalLikes Likes
+            </a>
+            
+            @* Total likes. Navigates to post to see comments if clicked *@
             <a asp-controller="Post"
                asp-action="Post"
                asp-route-id="@Model.Post.PostId">
                 <i class="fa-solid fa-comment"></i>@Model.Post.Comments?.Count comments
             </a>
         </div>
+        
+        @* Edit, Delete, Go to post *@
         <div class="links">
+            @* If the user is admin, show button for deleting. *@
+            @* If the user is the owner of the comment, show buttons for editing and deleting. *@
             @if (Model.Post.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) || User.IsInRole("Admin"))
             {
                 if (Model.Post.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
@@ -116,7 +134,8 @@
 </div>
 
 @functions {
-
+    @* Calculates how much time has passed since "date" and until the current moment. 
+    It then returns a string describing this time difference in a human-readable format. *@
     static string CalculateTimeAgo(DateTime date)
     {
         var timeDifference = DateTime.Now - date;

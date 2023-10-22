@@ -5,6 +5,7 @@
 }
 
 <div class="post-card">
+    @* Header *@
     <div class="main-header">
         <span class="title">Posts (@Model.CurrentViewName View)</span>
 
@@ -12,6 +13,8 @@
 
         <a class="input" href="/Post/Compact">Change to Compact View&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-compress"></i></a>
     </div>
+    
+    @* Posts *@
     <div class="posts">
         @foreach (var post in Model.Posts)
         {

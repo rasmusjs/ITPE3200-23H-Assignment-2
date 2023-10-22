@@ -4,11 +4,14 @@
 <div class="shared-postCompact">
     <div class="top">
         <div class="chips">
+            
+            @* Category *@
             <a asp-controller="Search"
                asp-action="Search"
                asp-route-term="@Model.Category?.Name"
                class="category" style="background-color: @Model.Category?.Color">@Model.Category?.Name</a>
 
+            @* Tags *@
             @if (Model.Tags != null)
             {
                 foreach (var tag in Model.Tags)
@@ -37,23 +40,32 @@
                     <span class="deleted-user" title="Deleted user">[deleted user]</span>
                 }
             </span>
+            
+            @* Shows how long ago the post was created *@
             @CalculateTimeAgo(Model.DateCreated)
+            
+            @* If the post has been edited, show how long ago this happened *@
             @if (Model.DateLastEdited != null)
             {
                 <span class="last-edited">(edited @CalculateTimeAgo(Model.DateLastEdited.Value))</span>
             }
         </div>
         
+        @* Shows number of likes and comments *@
         <div class="likes-comments">
             @Model.TotalLikes likes | @Model.Comments?.Count comments
         </div>
     </div>
+    
     <div class="bottom">
         <div class="left-side">
+            @* Title *@
             <div class="title">@Model.Title</div>
+            @* Content *@
             <div class="content">@Html.Raw(Markdown.ToHtml(Model.Content))</div>
         </div>
         <div class="right-side">
+            @* Button/link that goes to the post *@
             <a asp-controller="Post"
                asp-action="Post"
                asp-route-id="@Model.PostId">
@@ -64,6 +76,8 @@
 </div>
 
 @functions {
+    @* Calculates how much time has passed since "date" and until the current moment. 
+    It then returns a string describing this time difference in a human-readable format. *@
     static string CalculateTimeAgo(DateTime date)
     {
         var timeDifference = DateTime.Now - date;

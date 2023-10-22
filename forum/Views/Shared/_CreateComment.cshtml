@@ -1,8 +1,11 @@
 @model Comment
 
 <form asp-controller="Post" asp-action="CreateComment" class="create-comment">
+    @* Hidden inputs *@
     <input type="hidden" asp-for="ParentCommentId"/>
     <input type="hidden" asp-for="PostId"/>
+    
+    @* Shown inputs *@
     <div class="form-group">
         <label asp-for="Content">Reply/comment</label>
         <textarea required asp-for="Content" onkeyup="validateComment(this)" rows="3"></textarea>
@@ -13,13 +16,14 @@
     </div>
 
     <script>
-    /* The reason for this code is that validation for the textarea is working with jQuery Validation, so I made my own.
+    /*
+    The reason for this code is that validation for the textarea is working with jQuery Validation, so I made my own.
     It reads the data values that are injected using ASP.NET Core's Annotations, and uses it for client side validation.
     The selectors are a bit messy, this is because _CreateComment is a partial view so I couldn't use selectors with IDs.  
     
     Source for pattern attribute:
     https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern
-     */
+    */
     
     // Only create the function if it doesn't already exist, this is to avoid errors when the page is loaded do to the partial view multiple times            
     if (typeof validateComment !== validateComment) {

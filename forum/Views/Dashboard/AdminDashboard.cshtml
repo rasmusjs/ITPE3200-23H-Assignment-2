@@ -92,30 +92,7 @@
                                 <label asp-for="@category.PicturePath"></label>
                                 <input required asp-for="@category.PicturePath"/>
                             </details>
-
                         </div>
-
-                        @*<input onchange="this.form.submit()" asp-for="@category.Name"/>
-                        <input onchange="this.form.submit()" type="color" asp-for="@category.Color"/>
-                        
-                        <input type="file" accept=".png,.jpg,.jpeg,.gif,.tif"
-                               asp-for="@Model.Category!.PictureBytes"
-                               class="img-input"
-                               onchange="document.getElementById('CategoryImage').src = window.URL.createObjectURL(this.files[0])"/>
-                        <span asp-validation-for="@Model.Category!.PictureBytes" class="error"></span>
-                        
-                        <label asp-for="@Model.Category!.PicturePath"></label>
-                        
-                        <input asp-for="@Model.Category!.PicturePath"/>*@
-
-                        @*@if (category.PicturePath != "")
-                        {
-                            <label> Current Path:
-                                <input disabled value="@category.PicturePath"/>
-                            </label>
-                            <img src="@category.PicturePath" alt="Picture of @category.Name">
-                        }*@
-
                         <input type="submit" value="Update"/>
                     </form>
 
@@ -130,7 +107,6 @@
             }
         </section>
     </section>
-
 
     <section class="configure-tags">
         <h1>Configure tags</h1>

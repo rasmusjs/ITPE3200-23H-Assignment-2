@@ -40,8 +40,10 @@
         </tbody>
     </table>
     
+    @* Actions: Cancel or confirm deletion *@
     <div class="actions-container">
         <a href="javascript:history.go(-1)" class="input"><i class="fa-solid fa-arrow-left"></i> Cancel</a>
+        
         <form asp-action="DeleteConfirmed" asp-route-id="@Model.PostId">
             <button type="submit" class="delete"><i class="fa-solid fa-trash-can"></i> Delete</button>
         </form>

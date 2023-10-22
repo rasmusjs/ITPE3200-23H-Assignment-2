@@ -11,17 +11,18 @@
     
     @if (Model.Posts.Any())
     {
+        @* Shows all posts matching the search query *@
         <div class="posts">
-        @foreach (var post in Model.Posts)
-        {
-            var postCardViewModel = new PostCardViewModel
+            @foreach (var post in Model.Posts)
             {
-                Post = post,
-                LimitContent = true,
-                HideGoToPost = false
-            };
-            <partial name="_PostCard" model="postCardViewModel"/>
-        }
+                var postCardViewModel = new PostCardViewModel
+                {
+                    Post = post,
+                    LimitContent = true,
+                    HideGoToPost = false
+                };
+                <partial name="_PostCard" model="postCardViewModel"/>
+            }
         </div>
     }
     else

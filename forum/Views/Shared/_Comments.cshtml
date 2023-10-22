@@ -3,10 +3,11 @@
 <div class="comments">
     @if (Model.Count > 0)
     {
-        // Sorts comments by total likes, then by date created. Then show them.
+        @* Sorts comments by total likes (1st priority) and date created (2nd priority) *@
         @foreach (var comment in Model.OrderByDescending(comment => comment.TotalLikes).ThenBy(comment => comment.DateCreated))
         {
-            @if (comment.ParentCommentId == null) // Only shows comments directly to the post, not replies(comments) to other comments.
+            @* Lists all comments *@
+            @if (comment.ParentCommentId == null) @* Only shows comments directly linked to a post, not replies/comments to other comments. *@
             {
                 <partial name="_Comment" model="comment"/>
             }
