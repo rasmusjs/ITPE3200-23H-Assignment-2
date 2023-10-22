@@ -9,10 +9,12 @@
 <div class="dashboard">
     <h1 class="title">Dashboard</h1>
 
+    @* Posts *@
     <section>
         <h2>Posts</h2>
         <hr>
 
+        @* User's posts *@
         <section>
             <h3>My posts:</h3>
             @if (Model.Posts == null || Model.Posts.Count == 0)
@@ -31,6 +33,7 @@
             }
         </section>
 
+        @* User's liked posts *@
         <section>
             <h3>Liked posts:</h3>
             @if (Model.LikedPosts == null || Model.LikedPosts.Count == 0)
@@ -50,12 +53,16 @@
         </section>
     </section>
 
+    @* Comments *@
     <section>
         <h2>Comments</h2>
         <hr>
 
+        @* User's comments *@
         <section>
             <h3>My comments:</h3>
+            
+            @* If no comments have been made, show text and link to posts *@
             @if (Model.Comments == null || Model.Comments.Count == 0)
             {
                 <p>You have not made any comments.</p>
@@ -64,10 +71,12 @@
             else
             {
                 <div class="comments">
+                    @* Lists all comments. Order by DateCreated (new -> old) *@
                     @foreach (var comment in Model.Comments.OrderByDescending(comment => comment.DateCreated))
                     {
                         <div class="comment">
                             <span class="comment-content">
+                                @* If comments has been deleted, replace content with text showing that content has been deleted *@
                                 @if (comment.Content.IsNullOrEmpty())
                                 {
                                     <p>[Deleted comment]</p>
@@ -77,9 +86,12 @@
                                     @comment.Content
                                 }
                             </span>
+                            
                             <span class="likes">
                                 @comment.TotalLikes <i class="fa-solid fa-thumbs-up"></i>
                             </span>
+                            
+                            @* Link that directs user to the post the comment was made on *@
                             <a asp-controller="Post"
                                asp-action="Post"
                                asp-route-id="@comment.PostId">
@@ -91,6 +103,7 @@
             }
         </section>
 
+        @* User's liked comments *@
         <section>
             <h3>Liked comments:</h3>
             @if (Model.LikedComments == null || Model.LikedComments.Count == 0)
@@ -100,18 +113,23 @@
             else
             {
                 <div class="comments">
+                    @* Lists all comments. Order by DateCreated (new -> old) *@
                     @foreach (var comment in Model.LikedComments.OrderByDescending(comment => comment.DateCreated))
                     {
                         <div class="comment">
                             <span class="comment-content">"@comment.Content"</span>
+                            
                             <a asp-controller="Post"
                                asp-action="LikeComment"
                                asp-route-id="@comment.CommentId" asp-route-redirect="false">
                                 Remove like
                             </a>
+                            
                             <span class="likes">
                                 @comment.TotalLikes <i class="fa-solid fa-thumbs-up"></i>
                             </span>
+                            
+                            @* Link that directs user to the post the comment was made on *@
                             <a asp-controller="Post"
                                asp-action="Post"
                                asp-route-id="@comment.PostId">

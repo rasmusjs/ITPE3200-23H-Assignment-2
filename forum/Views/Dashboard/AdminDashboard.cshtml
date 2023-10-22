@@ -10,23 +10,30 @@
 </style>
 
 <div class="admin-dashboard">
+    @* Configure categories *@
     <section class="configure-categories">
         <h1>Configure categories</h1>
+
+        @* Add new category *@
         <section class="add-category">
             <div>
                 <h2>Add category</h2>
                 <hr>
             </div>
             <form asp-action="NewCategory" enctype="multipart/form-data">
+                @* Color *@
                 <div class="form-group">
                     <label asp-for="@Model.Category!.Color"></label>
                     <input required type="color" id="NewCategory-color-field" asp-for="@Model.Category!.Color"/>
                 </div>
 
+                @* Name *@
                 <div class="form-group">
                     <label asp-for="@Model.Category!.Name"></label>
                     <input required asp-for="@Model.Category!.Name"/>
                 </div>
+                
+                @* Image *@
                 <div class="form-group">
                     <details>
                         <summary>
@@ -47,31 +54,38 @@
                     </details>
                 </div>
 
+                @* Submit button (add) *@
                 <input type="submit" value="Add"/>
             </form>
         </section>
 
+        @* Change or delete existing categories *@
         <section class="change-categories">
             <div>
                 <h2>Change categories</h2>
                 <hr>
             </div>
+            @* Lists all existing categories *@
             @foreach (var category in Model.CategoryList.OrderBy(c => c.Name))
             {
                 <div class="category-changer">
                     <form asp-action="UpdateCategory" enctype="multipart/form-data">
+                        @* Hidden input for ID *@
                         <input hidden="" asp-for="@category.CategoryId"/>
 
+                        @* Color *@
                         <div class="form-group">
                             <label asp-for="@category.Color"></label>
                             <input required type="color" asp-for="@category.Color"/>
                         </div>
 
+                        @* Name *@
                         <div class="form-group">
                             <label asp-for="@category.Name"></label>
                             <input required asp-for="@category.Name"/>
                         </div>
 
+                        @* Image *@
                         <div class="form-group">
                             <details>
                                 <summary>
@@ -93,11 +107,15 @@
                                 <input required asp-for="@category.PicturePath"/>
                             </details>
                         </div>
+                        
+                        @* Submit button (update) *@
                         <input type="submit" value="Update"/>
                     </form>
 
+                    @* Image preview *@
                     <img src="@category.PicturePath" alt="Category image - @category.Name">
 
+                    @* Delete button (delete category) *@
                     <a asp-action="DeleteCategory"
                        asp-route-id="@category.CategoryId"
                        class="clickable input delete-input">
@@ -108,8 +126,11 @@
         </section>
     </section>
 
+    @* Tags *@
     <section class="configure-tags">
         <h1>Configure tags</h1>
+        
+        @* Add new tag *@
         <section class="add-tag">
             <div>
                 <h2>Add tag</h2>
@@ -121,19 +142,24 @@
             </form>
         </section>
 
+        @* Change or remove existing tags *@
         <section class="change-tags">
             <div>
                 <h2>Change/delete tags</h2>
                 <hr>
             </div>
             <div class="tags">
+                @* Lists all existing tags *@
                 @foreach (var tag in Model.TagList.OrderBy(c => c.Name))
                 {
                     <div class="tag">
+                        @* Hidden input for ID *@
                         <form asp-action="UpdateTag">
                             <input hidden="" asp-for="@tag.TagId"/>
                             <input onchange="this.form.submit()" asp-for="@tag.Name"/>
                         </form>
+                        
+                        @* Delete button (delete tag) *@
                         <a asp-action="DeleteTag"
                            asp-route-id="@tag.TagId"
                            class="clickable input delete-input">
