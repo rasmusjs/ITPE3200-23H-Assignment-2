@@ -46,19 +46,10 @@ public class DashBoardController : Controller
         // Initialize variable
         ApplicationUser? userActivity;
 
-        try
-        {
-            // Try to get all activity for the user
-            userActivity = await _userRepository.GetUserActivity(GetUserId());
-        }
-        catch (Exception e)
-        {
-            // Exception and error logging if the server fail to fetch data
-            _logger.LogError("[Dashboard controller] an error occured when trying to fetch user activity: {e}", e);
-            return StatusCode(500, "Internal server error. Please try again later.");
-        }
+        // Fetch all activity for the user
+        userActivity = await _userRepository.GetUserActivity(GetUserId());
 
-        // If no posts, return NotFound and log error
+        // If no posts or catch in ForumRepository, return NotFound and log error
         if (userActivity == null)
         {
             _logger.LogError("[Dashboard controller] Dashboard() failed, error message: userActivity is null");
@@ -76,21 +67,11 @@ public class DashBoardController : Controller
         IEnumerable<Category>? categories;
         IEnumerable<Tag>? tags;
 
-        try
-        {
-            // Fetching the categories and tags data
-            categories = await _categoryRepository.GetAll();
-            tags = await _tagsRepository.GetAll();
-        }
-        catch (Exception e)
-        {
-            // Exception and error logging if the server can't fetch the data
-            _logger.LogError("[Dashboard controller] An exception occurred while fetching categories or tags: {e}",
-                e);
-            return StatusCode(500, "Internal server error. Please try again later.");
-        }
+        // Fetching the categories and tags data
+        categories = await _categoryRepository.GetAll();
+        tags = await _tagsRepository.GetAll();
 
-        // Exception and error logging if there are no tags or categories to show the user
+        // Throws error and log it if there are no tags or categories to show the user or a catch in ForumRepository
         if (categories == null || tags == null)
         {
             _logger.LogError(
