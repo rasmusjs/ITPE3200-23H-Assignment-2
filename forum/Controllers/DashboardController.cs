@@ -44,7 +44,7 @@ public class DashBoardController : Controller
     public async Task<IActionResult> Dashboard()
     {
         // Initialize variable
-        ApplicationUser? userActivity = null;
+        ApplicationUser? userActivity;
 
         try
         {
@@ -73,8 +73,8 @@ public class DashBoardController : Controller
     public async Task<IActionResult> AdminDashboard()
     {
         // Initialize categories and tags
-        IEnumerable<Category>? categories = null;
-        IEnumerable<Tag>? tags = null;
+        IEnumerable<Category>? categories;
+        IEnumerable<Tag>? tags;
 
         try
         {
@@ -114,7 +114,7 @@ public class DashBoardController : Controller
     public async Task<IActionResult> UpdateCategory(Category category)
     {
         // Initialize the variable
-        Category? dbCategory = null;
+        Category? dbCategory;
 
         try
         {
@@ -282,7 +282,7 @@ public class DashBoardController : Controller
     public async Task<IActionResult> DeleteCategory(int id)
     {
         // Initialize the variable
-        Category? category = null;
+        Category? category;
 
         try
         {
@@ -392,10 +392,8 @@ public class DashBoardController : Controller
         // Copy the file to the path
         try
         {
-            await using (FileStream fs = System.IO.File.Create(filePath))
-            {
-                await file.CopyToAsync(fs);
-            }
+            await using FileStream fs = System.IO.File.Create(filePath);
+            await file.CopyToAsync(fs);
             // Source: https://learn.microsoft.com/en-us/dotnet/api/system.io.file.create?view=net-6.0 
         }
         catch (Exception e)
