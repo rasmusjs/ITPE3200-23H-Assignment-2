@@ -48,12 +48,12 @@
                 </span>
 
                 @* Shows how long ago the post was created *@
-                @CalculateTimeAgo(Model.Post.DateCreated)
+                <span class="date-hoverable">@CalculateTimeAgo(Model.Post.DateCreated)<span class="exact-date">@Model.Post.DateCreated</span></span>
 
                 @* If the post has been edited, show how long ago this happened *@
                 @if (Model.Post.DateLastEdited != null)
                 {
-                    <span class="last-edited">Last edited @CalculateTimeAgo(Model.Post.DateLastEdited.Value)</span>
+                    <span class="last-edited">Last edited <span class="date-hoverable">@CalculateTimeAgo(Model.Post.DateLastEdited.Value)<span class="exact-date">@Model.Post.DateLastEdited</span></span></span>
                 }
             </div>
 

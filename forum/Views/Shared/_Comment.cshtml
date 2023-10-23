@@ -44,15 +44,14 @@
             </span>
 
             @* Shows how long ago the comment was created *@
-            <span>Created @CalculateTimeAgo(Model.DateCreated)</span>
+            <span>Created <span class="date-hoverable">@CalculateTimeAgo(Model.DateCreated)<span class="exact-date">@Model.DateCreated</span></span></span>
 
             @* If comment has been edited/changed, shows how long ago this happened *@
             @if (Model.DateLastEdited != null)
             {
-                <span class="last-edited">(last edited @CalculateTimeAgo(Model.DateLastEdited.Value))</span>
+                <span class="last-edited">(last edited <span class="date-hoverable">@CalculateTimeAgo(Model.DateLastEdited.Value)<span class="exact-date">@Model.DateLastEdited</span></span>)</span>
             }
         </div>
-
 
         <div class="content">
             @if (Model.Content.IsNullOrEmpty())
@@ -64,7 +63,6 @@
                 @Model.Content
             }
         </div>
-
 
         <div class="likes-and-comments">@Model.TotalLikes likes<span class="spacer">|</span>@Model.CommentReplies?.Count replies</div>
 

@@ -28,6 +28,7 @@
     --txt-3: #a9a9a9;
     /* Transitions */
     --tr-default: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --tr-timing: 150ms cubic-bezier(0.4, 0, 0.2, 1);
     /* Navbar */
     --nav-height: 54px;
 }
@@ -191,6 +192,51 @@ button {
 .deleted-user {
     color: var(--txt-2);
     font-style: italic;
+}
+
+.date-hoverable {
+    position: relative;
+    transition: filter var(--tr-timing);
+    
+    .exact-date {
+        position: absolute;
+        top: -2px;
+        left: 50%;
+        transform: translate(-50%, -100%);
+        white-space: nowrap;
+        font-style: normal !important;
+        padding: 8px 12px;
+        border-radius: 4px;
+        color: var(--bg-1) !important;
+        background-color: var(--txt-1);
+        opacity: 0;
+        filter: drop-shadow(0px 1px 4px rgba(0,0,0,1));
+        pointer-events: none;
+        transition: var(--tr-default);
+        transition-delay: 100ms;
+        
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, 100%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid var(--txt-1);
+        }
+    }
+    
+    &:hover {
+        filter: brightness(125%);
+        
+        .exact-date {
+            top: -8px;
+            opacity: 100%;
+        }
+    }
 }
 
 nav {
