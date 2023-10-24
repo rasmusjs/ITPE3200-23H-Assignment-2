@@ -164,28 +164,6 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         }
     }
 
-    // Fetches comments from the database, based on the comment id
-    public async Task<IEnumerable<Comment>?> GetCommentsByPostId(int postId, string userId = "")
-    {
-        try
-        {
-            // Query the database for comments by id. Includes tags and categories (eagerly loading)
-            var comments = await _db.Comments.Include(comment => comment.CommentReplies)
-                .Where(comment => comment.PostId == postId).ToListAsync();
-
-            // If user is logged in, add likes to comments
-            if (userId != "") comments = await AddLikeToComments(comments, userId);
-
-            return comments;
-        }
-        // Error handling if it can't fetch the comment from db
-        catch (Exception e)
-        {
-            // Sends function name and error to the LogError function
-            LogError("GetCommentsByPostId", e);
-            return null;
-        }
-    }
 
     // Generic method to fetch any entity based on id
     public async Task<TEntity?> GetTById(int id)
@@ -295,9 +273,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
             // Source: https://learn.microsoft.com/en-us/ef/core/querying/sql-queries
             // According to the documentation it's faster to do this than to select all the tags and then remove them one by one for updating
             var executeSqlAsync =
-                await _db.Database.ExecuteSqlAsync(
-                    $"DELETE FROM PostTag WHERE PostsPostId = {id}");
-
+                await _db.Database.ExecuteSqlAsync($"DELETE FROM PostTag WHERE PostsPostId = {id}");
 
             // Error handling if it could not find the entity 
             if (executeSqlAsync == 0)
@@ -321,19 +297,20 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
 
     private async Task<List<Post>?> AddLikeToPosts(List<Post>? posts, string userId)
     {
-        // Check if posts are null or empty
-        if (posts == null || !posts.Any())
-        {
-            LogError("AddLikeToPosts", new InvalidOperationException("Posts are null or empty"));
-            throw new InvalidOperationException("Posts list cannot be empty");
-        }
-
         try
         {
+            // Check if posts are null or empty
+            if (posts == null || !posts.Any())
+            {
+                LogError("AddLikeToPosts", new InvalidOperationException("Posts are null or empty"));
+                throw new InvalidOperationException("Posts list cannot be empty");
+            }
+
+
             // Fetches the user activity
             var user = await GetUserActivity(userId);
 
-            if (user != null && user.LikedPosts != null)
+            if (user is { LikedPosts: not null })
             {
                 // Loops through all posts
                 foreach (var post in posts)
@@ -361,8 +338,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         // Check if comments are null or empty
         if (comments == null || !comments.Any())
         {
-            LogError("AddLikeToComments", new InvalidOperationException("Comments are null or empty"));
-            throw new InvalidOperationException("Comments list cannot be empty");
+            return comments;
         }
 
         try
@@ -370,22 +346,22 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
             // Fetches the user activity
             var user = await GetUserActivity(userId);
 
-            if (user != null && user.LikedComments != null)
+            if (user is { LikedComments: not null })
             {
                 // Loops through all posts
                 foreach (var comment in comments)
                     // Checks if the user has liked the comment
                     if (user.LikedComments.Any(t => t.CommentId == comment.CommentId))
-                        comment.IsLiked = true;  
+                        comment.IsLiked = true;
             }
             else
             {
-                LogError("AddLikeToComments", new Exception("GetUserActivity() returned null")); 
+                LogError("AddLikeToComments", new Exception("GetUserActivity() returned null"));
             }
         }
         catch (Exception e)
         {
-            LogError("AddLikeToComments", e); 
+            LogError("AddLikeToComments", e);
         }
 
         return comments;
