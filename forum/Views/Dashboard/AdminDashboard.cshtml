@@ -92,9 +92,9 @@
                                     <i class="fa fa-upload" aria-hidden="true"></i>
                                     File upload
                                 </summary>
-                                <label asp-for="@category!.PictureBytes">Upload image</label>
+                                <label asp-for="@category.PictureBytes">Upload image</label>
                                 <input type="file" accept=".png,.jpg,.jpeg,.gif,.tif"
-                                       asp-for="@category!.PictureBytes"
+                                       asp-for="@category.PictureBytes"
                                        class="img-input"/>
                                 <span asp-validation-for="@Model.Category!.PictureBytes" class="error"></span>
                             </details>

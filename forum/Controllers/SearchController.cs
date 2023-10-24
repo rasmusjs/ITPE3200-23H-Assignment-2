@@ -10,7 +10,7 @@ namespace forum.Controllers;
 // Controller for the search function
 public class SearchController : Controller
 {
-    private readonly ILogger<SearchController> _logger; // Ikke satt opp enda!
+    private readonly ILogger<SearchController> _logger;
 
     // Connect the controller to the different models
     private readonly IForumRepository<Post> _postRepository;

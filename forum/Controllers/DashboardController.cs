@@ -10,22 +10,22 @@ namespace forum.Controllers;
 
 public class DashBoardController : Controller
 {
-    private readonly IForumRepository<Category> _categoryRepository;
-    private readonly ILogger<ApplicationUser> _logger; // Kommentert ut i program.cs
-    private readonly IForumRepository<Tag> _tagsRepository;
-
     // Connect the controller to the different models
+    private readonly IForumRepository<Category> _categoryRepository;
+    private readonly ILogger<DashBoardController> _logger;
+    private readonly IForumRepository<Tag> _tagsRepositoryRepository;
+
     private readonly IForumRepository<ApplicationUser> _userRepository;
 
     // Constructor for Dependency Injection to the Data Access Layer from the different repositories
     public DashBoardController(
         IForumRepository<ApplicationUser> userRepository, IForumRepository<Category> categoryRepository
-        , IForumRepository<Tag> tags,
-        ILogger<ApplicationUser> logger)
+        , IForumRepository<Tag> tagsRepository,
+        ILogger<DashBoardController> logger)
     {
         _userRepository = userRepository;
         _categoryRepository = categoryRepository;
-        _tagsRepository = tags;
+        _tagsRepositoryRepository = tagsRepository;
         _logger = logger;
     }
 
@@ -43,11 +43,8 @@ public class DashBoardController : Controller
     [Authorize]
     public async Task<IActionResult> Dashboard()
     {
-        // Initialize variable
-        ApplicationUser? userActivity;
-
-        // Fetch all activity for the user
-        userActivity = await _userRepository.GetUserActivity(GetUserId());
+        // Initialize variable, and fetch all activity for the user
+        var userActivity = await _userRepository.GetUserActivity(GetUserId());
 
         // If no posts or catch in ForumRepository, return NotFound and log error
         if (userActivity == null)
@@ -63,13 +60,9 @@ public class DashBoardController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AdminDashboard()
     {
-        // Initialize categories and tags
-        IEnumerable<Category>? categories;
-        IEnumerable<Tag>? tags;
-
-        // Fetching the categories and tags data
-        categories = await _categoryRepository.GetAll();
-        tags = await _tagsRepository.GetAll();
+        // Initialize categories and tags and fetch the categories and tags data
+        IEnumerable<Category>? categories = await _categoryRepository.GetAll();
+        IEnumerable<Tag>? tags = await _tagsRepositoryRepository.GetAll();
 
         // Throws error and log it if there are no tags or categories to show the user or a catch in ForumRepository
         if (categories == null || tags == null)
@@ -365,7 +358,8 @@ public class DashBoardController : Controller
             }
             catch (Exception e)
             {
-                _logger.LogError($"[Dashboard controller] FileUpload() failed, could not create directory. error message: {e}");
+                _logger.LogError(
+                    $"[Dashboard controller] FileUpload() failed, could not create directory. error message: {e}");
                 return "";
             }
 
@@ -436,7 +430,7 @@ public class DashBoardController : Controller
         if (ModelState.IsValid)
         {
             // Tries to update tag in repo, logs error if it cannot update tag
-            var updateTag = await _tagsRepository.Update(tag);
+            var updateTag = await _tagsRepositoryRepository.Update(tag);
             if (!updateTag)
             {
                 TempData["ErrorMessage"] =
@@ -459,7 +453,7 @@ public class DashBoardController : Controller
         if (ModelState.IsValid)
         {
             // Tries to create tag in repo, logs error if it cannot create tag 
-            var newTag = await _tagsRepository.Create(tag);
+            var newTag = await _tagsRepositoryRepository.Create(tag);
             if (newTag == null)
                 _logger.LogWarning("[Dashboard controller] Tag creation failed for {@tag}", tag);
         }
@@ -474,7 +468,7 @@ public class DashBoardController : Controller
     public async Task<IActionResult> DeleteTag(int id)
     {
         // Tries to delete the tag, logs and returns error if there is no category to delete
-        var deleteTag = await _tagsRepository.Delete(id);
+        var deleteTag = await _tagsRepositoryRepository.Delete(id);
         if (!deleteTag)
         {
             _logger.LogError("[Dashboard controller] DeleteTag() failed, error message: result is null");

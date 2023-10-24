@@ -6,7 +6,7 @@ namespace forum.Models;
 public class ApplicationUser : IdentityUser
 {
     public DateTime CreationDate { get; set; } = DateTime.Now;
-    public byte[]? ProfilePicture { get; set; } = null!;
+    public byte[]? ProfilePicture { get; set; }
 
     // navigation property
     public virtual List<Post>? Posts { get; set; }

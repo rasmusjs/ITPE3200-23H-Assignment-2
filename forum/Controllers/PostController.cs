@@ -12,25 +12,25 @@ namespace forum.Controllers;
 
 public class PostController : Controller
 {
-    private readonly IForumRepository<Category> _categoryRepository;
-    private readonly IForumRepository<Comment> _commentRepository;
-
-    private readonly ILogger<PostController> _logger; // Ikke satt opp enda!
+    private readonly ILogger<PostController> _logger;
 
     // Connect the controller to the different models
     private readonly IForumRepository<Post> _postRepository;
     private readonly IForumRepository<Tag> _tags;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IForumRepository<Category> _categoryRepository;
+    private readonly IForumRepository<Comment> _commentRepository;
+
 
     // Constructor for Dependency Injection to the Data Access Layer from the different repositories
     public PostController(IForumRepository<Category> categoryRepository,
-        IForumRepository<Tag> tagRepo, IForumRepository<Post> postRepository,
+        IForumRepository<Tag> tagsRepository, IForumRepository<Post> postRepository,
         IForumRepository<Comment> commentRepository,
         UserManager<ApplicationUser> userManager,
         ILogger<PostController> logger)
     {
         _categoryRepository = categoryRepository;
-        _tags = tagRepo;
+        _tags = tagsRepository;
         _postRepository = postRepository;
         _commentRepository = commentRepository;
         _userManager = userManager;
@@ -416,7 +416,7 @@ public class PostController : Controller
 
         // Checks if the user is the owner of the comment  // TODO: Add error message
         if (commentFromDb.UserId != GetUserId()) return GoToPostComment(comment.PostId, comment.CommentId);
-        
+
         // Sanitizing the post content
         comment.Content = new HtmlSanitizer().Sanitize(comment.Content);
 
