@@ -24,9 +24,14 @@
         </div>
         <div class="form-group">
             <label asp-for="Post.Content">Content*</label>
-            <textarea asp-for="Post.Content"></textarea>
+            <textarea id="Post.Content" asp-for="Post.Content"></textarea>
             <span asp-validation-for="Post.Content" class="error"></span>
         </div>
         <button type="submit">Create</button>
     </form>
 </div>
+
+    @*https://github.com/sparksuite/simplemde-markdown-editor*@
+    <link rel="stylesheet" href="~/lib/simplemde/dist/simplemde.min.css">
+    <script src="~/lib/simplemde/dist/simplemde.min.js"></script>
+    <script>const simplemde = new SimpleMDE({ element: document.getElementById("Post.Content") });</script>
