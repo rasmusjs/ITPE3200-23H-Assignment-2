@@ -37,6 +37,6 @@
     </form>
 </div>
 @*https://github.com/sparksuite/simplemde-markdown-editor*@
-<link rel="stylesheet" href="~/lib/simplemde/dist/simplemde.min.css">
+<link rel="stylesheet" href="~/lib/simplemde/dist/custom-simplemde.css">
 <script src="~/lib/simplemde/dist/simplemde.min.js"></script>
-<script>const simplemde = new SimpleMDE({ element: document.getElementById("Post.Content") });</script>
+    <script>const simplemde = new SimpleMDE({ element: document.getElementById("Post.Content"), spellChecker: false });</script>
