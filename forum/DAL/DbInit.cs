@@ -11,7 +11,7 @@ public static class DbInit
         using var serviceScope = app.ApplicationServices.CreateScope();
         var context = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
 
-        //await context.Database.EnsureDeletedAsync();
+        await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
 
         // Sets categories
@@ -206,16 +206,74 @@ public static class DbInit
             new()
             {
                 Title = "\ud83d\udcdc Why JavaScript should be considered a gift from GOD! \ud83d\udcdc",
-                Content =
-                    "Ladies and gentlemen, gather 'round, for today, we embark on a divine journey through the ethereal realms of JavaScript! \ud83d\ude80\ud83c\udf0c\n\n##  **Unleash the Versatility**\nBehold, for JavaScript is the omnipotent chameleon of coding languages! It dances seamlessly not only in the sacred halls of browsers but also dons the crown of servers (praise be to Node.js) and blesses mobile apps with its touch (hail React Native)!\n\n##  **A Cosmic Force of Popularity**\nIt is not just a language; it's a celestial phenomenon! JavaScript's ubiquity transcends the boundaries of realms, making it one of the most widely-used languages, embraced by mortals and tech gods alike.\n\n##  **A Sacred Evolution**\nJavaScript is on an eternal quest for perfection. ES6, ES7, ES8... it evolves faster than the speed of light, adapting to the celestial needs of modern development.\n\n##  **The Art of Interactivity**\nWitness the magic as JavaScript breathes life into the lifeless! It grants websites the gift of interactivity and dynamism, ensnaring users in a spellbinding trance.\n\n##  **A Cosmic Job Market**\nBy embracing the holy scriptures of JavaScript, you open the gates to an abundance of job opportunities in the ever-expanding tech universe. Devs, rejoice! \ud83d\ude4c\ud83c\udf20\n\n##  **The Fellowship of Community**\nJavaScript's community is not just a community; it's a sacred brotherhood! On StackOverflow, GitHub, and countless other altars, the faithful gather to bestow wisdom upon the seeking souls.\n\nYes, it has its quirks (the enigmatic \"undefined\" and the mystical \"NaN\"), but what godly creation doesn't have its mysteries? \ud83e\udd37\u200d\u2642\ufe0f\ud83c\udf0c\n\nSo, let us kneel before JavaScript, the divine thread that weaves the very fabric of the web, a celestial gift that keeps on giving to us humble developers! \ud83d\ude4f\n\nDo you too believe in the divinity of JavaScript or have celestial tales to share? \ud83c\udf20\ud83d\udd2e #JavaScriptGift #DevotionToCode\n",
+                Content = "Ladies and gentlemen, gather 'round, for today, we embark on a divine journey through the ethereal realms of JavaScript! \ud83d\ude80\ud83c\udf0c\n\n##  **Unleash the Versatility**\nBehold, for JavaScript is the omnipotent chameleon of coding languages! It dances seamlessly not only in the sacred halls of browsers but also dons the crown of servers (praise be to Node.js) and blesses mobile apps with its touch (hail React Native)!\n\n##  **A Cosmic Force of Popularity**\nIt is not just a language; it's a celestial phenomenon! JavaScript's ubiquity transcends the boundaries of realms, making it one of the most widely-used languages, embraced by mortals and tech gods alike.\n\n##  **A Sacred Evolution**\nJavaScript is on an eternal quest for perfection. ES6, ES7, ES8... it evolves faster than the speed of light, adapting to the celestial needs of modern development.\n\n##  **The Art of Interactivity**\nWitness the magic as JavaScript breathes life into the lifeless! It grants websites the gift of interactivity and dynamism, ensnaring users in a spellbinding trance.\n\n##  **A Cosmic Job Market**\nBy embracing the holy scriptures of JavaScript, you open the gates to an abundance of job opportunities in the ever-expanding tech universe. Devs, rejoice! \ud83d\ude4c\ud83c\udf20\n\n##  **The Fellowship of Community**\nJavaScript's community is not just a community; it's a sacred brotherhood! On StackOverflow, GitHub, and countless other altars, the faithful gather to bestow wisdom upon the seeking souls.\n\nYes, it has its quirks (the enigmatic \"undefined\" and the mystical \"NaN\"), but what godly creation doesn't have its mysteries? \ud83e\udd37\u200d\u2642\ufe0f\ud83c\udf0c\n\nSo, let us kneel before JavaScript, the divine thread that weaves the very fabric of the web, a celestial gift that keeps on giving to us humble developers! \ud83d\ude4f\n\nDo you too believe in the divinity of JavaScript or have celestial tales to share? \ud83c\udf20\ud83d\udd2e #JavaScriptGift #DevotionToCode\n",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
                 DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
                 TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
-                CategoryId = random.Next(1, categoriesList.Count),
+                CategoryId = random.Next(1, categoriesList.Count), // Switch to "Front End"
                 Tags = new List<Tag>
                 {
                     tags.First(t => t.Name == "JavaScript")
+                }
+            },
+            new()
+            {
+                Title = "How to Center Elements in CSS: A Beginner's Guide \ud83c\udfaf",
+                Content = "### Introduction \ud83d\udc4b\nCentering elements in CSS can be confusing for beginners. This guide aims to clarify the basics.\n\n### Horizontal Centering \ud83d\udccf\nInline Elements: Use `text-align: center`.\nBlock Elements: Use `margin: auto`.\n\n### Vertical Centering \ud83d\udcd0\nSingle Line of Text: Use `line-height`.\nMultiple Lines: Use Flexbox or Grid.\n\n### Common Pitfalls \u26a0\ufe0f\nForgot `DOCTYPE`: Always declare it.\nParent Dimensions: Make sure parent has defined width and height.\n\n### Resources \ud83d\udcda\nCSS Tricks Guide: [CSS Tricks Guide](https://css-tricks.com/)\nMDN Web Docs: [MDN Web Docs](https://developer.mozilla.org/)\n\nLooking forward to your questions and contributions! \ud83e\udd17",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = random.Next(1, categoriesList.Count), // Switch to "Front End"
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Beginner"),
+                    tags.First(t => t.Name == "CSS")
+                }
+            },
+            new()
+            {
+                Title = "Managing Environments in C# Projects with Git Branches \ud83c\udf33\n",
+                Content = "## Introduction \ud83d\udc4b\nWhen developing C# projects, you often need to manage multiple environments like development, staging, and production. Using Git branches effectively can simplify this process.\n\n## Why Use Git Branches? \ud83e\udd14\nGit branches allow you to isolate features or environments, making it easier to manage your codebase and deploy to different environments.\n\n## Best Practices \ud83d\udee0\ufe0f\nCreate specific branches for each environment.\nUse a Gitflow or similar workflow.\nAlways merge 'development' into 'staging' and 'staging' into 'production'.\n\n## Version Control in C# \ud83d\udd17\nC# and .NET provide built-in tools like `appsettings.json` to manage environment-specific configurations, making it seamless to integrate with version control systems like Git.",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = random.Next(1, categoriesList.Count), // Switch to "Back End"
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "C#"),
+                    tags.First(t => t.Name == "Version Control")
+                }
+            },
+            new()
+            {
+                Title = "Leveraging Data Science in Back-End Development: A Comprehensive Guide \ud83d\udcca",
+                Content = "## Introduction\nData science isn't just for data analysts or machine learning engineers. Back-end developers can also benefit from understanding and implementing data science concepts. This post aims to explore how data science techniques can improve back-end systems.\n\n## Why Data Science Matters in Back-End Development \ud83c\udfaf\nData is the lifeblood of any modern application. As back-end developers, we are responsible for storing, manipulating, and serving that data. Understanding basic data science techniques helps us to optimize these processes, thereby improving application performance and user experience.\n\n## Data Preprocessing \u2699\ufe0f\nOne of the first steps in utilizing data effectively is preprocessing. This includes cleaning and transforming raw data into a format that's easier to work with. For example, you might need to normalize text data or handle missing values before saving it to a database.\n\n## Real-time Analytics \ud83d\udcc8\nWith the advent of big data, analytics have moved beyond batch processing. Real-time analytics provide insights as data flows into the system. This is particularly useful for applications that need to react to data changes instantly, like stock trading platforms.\n\n## Machine Learning Models \ud83e\udd16\nImplementing machine learning models on the back-end can add intelligence to your application. For example, a recommendation engine could improve user engagement, or a fraud detection system could save your company money. You don't need to be a data scientist to implement basic machine learning algorithms.\n\n## Caching Strategies and Data Stores \ud83d\uddc4\ufe0f\nData science also includes making smart decisions about how and where to store data. Different types of databases have their own pros and cons, and your choice can greatly affect performance. Caching frequently accessed data can also reduce database load.\n\n## Conclusion \ud83c\udf1f\nData science isn't a field reserved for specialists. By leveraging data science techniques in back-end development, we can build smarter, faster, and more reliable applications.",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = random.Next(1, categoriesList.Count), // Switch to "Back End"
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Data Science"),
+                }
+            },
+            new()
+            {
+                Title = "Immersive Gaming Experiences with Unity: A Detailed Look \ud83c\udfae",
+                Content = "## Introduction\nUnity has become a leading platform for both indie developers and large studios aiming to create compelling gaming experiences. This post will delve into techniques to enrich gameplay and engage players through Unity's various features.\n\n## The Power of Unity in Gaming \ud83d\udd79\ufe0f\nUnity's real strength lies in its versatility and the ease with which developers can create both 2D and 3D games. Its asset store and extensive documentation allow even novices to jump in and start developing their gaming ideas.\n\n## Storytelling through Environment \ud83c\udf0d\nOne way to enhance player engagement is through the game environment. Unity's lighting, shading, and physics tools can add depth and realism, helping to tell a story without words. The use of spatial audio further immerses the player into the game world.\n\n## User Interface and Experience Design \ud83d\udda5\ufe0f\nA well-designed UI is essential for player enjoyment. Unity offers a variety of built-in components for UI development, from basic buttons and sliders to complex scroll views and panels. Custom shaders can add a unique look and feel to your game's interface.\n\n## Multiplayer Functionality \ud83c\udf10\nMultiplayer games are all the rage, and Unity's networking features make it easier to create such experiences. Whether it's a cooperative play or a competitive arena, Unity provides the tools necessary to ensure seamless real-time interactions.\n\n## Virtual Reality and Augmented Reality \ud83d\udd76\ufe0f\nUnity is fully equipped to develop VR and AR games, offering a whole new level of immersion. The platform supports popular VR headsets and allows for intuitive interactions, making it easier for developers to enter the burgeoning VR/AR market.\n\n## Performance Optimization \u2699\ufe0f\nGames need to run smoothly to provide a good user experience. Unity's Profiler tool helps identify bottlenecks in game performance, while its scripting options allow for fine-tuned control over game mechanics, helping ensure that your game runs flawlessly on a range of hardware.\n\n## Conclusion \ud83c\udf1f\nUnity offers an array of tools and features that can be leveraged to create rich, engaging gaming experiences. Whether you're a beginner or a seasoned pro, the platform provides everything you need to bring your gaming vision to life.",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = random.Next(1, categoriesList.Count), // Switch to "Entertainment"
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Unity"),
+                    tags.First(t => t.Name == "Gaming"),
                 }
             },
             new()
