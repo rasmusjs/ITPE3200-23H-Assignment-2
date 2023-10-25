@@ -25,6 +25,10 @@
             flex-direction: row;
             gap: 4px;
 
+            @media (max-width: 450px) {
+                flex-direction: column;
+            }
+
             & a {
                 text-decoration: none;
                 height: min-content;
@@ -85,6 +89,10 @@
                 height: 28px;
                 aspect-ratio: 1/1;
                 border-radius: 48px;
+
+                @media (max-width: 450px) {
+                    display: none;
+                }
             }
         }
     }
@@ -127,6 +135,10 @@
             display: flex;
             flex-direction: row;
             gap: 4px;
+            
+            .show-on-small-screen {
+                display: none;
+            }
 
             & a {
                 text-decoration: none;
@@ -134,11 +146,14 @@
                 padding: 8px 12px;
                 color: var(--txt-2);
                 transition: var(--tr-default);
+                
+                & * {
+                    color: var(--txt-2);
+                    transition: var(--tr-default);
+                }
 
                 & i {
                     font-size: var(--fs-default);
-                    color: var(--txt-2);
-                    margin-right: 6px;
                     transition: var(--tr-default);
                 }
 
@@ -151,9 +166,25 @@
 
                 &:hover {
                     color: var(--txt-1);
+
+                    & * {
+                        color: var(--txt-1);
+                    }
+                }
+            }
+
+            @media (max-width: 450px) {
+                & a {
+                    padding: 8px;
                 }
 
-
+                .hide-on-small-screen {
+                    display: none;
+                }
+                
+                .show-on-small-screen {
+                    display: block;
+                }
             }
 
             &.likes-comments {
@@ -163,8 +194,10 @@
                     &:hover {
                         background-color: var(--fg-1);
                     }
-
-
+                    
+                    & i {
+                        margin-right: 6px;
+                    }
                 }
             }
 

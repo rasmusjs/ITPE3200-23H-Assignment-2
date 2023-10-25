@@ -153,7 +153,7 @@ public class IndexModel : PageModel
 
         [Display(Name = "Profile Picture")] public byte[] ProfilePicture { get; set; }
 
-        [Display(Name = "Remove Profile Picture ?")]
+        [Display(Name = "Remove Profile Picture")]
         public bool RemoveProfilePicture { get; set; }
     }
 }
