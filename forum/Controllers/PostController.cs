@@ -45,7 +45,6 @@ public class PostController : Controller
         if (_userManager.GetUserAsync(User).Result != null)
             //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
             return User.FindFirstValue(ClaimTypes.NameIdentifier);
-
         return "";
     }
 

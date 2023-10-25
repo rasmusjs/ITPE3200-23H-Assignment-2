@@ -50,7 +50,7 @@ public class DashBoardController : Controller
         if (userActivity == null)
         {
             _logger.LogError("[Dashboard controller] Dashboard() failed, error message: userActivity is null");
-            return NotFound("User data not found");
+            return NotFound("User activity not found");
         }
 
         return View(userActivity);
@@ -67,8 +67,7 @@ public class DashBoardController : Controller
         // Throws error and log it if there are no tags or categories to show the user or a catch in ForumRepository
         if (categories == null || tags == null)
         {
-            _logger.LogError(
-                "[Dashboard controller] _categoryRepository.GetAll() and/or _tagsRepository.GetAll() returned null");
+            _logger.LogError("[Dashboard controller] _categoryRepository.GetAll() and/or _tagsRepository.GetAll() returned null");
             return NotFound("Categories or tags not found, cannot create post");
         }
 

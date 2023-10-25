@@ -11,7 +11,7 @@ public static class DbInit
         using var serviceScope = app.ApplicationServices.CreateScope();
         var context = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
 
-        await context.Database.EnsureDeletedAsync();
+        //await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
 
         // Sets categories
@@ -136,8 +136,7 @@ public static class DbInit
         // Sets users
         if (!context.Users.Any())
         {
-            var userManager =
-                serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             var userList = new List<ApplicationUser>
             {
@@ -211,7 +210,7 @@ public static class DbInit
                 DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
                 TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
-                CategoryId = random.Next(1, categoriesList.Count), // Switch to "Front End"
+                CategoryId = categoriesList.First(c => c.Name == "Entertainment").CategoryId,
                 Tags = new List<Tag>
                 {
                     tags.First(t => t.Name == "JavaScript")
@@ -225,7 +224,7 @@ public static class DbInit
                 DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
                 TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
-                CategoryId = random.Next(1, categoriesList.Count), // Switch to "Front End"
+                CategoryId = categoriesList.First(c => c.Name == "Front End").CategoryId,
                 Tags = new List<Tag>
                 {
                     tags.First(t => t.Name == "Beginner"),
@@ -240,7 +239,7 @@ public static class DbInit
                 DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
                 TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
-                CategoryId = random.Next(1, categoriesList.Count), // Switch to "Back End"
+                CategoryId = categoriesList.First(c => c.Name == "Back End").CategoryId,
                 Tags = new List<Tag>
                 {
                     tags.First(t => t.Name == "C#"),
@@ -255,7 +254,7 @@ public static class DbInit
                 DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
                 TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
-                CategoryId = random.Next(1, categoriesList.Count), // Switch to "Back End"
+                CategoryId = categoriesList.First(c => c.Name == "Back End").CategoryId,
                 Tags = new List<Tag>
                 {
                     tags.First(t => t.Name == "Data Science"),
@@ -269,7 +268,7 @@ public static class DbInit
                 DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
                 TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
-                CategoryId = random.Next(1, categoriesList.Count), // Switch to "Entertainment"
+                CategoryId = categoriesList.First(c => c.Name == "Entertainment").CategoryId,
                 Tags = new List<Tag>
                 {
                     tags.First(t => t.Name == "Unity"),

@@ -83,6 +83,12 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
                 )
                 .ToListAsync();
 
+            if (!posts.Any())
+            {
+                _logger.LogInformation("[Forum Repository] GetAllPostsByTerm() found no posts");
+                return null;
+            }
+
             // If user is logged in, add likes to posts
             if (userId != "") posts = await AddLikeToPosts(posts, userId);
 
@@ -149,6 +155,12 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         {
             // Query the database for all posts. Includes tags and categories (eagerly loading)
             var posts = await _db.Posts.Include(post => post.Tags).Include(post => post.Category).ToListAsync();
+
+            if (!posts.Any())
+            {
+                _logger.LogInformation("[Forum Repository] GetAllPosts() found no posts");
+                return null;
+            }
 
             // If user is logged in, add likes to posts
             if (userId != "") posts = await AddLikeToPosts(posts, userId);
@@ -297,16 +309,16 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
 
     private async Task<List<Post>?> AddLikeToPosts(List<Post>? posts, string userId)
     {
+        // Check if posts are null or empty
+        if (posts == null || !posts.Any())
+        {
+            _logger.LogWarning(
+                "[Forum Repository] AddLikeToPosts() could not add Likes to posts, warning: Posts are null or empty");
+            return posts;
+        }
+
         try
         {
-            // Check if posts are null or empty
-            if (posts == null || !posts.Any())
-            {
-                LogError("AddLikeToPosts", new InvalidOperationException("Posts are null or empty"));
-                throw new InvalidOperationException("Posts list cannot be empty");
-            }
-
-
             // Fetches the user activity
             var user = await GetUserActivity(userId);
 
@@ -322,7 +334,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
             }
             else
             {
-                LogError("AddLikeToPosts", new Exception("GetUserActivity() returned null"));
+                _logger.LogInformation("[Forum Repository] AddLikeToPosts() user have not liked any posts");
             }
         }
         catch (Exception e)
