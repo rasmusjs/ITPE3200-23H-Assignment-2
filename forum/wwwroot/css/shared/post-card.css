@@ -146,10 +146,14 @@
                 padding: 8px 12px;
                 color: var(--txt-2);
                 transition: var(--tr-default);
+                
+                & * {
+                    color: var(--txt-2);
+                    transition: var(--tr-default);
+                }
 
                 & i {
                     font-size: var(--fs-default);
-                    color: var(--txt-2);
                     transition: var(--tr-default);
                 }
 
@@ -162,6 +166,10 @@
 
                 &:hover {
                     color: var(--txt-1);
+
+                    & * {
+                        color: var(--txt-1);
+                    }
                 }
             }
 
