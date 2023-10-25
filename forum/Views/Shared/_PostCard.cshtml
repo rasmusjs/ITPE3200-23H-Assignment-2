@@ -89,14 +89,14 @@
                asp-route-id="@Model.Post.PostId"
                class="@(Model.Post.IsLiked ? "liked" : "")">
                 <i class="fa-solid fa-thumbs-up"></i>
-                @Model.Post.TotalLikes Likes
+                @Model.Post.TotalLikes <span class="hide-on-small-screen">Likes</span>
             </a>
 
             @* Total likes. Navigates to post to see comments if clicked *@
             <a asp-controller="Post"
                asp-action="Post"
                asp-route-id="@Model.Post.PostId">
-                <i class="fa-solid fa-comment"></i>@Model.Post.Comments?.Count comments
+                <i class="fa-solid fa-comment"></i>@Model.Post.Comments?.Count <span class="hide-on-small-screen">Comments</span>
             </a>
         </div>
 
@@ -111,13 +111,13 @@
                     <a asp-controller="Post"
                        asp-action="Update"
                        asp-route-id="@Model.Post.PostId">
-                        Edit
+                        <i class="fa-solid fa-pen-to-square show-on-small-screen"></i><span class="hide-on-small-screen">Edit</span>
                     </a>
                 }
                 <a asp-controller="Post"
                    asp-action="Delete"
                    asp-route-id="@Model.Post.PostId">
-                    Delete
+                    <i class="fa-solid fa-trash-can show-on-small-screen"></i><span class="hide-on-small-screen">Delete</span>
                 </a>
             }
 
@@ -126,7 +126,7 @@
                 <a asp-controller="Post"
                    asp-action="Post"
                    asp-route-id="@Model.Post.PostId">
-                    Go to post
+                    <i class="fa-solid fa-arrow-right show-on-small-screen"></i><span class="hide-on-small-screen">Go to post</span>
                 </a>
             }
         </div>
