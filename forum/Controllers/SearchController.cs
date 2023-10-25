@@ -58,8 +58,9 @@ public class SearchController : Controller
         // Error handling if the term does not provide any posts
         if (posts == null)
         {
-            _logger.LogError("[ItemController] Item list not found while executing _itemRepository.GetAll()");
-            return NotFound("Item list not found");
+            _logger.LogInformation("[Search controller] Search(), No posts found for search term: " + term);
+            // Return view with all the posts matching the search term
+            return View(new PostsListViewModel(new List<Post>(), "Search"));
         }
 
         posts = sortby switch
@@ -73,10 +74,8 @@ public class SearchController : Controller
             _ => posts.OrderByDescending(post => post.DateCreated)
         };
 
-
         // Return view with all the posts matching the search term
-        var postsListViewModel = new PostsListViewModel(posts, "Search");
-        return View(postsListViewModel);
+        return View(new PostsListViewModel(posts, "Search"));
     }
 
     // Sends user to index
