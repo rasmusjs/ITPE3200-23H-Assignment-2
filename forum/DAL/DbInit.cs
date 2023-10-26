@@ -11,7 +11,7 @@ public static class DbInit
         using var serviceScope = app.ApplicationServices.CreateScope();
         var context = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
 
-        //await context.Database.EnsureDeletedAsync();
+        await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
 
         // Sets categories
@@ -19,8 +19,8 @@ public static class DbInit
         {
             new()
             {
-                Name = "Entertainment", Color = "#a83432",
-                PicturePath = "../images/categories/entertainment-cover.png"
+                Name = "Algorithms", Color = "#a83432",
+                PicturePath = "../images/categories/algorithms-cover.png"
             },
             new()
             {
@@ -29,8 +29,8 @@ public static class DbInit
             },
             new()
             {
-                Name = "Politics", Color = "#a89e32",
-                PicturePath = "../images/categories/politics-cover.png"
+                Name = "Database", Color = "#a89e32",
+                PicturePath = "../images/categories/database-cover.png"
             },
             new()
             {
@@ -39,8 +39,8 @@ public static class DbInit
             },
             new()
             {
-                Name = "Sports", Color = "#32a85f",
-                PicturePath = "../images/categories/sports-cover.png"
+                Name = "Code Review", Color = "#32a85f",
+                PicturePath = "../images/categories/code-review-cover.png"
             },
             new()
             {
@@ -70,7 +70,7 @@ public static class DbInit
             new()
             {
                 Name = "Game Development", Color = "#9a32a8",
-                PicturePath = "../images/categories/gamedevelopment-cover.png"
+                PicturePath = "../images/categories/game-development-cover.png"
             },
             new()
             {
@@ -99,14 +99,15 @@ public static class DbInit
                 new() { Name = "C#" },
                 new() { Name = "Data Science" },
                 new() { Name = "Machine Learning" },
-                new() { Name = "Internet Of Things" }, // Make category instead
                 new() { Name = "JavaScript" },
                 new() { Name = "PowerShell" },
                 new() { Name = "Python" },
                 new() { Name = "Unity" },
                 new() { Name = "Windows" },
                 new() { Name = "Java" },
-                new() { Name = "Humor" }
+                new() { Name = "Humor" },
+                new() { Name = "SQL" },
+                new() { Name = "Cloudflare" },
             };
 
             // Add tags
@@ -203,6 +204,93 @@ public static class DbInit
         // Sets posts
         var postsList = new List<Post>
         {
+            new()
+            {
+                Title = "Simple ToDo App",
+                Content = "Hello everyone,\n\nI've recently built a simple ToDo app using vanilla JavaScript and HTML. I'm looking for feedback on my code structure, naming conventions, and any best practices I might be overlooking. Here's the main code snippet:\n\n```html\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Simple ToDo App</title>\n</head>\n<body>\n    <div id=\"app\">\n        <input type=\"text\" id=\"taskInput\" placeholder=\"Enter your task\">\n        <button onclick=\"addTask()\">Add Task</button>\n        <ul id=\"taskList\"></ul>\n    </div>\n\n    <script>\n        function addTask() {\n            const taskInput = document.getElementById('taskInput');\n            const taskList = document.getElementById('taskList');\n\n            if(taskInput.value.trim() === '') return;\n\n            const li = document.createElement('li');\n            li.textContent = taskInput.value;\n            taskList.appendChild(li);\n\n            taskInput.value = '';\n        }\n    </script>\n</body>\n</html>",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "Code Review").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "JavaScript"),
+                    tags.First(t => t.Name == "HTML")
+                }
+            },
+            new()
+            {
+                Title = "Beginner's Question: HTML Layout Structure",
+                Content = "Hi everyone,\n\nI'm just starting out with web development and have a basic question about HTML structure. I've created a simple webpage layout, and I'd like to get feedback on whether I'm structuring it correctly.\n\n```html\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>My First Webpage</title>\n</head>\n<body>\n    <header>\n        <h1>Welcome to My Webpage</h1>\n        <nav>\n            <ul>\n                <li><a href=\"#home\">Home</a></li>\n                <li><a href=\"#about\">About</a></li>\n                <li><a href=\"#contact\">Contact</a></li>\n            </ul>\n        </nav>\n    </header>\n\n    <main>\n        <section id=\"home\">\n            <h2>Home</h2>\n            <p>This is the homepage content.</p>\n        </section>\n\n        <section id=\"about\">\n            <h2>About</h2>\n            <p>Information about the website.</p>\n        </section>\n\n        <section id=\"contact\">\n            <h2>Contact</h2>\n            <p>Contact details and form will go here.</p>\n        </section>\n    </main>\n\n    <footer>\n        <p>\u00a9 2023 My Webpage. All rights reserved.</p>\n    </footer>\n</body>\n</html>",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "Code Review").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Beginner"),
+                    tags.First(t => t.Name == "HTML")
+                }
+            },
+            new()
+            {
+                Title = "Binary Search Implementation in Python",
+                Content = "I've been practicing my algorithm skills and decided to implement the binary search algorithm in Python. I would love to get feedback on my implementation for correctness and efficiency.\n\n```python\ndef binary_search(arr, x):\n    \"\"\"\n    Perform binary search to find the index of x in arr.\n    \n    :param arr: List of sorted elements\n    :param x: Element to search for\n    :return: Index of x in arr or -1 if not found\n    \"\"\"\n    l = 0\n    r = len(arr) - 1\n    \n    while l <= r:\n        mid = (l + r) // 2\n        \n        # Check if x is present at mid\n        if arr[mid] == x:\n            return mid\n        \n        # If x is greater, ignore the left half\n        elif arr[mid] < x:\n            l = mid + 1\n        \n        # If x is smaller, ignore the right half\n        else:\n            r = mid - 1\n            \n    return -1\n\n# Test\narr = [1, 3, 5, 7, 9, 11, 13]\nx = 7\nprint(binary_search(arr, x))  # Expected output: 3",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "Algorithms").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Python"),
+                }
+            },
+            new()
+            {
+                Title = "C# ML.NET Model Training Issue",
+                Content = "Hi all,\n\nI've started using ML.NET in C# for a basic regression model. Encountered an error during model training. Here's the code snippet:\n\n```csharp\nusing Microsoft.ML;\nusing Microsoft.ML.Data;\n\nvar context = new MLContext();\nIDataView dataView = context.Data.LoadFromTextFile<MyData>(\"data.csv\", separatorChar: ',');\n\nvar pipeline = context.Transforms.Concatenate(\"Features\", \"Value1\", \"Value2\")\n                .Append(context.Regression.Trainers.Sdca());\n\nvar model = pipeline.Fit(dataView); // Error occurs here",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "Algorithms").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "C#"),
+                    tags.First(t => t.Name == "Machine Learning")
+                }
+            },
+            new()
+            {
+                Title = "SQL Query Help \ud83e\udd14",
+                Content = "I'm working with a SQL database and I'm having trouble constructing a query to retrieve data based on specific conditions. Can anyone help me out?\n\n```sql\nSELECT * FROM users WHERE last_login < '2022-01-01' AND status = 'active';",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "Database").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "SQL"),
+                }
+            },
+            new()
+            {
+                Title = "Database Hosting with Cloudflare \u2601\ufe0f\ud83d\udd12",
+                Content = "I've been researching hosting options for my database and came across Cloudflare's database hosting services. I have a few questions:\n\n1. \ud83d\ude80 How does Cloudflare's performance compare to other providers like AWS and Google Cloud?\n2. \ud83d\udd12 What are the security measures Cloudflare provides for databases?\n3. \ud83d\udcb0 Are there any hidden costs or considerations when using Cloudflare for database hosting?\n4. \ud83d\udd04 How easy is it to migrate an existing database to Cloudflare?\n\nWould love to hear from anyone with experience using Cloudflare for databases. Any insights or recommendations would be greatly appreciated!\n\nThanks!",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "Database").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Cloudflare"),
+                }
+            },
             new()
             {
                 Title = "\ud83d\udcdc Why JavaScript should be considered a gift from GOD! \ud83d\udcdc",
@@ -577,7 +665,6 @@ public static class DbInit
                     tags.First(t => t.Name == "Version Control")
                 }
             },
-
             new()
             {
                 Title = "Building Responsive Web Design with CSS Grid",
