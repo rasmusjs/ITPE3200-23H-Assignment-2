@@ -92,20 +92,21 @@ public static class DbInit
             var tagsList = new List<Tag>
             {
                 new() { Name = "Beginner" },
+                new() { Name = "HTML" },
                 new() { Name = "CSS" },
-                new() { Name = "C#" },
-                new() { Name = "Gaming" },
                 new() { Name = "Git" },
+                new() { Name = "Version Control" },
+                new() { Name = "C#" },
                 new() { Name = "Data Science" },
                 new() { Name = "Machine Learning" },
-                new() { Name = "Internet Of Things" },
+                new() { Name = "Internet Of Things" }, // Make category instead
                 new() { Name = "JavaScript" },
                 new() { Name = "PowerShell" },
                 new() { Name = "Python" },
                 new() { Name = "Unity" },
-                new() { Name = "Version Control" },
                 new() { Name = "Windows" },
-                new() { Name = "Java" }
+                new() { Name = "Java" },
+                new() { Name = "Humor" }
             };
 
             // Add tags
@@ -210,16 +211,17 @@ public static class DbInit
                 DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
                 TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
-                CategoryId = categoriesList.First(c => c.Name == "Entertainment").CategoryId,
+                CategoryId = categoriesList.First(c => c.Name == "Front End").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "JavaScript")
+                    tags.First(t => t.Name == "JavaScript"),
+                    tags.First(t => t.Name == "Humor")
                 }
             },
             new()
             {
                 Title = "How to Center Elements in CSS: A Beginner's Guide \ud83c\udfaf",
-                Content = "### Introduction \ud83d\udc4b\nCentering elements in CSS can be confusing for beginners. This guide aims to clarify the basics.\n\n### Horizontal Centering \ud83d\udccf\nInline Elements: Use `text-align: center`.\nBlock Elements: Use `margin: auto`.\n\n### Vertical Centering \ud83d\udcd0\nSingle Line of Text: Use `line-height`.\nMultiple Lines: Use Flexbox or Grid.\n\n### Common Pitfalls \u26a0\ufe0f\nForgot `DOCTYPE`: Always declare it.\nParent Dimensions: Make sure parent has defined width and height.\n\n### Resources \ud83d\udcda\nCSS Tricks Guide: [CSS Tricks Guide](https://css-tricks.com/)\nMDN Web Docs: [MDN Web Docs](https://developer.mozilla.org/)\n\nLooking forward to your questions and contributions! \ud83e\udd17",
+                Content = "## Introduction \ud83d\udc4b\nCentering elements in CSS can be confusing for beginners. This guide aims to clarify the basics.\n\n## Horizontal Centering \ud83d\udccf\nInline Elements: Use `text-align: center`.\nBlock Elements: Use `margin: auto`.\n\n## Vertical Centering \ud83d\udcd0\nSingle Line of Text: Use `line-height`.\nMultiple Lines: Use Flexbox or Grid.\n\n## Common Pitfalls \u26a0\ufe0f\nForgot `DOCTYPE`: Always declare it.\nParent Dimensions: Make sure parent has defined width and height.\n\n## Resources \ud83d\udcda\nCSS Tricks Guide: [CSS Tricks Guide](https://css-tricks.com/)\nMDN Web Docs: [MDN Web Docs](https://developer.mozilla.org/)\n\nLooking forward to your questions and contributions! \ud83e\udd17",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
                 DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
                 TotalLikes = random.Next(9999),
@@ -229,6 +231,21 @@ public static class DbInit
                 {
                     tags.First(t => t.Name == "Beginner"),
                     tags.First(t => t.Name == "CSS")
+                }
+            },
+            new()
+            {
+                Title = "Diving Deep into HTML and CSS \ud83c\udf10\ud83c\udfa8",
+                Content = "## Introduction \nHey web developers! \ud83d\udc69\u200d\ud83d\udcbb\n\nHTML and CSS are the building blocks of the web. They've evolved over the years, offering more flexibility and power.\n\n### Key HTML5 Features \ud83d\udcdc \n- **Semantic Tags:** Elements like `<article>`, `<nav>`, and `<aside>` make our content more understandable.\n- **Media Elements:** `<audio>` and `<video>` tags have revolutionized media integration without plugins.\n- **Canvas:** Allows for dynamic, scriptable rendering of 2D shapes and bitmap images.\n\n### CSS Flexbox and Grid \ud83c\udf9a\ufe0f \n- **Flexbox:** Simplifies layout, alignment, and distribution of items within a container. Perfect for 1D layouts! \ud83d\udea4\n- **Grid:** Introduces 2D layout control, making complex designs simpler and more responsive. \ud83d\uddf7\n\n## Conclusion \nThe evolving standards and capabilities in HTML and CSS continue to push the boundaries of what's possible on the web. Exciting times ahead! \ud83d\ude80\n\n---\n\nWhat are your favorite HTML and CSS features?\n",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "Front End").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "HTML"),
+                    tags.First(t => t.Name == "CSS"),
                 }
             },
             new()
@@ -268,23 +285,218 @@ public static class DbInit
                 DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
                 TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
-                CategoryId = categoriesList.First(c => c.Name == "Entertainment").CategoryId,
+                CategoryId = categoriesList.First(c => c.Name == "Game Development").CategoryId,
                 Tags = new List<Tag>
                 {
                     tags.First(t => t.Name == "Unity"),
-                    tags.First(t => t.Name == "Gaming"),
+                }
+            },
+            new()
+            {
+                Title = "Integrating Machine Learning into My C# Game",
+                Content = "Hey everyone!\n\nI'm currently working on a game developed in C#. Recently, I've started to integrate some machine learning features to enhance gameplay dynamics. Specifically, I'm training a model to adapt game difficulty based on a player's skill level and in-game behavior. This ensures a more tailored and challenging experience for each individual player.\n\nHas anyone else experimented with combining C# game development and machine learning? Would love to hear your insights and share some challenges I've encountered along the way.\n",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "Game Development").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "C#"),
+                    tags.First(t => t.Name == "Machine Learning"),
+                }
+            },
+            new()
+            {
+                Title = "Python indentations are annoying\ud83d\udc0d",
+                Content = "Hey all!\n\nRan into a quirky Python issue today. Always remember to check for indentation errors, they can be sneaky! \ud83d\udd75\ufe0f\u200d\u2642\ufe0f Any fun debugging stories to share?\n",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "Debugging").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Python"),
+                }
+            },
+            new()
+            {
+                Title = "Debugging in PowerShell \ud83d\udd0d\ud83d\udee0\ufe0f",
+                Content = "### Introduction\nHey PowerShell enthusiasts! \u270c\ufe0f\n\nI've been working on some scripts lately, and I've encountered multiple challenges. Figured I'd share and hopefully help someone out.\n\n### Common Issues \ud83d\udeab\n- **Syntax Errors:** Always double-check for missing brackets or misused symbols. It's easy to overlook!\n- **Execution Policy:** Remember, sometimes your script won't run due to the set execution policy. Use `Get-ExecutionPolicy` to check it.\n- **Path Errors:** Ensure paths are correct and avoid hardcoding them when possible. Use relative paths or variables.\n\n### Tips and Tricks \ud83d\udc8e\n- Use `Set-PSDebug -Trace 1` to step through your script line by line. It's a lifesaver! \ud83e\udd17\n- Always have a backup of your original script before making major changes. \ud83d\udd10\n\nWould love to hear about your own PowerShell debugging adventures and insights!\n",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "Debugging").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "PowerShell"),
+                }
+            },
+            new()
+            {
+                Title = "Exploring Alternative Version Control Systems",
+                Content = "**Hello devs!**\n\nWhile Git is popular, I've been exploring alternative version control systems like Mercurial and Bazaar. They offer some unique features! Has anyone else tried branching out? Thoughts? \ud83e\udd14\n",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "Development").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Version Control"),
+                }
+            },
+            new()
+            {
+                Title = "\ud83d\udda5\ufe0f Windows Development: Embracing the Modern Stack",
+                Content = "**Hey fellow developers!**\n\nWindows development has come a long way, especially with the introduction of tools like Windows Subsystem for Linux (WSL) and the move towards universal apps with the UWP platform.\n\n**WSL 2 - Bridging the Gap \ud83c\udf09**  \nWSL 2 has revolutionized the way we think about cross-platform development on Windows. Now, seamlessly integrating Linux-based tools and workflows is a breeze. It's especially beneficial for those coming from a UNIX background, wanting to maintain a familiar development environment. \ud83d\udc27\n\n**UWP - Universal Windows Platform \ud83c\udf10**  \nThe promise of write-once, run-anywhere is getting closer with UWP. Creating apps that work across PCs, tablets, Xbox, and even HoloLens is now more streamlined. Plus, with tools like Xamarin, you can extend this even further across platforms.\n\n**Staying Updated \ud83d\udd03**  \nWith constant updates to .NET, Visual Studio, and other essential tools, it's crucial to stay updated. Not just for the new features, but for performance improvements and security patches as well\n",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "Development").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Windows"),
+                }
+            },
+            new()
+            {
+                Title = "Why did the programmer quit his job?",
+                Content = "**Hey code enthusiasts!**\n\nJust wanted to share a little programming humor to brighten your day.\n\n**Q: Why did the programmer quit his job?**  \n**A:** Because he didn't get arrays!\n\nOkay, I'll admit, that was a bit of a stretch. But if coding has taught us anything, it's to appreciate a good (or bad) pun every now and then. \ud83d\ude02\n\nGot any coding jokes or puns to share? Let's hear them!\n",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "General").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Humor"),
+                }
+            },
+            new()
+            {
+                Title = "Java 16 Released! \u2615\ufe0f\ud83d\ude80",
+                Content = "**Hey devs!**\n\nJava 16 has just dropped, bringing with it a slew of new features and improvements! Time to brew some fresh code! \u2615\ufe0f Anyone tried the new features yet? Thoughts?\n",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "News").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Java"),
+                }
+            },
+            new()
+            {
+                Title = "Advancements in Machine Learning: GPT-4 and Beyond",
+                Content = "**Introduction**  \nHello ML enthusiasts! \ud83c\udf1f\n\nMachine learning has taken another significant leap with the release of GPT-4.\n\n**Features & Improvements** \ud83d\udcca  \n- **Increased Parameters:** GPT-4 boasts more parameters, leading to even more accurate predictions and nuances.\n- **Transfer Learning Enhancements:** Improved efficiency in transferring knowledge from one domain to another.\n- **Broader Language Support:** Supporting even more languages and dialects, making AI truly global. \ud83c\udf0d\n\n**Real-world Applications** \ud83c\udf10  \n- **Healthcare:** From predicting diseases to helping in drug discovery.\n- **Automotive:** Assisting in self-driving technology.\n- **Entertainment:** Creating music, art, and even writing scripts.\n\n**Closing Thoughts**  \nAs machine learning continues its rapid advancement, the potential applications in various sectors grow exponentially. Exciting times ahead! \ud83d\udca1\ud83c\udf89\n\nShare your thoughts and experiences on the latest in ML!\n",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "News").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Machine Learning"),
+                }
+            },
+            new()
+            {
+                Title = "Machine Learning in Political Campaigns",
+                Content = "**Machine learning** is now playing a pivotal role in political campaigns, aiding in voter targeting and sentiment analysis. Could this be the future of political strategy? What do you think?\n",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "News").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Machine Learning"),
+                }
+            },
+            new()
+            {
+                Title = "Windows OS: Privacy Concerns and Government Policies \ud83d\udda5\ufe0f\ud83d\udd12",
+                Content = "## Introduction \nIn recent times, the Windows OS has come under scrutiny for its privacy settings and data collection. Let's delve deeper.\n\n### Data Collection & Concerns \ud83d\udd0d \n- **Telemetry Data:** Windows collects data to enhance user experience, but how much is too much?\n- **Default Settings:** Some argue that many privacy-invading settings are on by default, raising concerns. \ud83d\udeab\n- **Data Sharing:** While Microsoft ensures user data security, concerns about sharing with third parties remain.\n\n### Governmental Intervention \ud83c\udfdb\ufe0f \n- **GDPR & Windows:** How does Windows fare against GDPR guidelines?\n- **Policies in Different Countries:** Different countries are imposing varied restrictions and regulations. \ud83c\udf0d\n\n### User Choices & Control \u2699\ufe0f \nEmpowering users by providing clear choices and granular controls is essential. Transparency is the key! \ud83d\udd11\n\n---\n\nDo you believe stricter regulations are needed? Or is it a user's responsibility to tweak settings as they see fit? Let's discuss!\n",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "News").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Windows"),
+                }
+            },
+            new()
+            {
+                Title = "NVIDIA's Breakthrough in Machine Learning",
+                Content = "**NVIDIA** has recently unveiled their latest GPUs optimized for machine learning workloads. A powerhouse for both gaming and ML! \ud83d\ude80 Who's excited to test them out?\n",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "Technology").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Machine Learning"),
+                }
+            },
+            new()
+            {
+                Title = "Exploring Unity: Beyond Game Development \ud83c\udfae",
+                Content = "**Introduction**  \nGreetings Unity enthusiasts! \u2728\n\nUnity, renowned for game development, is now stretching its wings into other domains.\n\n**Extended Applications** \ud83d\udcc8  \n- **Virtual Reality (VR):** Crafting immersive experiences for users.\n- **Augmented Reality (AR):** From mobile apps to complex AR systems, Unity is at the forefront. \ud83d\udcf1\n- **Film Production:** Unity is becoming a favorite for filmmakers, aiding in real-time rendering and effects.\n\n**Benefits of Unity** \ud83c\udfd6\ufe0f  \n- **Versatile:** Adapts to various projects and needs.\n- **Asset Store:** A plethora of resources available for developers.\n- **Supportive Community:** An active community ready to help and share. \ud83c\udf1f\n\n**Conclusion**  \nUnity's flexibility and capabilities make it a top choice not only for game developers but also for professionals in various industries. From movies to real-world simulations, Unity is shaping the future!\n\nGot any cool Unity projects or experiences? Share away!\n",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "Technology").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Unity"),
+                }
+            },
+            new()
+            {
+                Title = "Python in Bioinformatics and Genetic Research",
+                Content = "**Python in Bioinformatics**  \nPython is making strides in the realm of bioinformatics, aiding in genetic sequence analysis and data processing. The fusion of biology and Python is truly exciting! \ud83d\udd0d\n",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "Science").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "Python"),
+                }
+            },
+            new()
+            {
+                Title = "C# and Quantum Computing: The Leap Forward \u269b\ufe0f",
+                Content = "**C# in Quantum Computing**  \nC# is playing a pivotal role in the development of quantum computing applications.\n\n**Quantum and C#: The Synergy** \ud83c\udf0c  \n- **Q# Language:** Developed by Microsoft, it's designed to work seamlessly with C# for quantum programming.\n- **Complex Simulations:** C# provides the robustness needed for intricate quantum simulations. \u269b\ufe0f\n- **Interoperability:** C# interfaces efficiently with quantum hardware and other platforms.\n\n**Potential Outcomes** \ud83c\udf10  \n- **Medical Research:** Envision faster drug discovery and intricate molecule studies.\n- **Cryptography:** Quantum computing promises breakthroughs in secure communication. \ud83d\udd12\n- **Optimization Problems:** Solutions to previously unsolvable problems within reach.\n\n**Wrap Up**  \nC# continues to evolve, not just in traditional software domains, but also in pushing the boundaries of what's possible in science and quantum research. A fascinating journey ahead!\n\nShare your insights on C#, quantum, or both!\n",
+                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
+                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
+                TotalLikes = random.Next(9999),
+                UserId = RandomUser(),
+                CategoryId = categoriesList.First(c => c.Name == "Science").CategoryId,
+                Tags = new List<Tag>
+                {
+                    tags.First(t => t.Name == "C#"),
                 }
             },
             new()
             {
                 Title = "Exploring the Depths of PowerShell and Windows",
-                Content =
-                    "Welcome!, we'll venture into the fascinating world of PowerShell and Windows. Join me as we unlock the secrets of automation and discover the power of scripting in the Windows environment.",
+                Content = "# Welcome!  \nJoin us as we venture into the fascinating world of **PowerShell** and **Windows**. Unlock the secrets of automation and discover the immense power of scripting in the Windows environment.\n",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
                 DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
                 TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
-                CategoryId = random.Next(1, categoriesList.Count),
+                CategoryId = categoriesList.First(c => c.Name == "General").CategoryId,
                 Tags = new List<Tag>
                 {
                     tags.First(t => t.Name == "PowerShell"),
@@ -294,13 +506,12 @@ public static class DbInit
             new()
             {
                 Title = "Mastering Web Development",
-                Content =
-                    "Welcome noob! we'll embark on a journey into the exciting realm of JavaScript and web development. Whether you're a complete beginner or looking to reinforce your skills, this post is tailored just for you. Let's explore the fundamentals of JavaScript and how it plays a crucial role in creating dynamic web applications.",
+                Content = "# Welcome Noob!  \nEmbark on a journey into the exciting realm of **JavaScript** and **web development**. Whether you're a complete beginner or looking to reinforce your skills, this post is tailored just for you. Let's dive into the fundamentals of JavaScript and its crucial role in crafting dynamic web applications.\n",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
                 DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
                 TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
-                CategoryId = random.Next(1, categoriesList.Count),
+                CategoryId = categoriesList.First(c => c.Name == "Front End").CategoryId,
                 Tags = new List<Tag>
                 {
                     tags.First(t => t.Name == "JavaScript"),
@@ -310,13 +521,12 @@ public static class DbInit
             new()
             {
                 Title = "The Beauty of Python's Simplicity",
-                Content =
-                    "Explore the elegance of Python, a language that embraces simplicity and readability. Pythonic code is like poetry for programmers.",
+                Content = "# Explore the Elegance of Python \ud83d\udc0d  \n**Python**, a language that embraces simplicity and readability. Pythonic code is akin to poetry for programmers.\n",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
                 DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
                 TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
-                CategoryId = random.Next(1, categoriesList.Count),
+                CategoryId = categoriesList.First(c => c.Name == "General").CategoryId,
                 Tags = new List<Tag>
                 {
                     tags.First(t => t.Name == "Python")
@@ -324,29 +534,27 @@ public static class DbInit
             },
             new()
             {
-                Title = "The Art of Debugging: Finding the Needle in the Haystack",
-                Content =
-                    "Debugging is both an art and a science. Learn the techniques and tools that seasoned developers use to hunt down and fix bugs in their code.",
+                Title = "The Art of Debugging in Java",
+                Content = "Debugging is both an art and a science when coding in Java. Prove me wrong! Oh no, you cannot... because it is AWESOME!!!",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
                 DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
                 TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
-                CategoryId = random.Next(1, categoriesList.Count),
+                CategoryId = categoriesList.First(c => c.Name == "Debugging").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "Python")
+                    tags.First(t => t.Name == "Java")
                 }
             },
             new()
             {
                 Title = "Diving into Data Science: A Beginner's Guide",
-                Content =
-                    "Interested in data science? Discover the essential concepts and tools you need to start your journey into the exciting world of data analysis and machine learning.",
+                Content = "Interested in data science? Discover the essential concepts and tools you need to start your journey into the exciting world of data analysis and machine learning.",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
                 DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
                 TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
-                CategoryId = random.Next(1, categoriesList.Count),
+                CategoryId = categoriesList.First(c => c.Name == "General").CategoryId,
                 Tags = new List<Tag>
                 {
                     tags.First(t => t.Name == "Data Science"),
@@ -357,13 +565,12 @@ public static class DbInit
             new()
             {
                 Title = "The Power of Git: Version Control Made Easy",
-                Content =
-                    "Git is a developer's best friend. Learn how this version control system simplifies collaboration and tracking changes in your codebase.",
+                Content = "Git is a developer's best friend. Learn how this version control system simplifies collaboration and tracking changes in your codebase.",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
                 DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
                 TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
-                CategoryId = random.Next(1, categoriesList.Count),
+                CategoryId = categoriesList.First(c => c.Name == "Development").CategoryId,
                 Tags = new List<Tag>
                 {
                     tags.First(t => t.Name == "Git"),
@@ -374,13 +581,12 @@ public static class DbInit
             new()
             {
                 Title = "Building Responsive Web Design with CSS Grid",
-                Content =
-                    "Dive into the world of CSS Grid and unlock the potential for creating stunning, responsive web layouts with ease.",
+                Content = "Dive into the world of CSS Grid and unlock the potential for creating stunning, responsive web layouts with ease.",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
                 DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
                 TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
-                CategoryId = random.Next(1, categoriesList.Count),
+                CategoryId = categoriesList.First(c => c.Name == "Front End").CategoryId,
                 Tags = new List<Tag>
                 {
                     tags.First(t => t.Name == "CSS")
@@ -388,29 +594,13 @@ public static class DbInit
             },
             new()
             {
-                Title = "Exploring the Internet of Things (IoT)",
-                Content =
-                    "Get ready for a journey into the Internet of Things, where everyday objects are connected to the digital world. Discover the possibilities and challenges of IoT.",
-                DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
-                DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
-                TotalLikes = random.Next(9999),
-                UserId = RandomUser(),
-                CategoryId = random.Next(1, categoriesList.Count),
-                Tags = new List<Tag>
-                {
-                    tags.First(t => t.Name == "Internet Of Things")
-                }
-            },
-            new()
-            {
                 Title = "Game Development with Unity: Bringing Ideas to Life",
-                Content =
-                    "If you've ever dreamed of creating your own video game, Unity is the platform to make it happen. Explore the world of game development and start building your masterpiece.",
+                Content = "If you've ever dreamed of creating your own video game, Unity is the platform to make it happen. Explore the world of game development and start building your masterpiece!",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
                 DateLastEdited = DateTime.Now - TimeSpan.FromDays(random.Next(9)),
                 TotalLikes = random.Next(9999),
                 UserId = RandomUser(),
-                CategoryId = random.Next(1, categoriesList.Count),
+                CategoryId = categoriesList.First(c => c.Name == "Game Development").CategoryId,
                 Tags = new List<Tag>
                 {
                     tags.First(t => t.Name == "Unity")
