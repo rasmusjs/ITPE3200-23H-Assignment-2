@@ -83,8 +83,10 @@
                 overflow: hidden;
 
                 & * {
-                    color: var(--txt-2);
+                    margin: 0;
                     font-size: var(--fs-s);
+                    line-height: 20px;
+                    color: var(--txt-2);
                 }
 
                 &:after {
