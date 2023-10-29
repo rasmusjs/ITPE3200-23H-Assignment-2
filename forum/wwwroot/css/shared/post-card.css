@@ -154,7 +154,7 @@
                 left: 0;
                 height: 100px;
                 width: 100%;
-                background: linear-gradient(to bottom, transparent 0%, 30%, var(--fg-1) calc(100% - 4px));
+                background: linear-gradient(to bottom, transparent, var(--fg-1) calc(100% - 4px));
             }
         }
     }
