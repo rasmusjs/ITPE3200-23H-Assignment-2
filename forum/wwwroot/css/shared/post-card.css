@@ -101,6 +101,39 @@
         padding: 8px 16px 16px;
         background-color: var(--fg-1);
         border-radius: 0 0 6px 6px;
+        
+        & .markdown {
+            & ul,
+            & ol {
+                margin: 4px 0;
+                padding-left: 20px;
+                
+                & li {
+                    padding: 2px 0;
+                }
+            }
+            
+            & pre {
+                padding: 12px;
+                border: 1px solid var(--fg-2);
+                border-radius: 6px;
+                background-color: black;
+                
+                & code {
+                    color: white;
+                    font-family: monospace;
+                    font-size: var(--fs-s);
+                }
+            }
+            
+            & h2, & h3, & h4, & h5, & h6 {
+                margin-top: 16px;
+            }
+            
+            & hr {
+                margin: 16px 0;
+            }
+        }
 
         & .limit-content {
             position: relative;

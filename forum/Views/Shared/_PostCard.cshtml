@@ -76,7 +76,7 @@
         <div class="title">@Model.Post.Title</div>
 
         @* Content *@
-        <div class="@(Model.LimitContent ? "limit-content" : "")">
+        <div class="markdown @(Model.LimitContent ? "limit-content" : "")">
             @Html.Raw(Markdown.ToHtml(Model.Post.Content))
         </div>
     </div>
