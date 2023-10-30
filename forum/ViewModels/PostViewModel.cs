@@ -10,11 +10,23 @@ namespace forum.ViewModels;
 public class PostViewModel
 {
     // Property which contains a Post object (forum post)
-    public Post? Post { get; set; }
+    public Post Post { get; set; }
 
     // List of SelectListItem objects - The different categories that a forum post can belong to
-    public List<SelectListItem> CategorySelectList { get; set; } = default!;
+    public List<SelectListItem> CategorySelectList { get; set; }
 
     // List of SelectListItem objects - The different tags a forum post can have
-    public List<SelectListItem> TagList { get; set; } = default!;
+    public List<SelectListItem> TagList { get; set; }
+
+    public PostViewModel(Post post, List<SelectListItem> categorySelectList, List<SelectListItem> tagList)
+    {
+        // Initialize the Post property
+        Post = post;
+
+        // Initialize the CategorySelectList property
+        CategorySelectList = categorySelectList;
+
+        // Initialize the TagList property
+        TagList = tagList;
+    }
 }

@@ -70,6 +70,7 @@ public class PostController : Controller
         return Redirect($"{Url.Action("Post", new { id = postId })}#commentId-{commentId}");
     }
 
+    // Method to check if the user is admin
     public bool IsAdmin()
     {
         return User.IsInRole("Admin");
@@ -88,7 +89,6 @@ public class PostController : Controller
             _logger.LogError("[PostController] Card failed, posts is null while executing GetAllPosts()");
             return NotFound("Post list not found");
         }
-
 
         //Update session variable, used for determining which view to use
         HttpContext.Session.SetString("viewModel", "Card");
@@ -235,22 +235,21 @@ public class PostController : Controller
         }
 
         // New view model for creating a post
-        var postViewModel = new PostViewModel
-        {
-            Post = new Post(),
+        var postViewModel = new PostViewModel(
+            new Post(),
             // Fetching the category select
-            CategorySelectList = categories.Select(category => new SelectListItem
+            categories.Select(category => new SelectListItem
             {
                 Value = category.CategoryId.ToString(),
                 Text = category.Name
             }).ToList(),
             // Fetching the tag list
-            TagList = tags.Select(tag => new SelectListItem
+            tags.Select(tag => new SelectListItem
             {
                 Value = tag.TagId.ToString(),
                 Text = tag.Name
             }).ToList()
-        };
+        );
 
         // Return the full viewmodel for creating posts to the user
         return postViewModel;
@@ -281,23 +280,22 @@ public class PostController : Controller
         if (categories == null || tags == null) return NotFound("Categories or tags not found, cannot update post");
 
         // Creates a new view model
-        var postViewModel = new PostViewModel
-        {
-            Post = post,
+        var postViewModel = new PostViewModel(
+            post,
             // Fetches the category select list
-            CategorySelectList = categories.Select(category => new SelectListItem
+            categories.Select(category => new SelectListItem
             {
                 Value = category.CategoryId.ToString(),
                 Text = category.Name
             }).ToList(),
             // Fetches the tag select list
-            TagList = tags.Select(tag => new SelectListItem
+            tags.Select(tag => new SelectListItem
             {
                 Value = tag.TagId.ToString(),
                 Text = tag.Name,
                 Selected = selectedTags != null && selectedTags.Contains(tag)
-            }).ToList()
-        };
+            }).ToList());
+
 
         // Return the full viewmodel for the updated post
         return View(postViewModel);

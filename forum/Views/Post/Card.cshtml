@@ -18,13 +18,7 @@
     <div class="posts">
         @foreach (var post in Model.Posts)
         {
-            var postCardViewModel = new PostCardViewModel
-            {
-                Post = post,
-                LimitContent = true,
-                HideGoToPost = false
-            };
-
+            var postCardViewModel = new PostCardViewModel(post, true);
             <partial name="_PostCard" model="postCardViewModel"/>
         }
     </div>

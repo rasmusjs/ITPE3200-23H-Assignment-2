@@ -6,12 +6,7 @@
 
 <div class="post-post">
     @{
-        var postCardViewModel = new PostCardViewModel
-        {
-            Post = Model,
-            LimitContent = false,
-            HideGoToPost = true
-        };
+        var postCardViewModel = new PostCardViewModel(Model, false, true);
     }
 
     @* Post *@
