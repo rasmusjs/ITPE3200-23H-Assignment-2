@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace forum.Controllers;
 
@@ -20,11 +21,13 @@ public class PostController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IForumRepository<Category> _categoryRepository;
     private readonly IForumRepository<Comment> _commentRepository;
+    private readonly ForumDbContext _forumDbContext;
 
 
     // Constructor for Dependency Injection to the Data Access Layer from the different repositories
     public PostController(IForumRepository<Category> categoryRepository,
         IForumRepository<Tag> tagsRepository, IForumRepository<Post> postRepository,
+        ForumDbContext forumDbContext,
         IForumRepository<Comment> commentRepository,
         UserManager<ApplicationUser> userManager,
         ILogger<PostController> logger)
@@ -32,6 +35,7 @@ public class PostController : Controller
         _categoryRepository = categoryRepository;
         _tags = tagsRepository;
         _postRepository = postRepository;
+        _forumDbContext = forumDbContext;
         _commentRepository = commentRepository;
         _userManager = userManager;
         _logger = logger;
@@ -285,46 +289,47 @@ public class PostController : Controller
     {
         var postViewModel = await GetPostViewModel();
 
-
         // Sanitizing the post content
         post.Content = new HtmlSanitizer().Sanitize(post.Content);
 
         // Check if model is valid before updating
         if (!ModelState.IsValid || post.TagsId == null) return View(postViewModel);
 
+        // Fetch the post from database, based on id needed to update
+        var postFromDb = await _postRepository.GetTById(post.PostId);
 
-        /*var postFromDb = await _postRepository.GetTById(post.PostId);
+        if (postFromDb == null) return NotFound("Post not found, cannot update post");
 
-
-        post.UserId = postFromDb?.UserId;
-        post.DateCreated = postFromDb.DateCreated;
-        post.DateLastEdited = DateTime.Now;*/
-
-
-        // Checks if the user is the owner of the post,
-        if (!GetUserId().Equals(post.UserId)) // TODO: Add error message
+        // Checks if the user is the owner of the post
+        if (!GetUserId().Equals(postFromDb.UserId)) // TODO: Add error message
             return StatusCode(403, "You are not the owner of the post");
 
-        // Remove all the olds tags from post, this is done since we could not find a way to use CASCADE update in EF Core
-        await _postRepository.RemoveAllPostTags(post.PostId);
+        // Detach the entity from the DbContext to avoid tracking conflicts
+        _forumDbContext.Entry(postFromDb).State = EntityState.Detached;
+        // Source: https://stackoverflow.com/questions/48202403/instance-of-entity-type-cannot-be-tracked-because-another-instance-with-same-key
 
+        // Remove all the old tags from the post
+        await _postRepository.RemoveAllPostTags(postFromDb.PostId);
 
-        // Adds the required tags again 
-        // Source: https://stackoverflow.com/questions/62783700/asp-net-core-razor-pages-select-multiple-items-from-ienumerable-dropdownlist
-        // Inspiration for how to get the selected tags
+        // Adds the required tags again
         var allTags = await _tags.GetAll();
 
         if (allTags == null) return NotFound("Tags not found, cannot update post");
 
         // Link tags to post
-        post.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId)).ToList();
-
+        postFromDb.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId)).ToList();
 
         // Update post
-        if (!await _postRepository.Update(post)) return NotFound("Post not found, cannot update post");
+        postFromDb.DateLastEdited = DateTime.Now;
+        postFromDb.Title = post.Title;
+        postFromDb.Content = post.Content;
+        postFromDb.CategoryId = post.CategoryId;
 
-        // Sends user back to the updated post 
-        return GoToPost(post.PostId);
+        // Update post
+        if (!await _postRepository.Update(postFromDb)) return NotFound("Post not found, cannot update post");
+
+        // Sends the user back to the updated post
+        return GoToPost(postFromDb.PostId);
     }
 
     // Get request for deleting a post
