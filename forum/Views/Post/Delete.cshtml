@@ -1,4 +1,6 @@
 @model Post
+@using Markdig
+
 @{
     ViewData["Title"] = "Delete Post";
 }
@@ -35,7 +37,7 @@
         </tr>
         <tr>
             <td>Content</td>
-            <td>@Model.Content</td>
+            <td class="markdown">@Html.Raw(Markdown.ToHtml(@Model.Content))</td>
         </tr>
         </tbody>
     </table>
