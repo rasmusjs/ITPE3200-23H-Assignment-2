@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Home Page";
+    ViewBag.SuccesMessage = TempData["success"] ?? "";
+    ViewBag.ErrorMessage = TempData["error"] ?? "";
 }
 
 <div class="home">
@@ -16,47 +18,53 @@
     </ul>
     <p>Join the BracketBros community now and elevate your coding game!</p>
 
-    @* Preview of categories *@
-    <section>
-        <h2>Categories:</h2>
-        <div class="categories">
-            @* Lists all categories *@
-            @foreach (var category in Model.CategoryList.OrderBy(c => c.Name))
-            {
+    <p style="color: var(--error)">@ViewBag.ErrorMessage</p>
+
+
+    @if (Model.CategoryList.Any() && Model.CategoryList.Any())
+    {
+        @* Preview of categories *@
+        <section>
+            <h2>Categories:</h2>
+            <div class="categories">
+                @* Lists all categories *@
+                @foreach (var category in Model.CategoryList.OrderBy(c => c.Name))
+                {
                 @* Redirects user to the search page and sets search term to category name *@
-                <a asp-controller="Search"
-                   asp-action="Search"
-                   asp-route-term="@category.Name"
-                   class="category" style="background-color: @category.Color">
-                    <span class="title">@category.Name</span>
+                    <a asp-controller="Search"
+                       asp-action="Search"
+                       asp-route-term="@category.Name"
+                       class="category" style="background-color: @category.Color">
+                        <span class="title">@category.Name</span>
 
-                    @if (category.PicturePath != "")
-                    {
-                        <div class="img-container">
-                            <img style="max-width: 512px; height: auto;" src="@category.PicturePath" alt="Category image - @category.Name">
-                        </div>
-                    }
+                        @if (category.PicturePath != "")
+                        {
+                            <div class="img-container">
+                                <img style="max-width: 512px; height: auto;" src="@category.PicturePath" alt="Category image - @category.Name">
+                            </div>
+                        }
 
-                </a>
-            }
-        </div>
-    </section>
+                    </a>
+                }
+            </div>
+        </section>
 
     @* Preview of tags *@
-    <section>
-        <h2>Tags:</h2>
-        <div class="tags">
-            @* Lists all tags *@
-            @foreach (var tag in Model.TagList.OrderBy(c => c.Name))
-            {
+        <section>
+            <h2>Tags:</h2>
+            <div class="tags">
+                @* Lists all tags *@
+                @foreach (var tag in Model.TagList.OrderBy(c => c.Name))
+                {
                 @* Redirects user to the search page and sets search term to tag name *@
-                <a asp-controller="Search"
-                   asp-action="Search"
-                   asp-route-term="@tag.Name"
-                   class="tag">
-                    @tag.Name
-                </a>
-            }
-        </div>
-    </section>
+                    <a asp-controller="Search"
+                       asp-action="Search"
+                       asp-route-term="@tag.Name"
+                       class="tag">
+                        @tag.Name
+                    </a>
+                }
+            </div>
+        </section>
+    }
 </div>

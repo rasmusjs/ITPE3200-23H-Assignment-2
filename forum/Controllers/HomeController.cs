@@ -44,7 +44,12 @@ public class HomeController : Controller
         if (categories == null || tags == null)
         {
             _logger.LogError("[Home controller] Index() failed, error message: Categories or tags not found");
-            return NotFound("Categories or tags not found, cannot show view");
+            TempData["error"] = "Categories or tags not found, cannot show view";
+            return View(new DashboardViewModel
+            {
+                CategoryList = new List<Category>(),
+                TagList = new List<Tag>()
+            });
         }
 
         // New view model for creating a post
