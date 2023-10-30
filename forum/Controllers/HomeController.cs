@@ -53,12 +53,12 @@ public class HomeController : Controller
         }
 
         // New view model for creating a post
-        var adminDashboardViewModel = new DashboardViewModel
+        var dashboardViewModel = new DashboardViewModel
         {
             CategoryList = categories,
             TagList = tags
         };
 
-        return View(adminDashboardViewModel);
+        return View(dashboardViewModel);
     }
 }
