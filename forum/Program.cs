@@ -7,31 +7,10 @@ using Serilog;
 using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
-//ForumDbContextFactory forumDbContextFactory = new();
 
-
-// TODO: FIX REMOVE THIS LINE
+// Add services to the container.
 builder.Services.AddDbContext<ForumDbContext>(options => options.UseSqlite("Data Source=ForumDatabase.db"));
-
-// TODO: ADD THIS LINE
-/*var connectionString = builder.Configuration.GetConnectionString("ForumDbContextConnection") ??
-                       throw new InvalidOperationException("Connection string 'ForumDbContextConnection' not found.");
-                       */
-
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddDbContext<ForumDbContext>(options =>
-{
-    options.UseSqlite(
-        builder.Configuration["ConnectionStrings:ForumDbContextConnection"]);
-});
-
-/*builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ForumDbContext>();*/
-
-/*builder.Services.AddDefaultIdentity<IdentityUser>()
-    .AddEntityFrameworkStores<ForumDbContext>();*/
-
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     {
         // Password settings
@@ -52,9 +31,6 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     })
     .AddEntityFrameworkStores<ForumDbContext>()
     .AddDefaultUI() // Need to add this for the login page to work https://itecnote.com/tecnote/r-unable-to-resolve-service-for-type-iemailsender-while-attempting-to-activate-registermodel/
-    /*
-    .AddSignInManager<SignInManager<ApplicationUser>>()
-    */
     .AddDefaultTokenProviders();
 
 //Taken from lecture, see https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration?view=aspnetcore-7.0 for more info
@@ -62,14 +38,14 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
 
+// Add repositories to the container.
 builder.Services.AddScoped<IForumRepository<ApplicationUser>, ForumRepository<ApplicationUser>>();
 builder.Services.AddScoped<IForumRepository<Post>, ForumRepository<Post>>();
 builder.Services.AddScoped<IForumRepository<Category>, ForumRepository<Category>>();
 builder.Services.AddScoped<IForumRepository<Tag>, ForumRepository<Tag>>();
 builder.Services.AddScoped<IForumRepository<Comment>, ForumRepository<Comment>>();
 
-
-/*var loggerConfiguration = new LoggerConfiguration()
+var loggerConfiguration = new LoggerConfiguration()
     .MinimumLevel.Information() // levels: Trace< Information < Warning < Error < Fatal
     .WriteTo.File($"Logs/app_{DateTime.Now:yyyy.MM.dd-HHmm_ss)}.log");
 
@@ -77,25 +53,22 @@ loggerConfiguration.Filter.ByExcluding(e => e.Properties.TryGetValue("SourceCont
                                             e.Level == LogEventLevel.Information &&
                                             e.MessageTemplate.Text.Contains("Executed DbCommand"));
 
+// Add Serilog to the container.
 var logger = loggerConfiguration.CreateLogger();
-builder.Logging.AddSerilog(logger);*/
-
+builder.Logging.AddSerilog(logger);
 builder.Services.ConfigureApplicationCookie(options =>
 {
     // Cookie settings
     options.Cookie.Name = "BracketBros.Session";
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // 30 minutes
-
     options.LoginPath = "/Identity/Account/Login";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.SlidingExpiration = true;
 });
 //From https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-7.0&tabs=visual-studio
 
-
 var app = builder.Build();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -106,19 +79,9 @@ else
     app.UseExceptionHandler("/Home/Error");
 }
 
+
 app.UseStaticFiles(); // for adding middleware
 app.UseSession();
-
-//builder.Services.AddDistributedMemoryCache();
-
-
-/*
-builder.Services.AddSession(options =>
-{
-    options.Cookie.Name = ".AdventureWorks.Session";
-    options.IdleTimeout = TimeSpan.FromSeconds(1800); // 30 minutes
-    options.Cookie.IsEssential = true;
-});*/
 
 //Taken from lecture, see https://learn.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-7.0&viewFallbackFrom=aspnetcore-3.0 for more info
 app.UseJdenticon(); // For using for generating identicons. //https://jdenticon.com/#quick-start-asp-net-core
