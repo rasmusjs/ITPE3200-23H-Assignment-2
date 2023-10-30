@@ -8,9 +8,9 @@
 
         .error {
             position: absolute;
-            bottom: -4px;
+            top: -4px;
             left: 0;
-            transform: translateY(100%);
+            transform: translateY(-100%);
             font-size: var(--fs-s);
             color: var(--error);
         }
