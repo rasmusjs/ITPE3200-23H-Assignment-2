@@ -20,11 +20,11 @@ When you have logged in you can create/edit posts, comment and like posts. You g
 
 ` For admin priviliges you can login with user «torkratte» and password «Password123!».` 
 
-About Admin functionality
+We have an admin role which has access to an admin dashboard. Here the user can edit, delete or add new categories and tags. They can change both the color, name and picture. An admin can also delete all posts and comments, while a regular user can only delete its own content.
 
 **📝 Functionality**
 ---
-This forum website allows users to browse posts and comment. Both in a feed, by searching or by using categories. The user can register an account to create posts, comment on other posts and like posts. When the user is logged in it gets a dashboard view with an overview over the users posts, comments and likes. 
+This forum website allows users to browse posts and comment. Both in a feed, by searching or by using categories and tags. The feed can be sorted after different criterias. The user can register an account to create posts, comment on other posts and like posts. When the user is logged in it gets a dashboard view with an overview over the users posts, comments and likes. We have admin users with extra functionality. They have their own admin dashboard where they can change categories and tags. There is a user dashboard where the user can change their information and upload a custom profile picture.
 
 
 **🔨 Project architecture**
