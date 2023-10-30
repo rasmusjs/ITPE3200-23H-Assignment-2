@@ -67,7 +67,8 @@ public class DashBoardController : Controller
         // Throws error and log it if there are no tags or categories to show the user or a catch in ForumRepository
         if (categories == null || tags == null)
         {
-            _logger.LogError("[Dashboard controller] _categoryRepository.GetAll() and/or _tagsRepository.GetAll() returned null");
+            _logger.LogError(
+                "[Dashboard controller] _categoryRepository.GetAll() and/or _tagsRepository.GetAll() returned null");
             return NotFound("Categories or tags not found, cannot create post");
         }
 
@@ -432,13 +433,11 @@ public class DashBoardController : Controller
             var updateTag = await _tagsRepositoryRepository.Update(tag);
             if (!updateTag)
             {
-                TempData["ErrorMessage"] =
-                    "Tag update failed."; // Tried creating error message for the user - May just remove it // TODO: Remove this line
                 _logger.LogWarning("[Dashboard controller] Tag update failed for {@tag}", tag);
+                return StatusCode(500, "Internal server error while updating tag please try again");
             }
         }
 
-        TempData["TestMessage"] = "This is a test, babe."; // TODO: Remove this line
         // Redirects to admin dashboard
         return RedirectToAction("AdminDashboard");
     }
@@ -454,7 +453,10 @@ public class DashBoardController : Controller
             // Tries to create tag in repo, logs error if it cannot create tag 
             var newTag = await _tagsRepositoryRepository.Create(tag);
             if (newTag == null)
+            {
                 _logger.LogWarning("[Dashboard controller] Tag creation failed for {@tag}", tag);
+                return StatusCode(500, "Internal server error while creating tag please try again");
+            }
         }
 
         // Redirects to admin dashboard
