@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace forum.Controllers;
 
-// Controller for the search function
+// Controller for the homepage
 public class HomeController : Controller
 {
     // Connect the controller to the different models
