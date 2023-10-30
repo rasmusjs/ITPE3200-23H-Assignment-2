@@ -12,7 +12,15 @@ When starting the server you will be sent to the post view, where there is an ch
 
 To interact with the site, you need to register a user. Register a username, email and password. The password must consist of at least 8 characters, one alphanumeric character, one lowercase and one uppercase letter. 
 
+`You can also log into the account "Hackerman" with the password "Password123!"`
+
 When you have logged in you can create/edit posts, comment and like posts. You get a dashboard with overview of your post, comments and likes. In the upper right corner you have your profile panel. Here you can change username, upload a profile picture, change mail/password, enable 2FA and download all your user data. You can delete your user and data under "personal data". Then all your posts and comments will be marked as posted by Anonymous.
+
+### Admin functionality
+
+` For admin priviliges you can login with user «torkratte» and password «Password123!».` 
+
+About Admin functionality
 
 **📝 Functionality**
 ---
