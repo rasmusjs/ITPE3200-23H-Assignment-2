@@ -412,8 +412,17 @@ public class PostController : Controller
     [Authorize]
     public async Task<IActionResult> UpdateComment(Comment comment)
     {
+        // Sanitizing the post content
+        comment.Content = new HtmlSanitizer().Sanitize(comment.Content);
+
+        // Checks if the model for comments is valid and returns error message.  // TODO: Add error message
+        if (!ModelState.IsValid) return GoToPostComment(comment.PostId, comment.CommentId);
+
+        Console.WriteLine(comment.CommentId);
+
         // Fetch the comment from database, based on id
         var commentFromDb = await _commentRepository.GetTById(comment.CommentId);
+
 
         // Error handling if no comment is found // TODO: Add error message
         if (commentFromDb == null) return GoToPostComment(comment.PostId, comment.CommentId);
@@ -421,11 +430,6 @@ public class PostController : Controller
         // Checks if the user is the owner of the comment  // TODO: Add error message
         if (commentFromDb.UserId != GetUserId()) return GoToPostComment(comment.PostId, comment.CommentId);
 
-        // Sanitizing the post content
-        comment.Content = new HtmlSanitizer().Sanitize(comment.Content);
-
-        // Checks if the model for comments is valid and returns error message.  // TODO: Add error message
-        if (!ModelState.IsValid) return GoToPostComment(comment.PostId, comment.CommentId);
 
         // Updates the comment in the database
         commentFromDb.DateLastEdited = DateTime.Now;
