@@ -32,9 +32,11 @@ public class SearchController : Controller
     }
 
     // Function to refresh
-    // NOT USED?????
-    public IActionResult Refresh()
+    public IActionResult Refresh(string success = "", string error = "")
     {
+        // Handling for the success message
+        TempData["success"] = error;
+        TempData["error"] = error;
         return Redirect(Request.Headers["Referer"].ToString());
     }
 
@@ -48,9 +50,11 @@ public class SearchController : Controller
     [HttpGet]
     public async Task<IActionResult> Search(string term, string sortby = "")
     {
+        return Refresh("", "Search term must be at least 2 characters long");
+
         // Error handling for the search term
-        if (string.IsNullOrWhiteSpace(term)) return Refresh(); // TODO: Redirect to error page
-        if (term.Length < 2) return Refresh(); // TODO: Redirect to error page
+        if (string.IsNullOrWhiteSpace(term) || term.Length < 2)
+            return Refresh("", "Search term must be at least 2 characters long");
 
         // Fetch all posts based on the search term
         var posts = await _postRepository.GetAllPostsByTerm(term, GetUserId());
