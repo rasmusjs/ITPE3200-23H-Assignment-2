@@ -10,19 +10,14 @@ public class ForumDbContext : IdentityDbContext<ApplicationUser>
 {
     public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
     {
-        //Database.EnsureCreated();
     }
 
-    // Getter and setters for the models
-    // public DbSet<User> CustomUsers { get; set; }
-
-    public DbSet<ApplicationUser> CustomUsers { get; set; }
-    public DbSet<Category> Categories { get; set; }
-    public DbSet<Tag> Tags { get; set; }
-    public DbSet<Post> Posts { get; set; }
-
-    //public DbSet<PostTag> PostTags { get; set; }
-    public DbSet<Comment> Comments { get; set; }
+    // Getter and setters for the entities in the database
+    public DbSet<ApplicationUser> CustomUsers { get; set; } = null!;
+    public DbSet<Category> Categories { get; set; } = null!;
+    public DbSet<Tag> Tags { get; set; } = null!;
+    public DbSet<Post> Posts { get; set; } = null!;
+    public DbSet<Comment> Comments { get; set; } = null!;
 
     // Configuring the relationships and schemas for the entities in the database
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -54,7 +49,6 @@ public class ForumDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<Comment>().HasOne(p => p.User).WithMany(u => u.Comments).HasForeignKey(p => p.UserId)
             .OnDelete(DeleteBehavior.SetNull);
         // If the user is deleted, the posts will not be deleted. User will show up a anonymous
-
 
         //Fixes
         //Unhandled exception. System.InvalidOperationException: The entity type 'IdentityUserLogin<string>' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.
