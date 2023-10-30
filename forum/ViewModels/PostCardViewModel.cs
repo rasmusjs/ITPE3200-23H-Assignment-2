@@ -10,7 +10,7 @@ public class PostCardViewModel
     // Limits the amount of visible content and places a shadow above overflowing text
     public bool LimitContent { get; set; }
 
-    // Removed the "Go to post" button
+    // Removes the "Go to post" button
     public bool HideGoToPost { get; set; }
 
     public PostCardViewModel(Post post, bool limitContent = false, bool hideGoToPost = false)
