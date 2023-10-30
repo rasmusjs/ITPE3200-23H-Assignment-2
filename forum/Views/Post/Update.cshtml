@@ -33,10 +33,30 @@
             <textarea id="Post.Content" asp-for="Post.Content"></textarea>
             <span asp-validation-for="Post.Content" class="error"></span>
         </div>
-        <button type="submit">Save</button>
+        <button title="Fill all required fields" type="submit">Save</button>
     </form>
 </div>
 @*https://github.com/sparksuite/simplemde-markdown-editor*@
 <link rel="stylesheet" href="~/lib/simplemde/dist/custom-simplemde.css">
 <script src="~/lib/simplemde/dist/simplemde.min.js"></script>
-    <script>const simplemde = new SimpleMDE({ element: document.getElementById("Post.Content"), spellChecker: false });</script>
+<script>
+ const postContent = document.getElementById("Post.Content");
+ const simplemde = new SimpleMDE({ element: postContent, spellChecker: false });
+ 
+ // Get the SimpleMDE content element
+ const simpleMDEContent = document.querySelector(".valid");
+ 
+ // Get the min max length from the element attribute (it's set in the model from Annotations)   
+ const minLength = postContent.getAttribute("data-val-length-min");
+ const maxLength = postContent.getAttribute("data-val-length-max");
+ 
+ // Source https://stackoverflow.com/questions/62408646/select-an-object-property-within-an-attribute-of-the-dom
+ 
+ 
+ // Validate the content length on change and disable the submit button if it's not valid
+ const submitButton = document.querySelector("button[type='submit']");
+  simplemde.codemirror.on("change", function () {
+      const value = simplemde.codemirror.getValue();
+       submitButton.disabled=value.length > maxLength || value.length < minLength;
+});
+</script>
