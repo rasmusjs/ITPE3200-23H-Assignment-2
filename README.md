@@ -59,7 +59,7 @@ Something cool about the views. discuss why you chose a particular structure or 
 Something about how the database works
 
 ### Design
-Spør Ole
+The website uses a dark theme designed to follow certain guidelines from [Google's Material Design](https://m3.material.io/) system but with additions and changes that make it look and feel unique.
 
 **📝 Functionality**
 ---
