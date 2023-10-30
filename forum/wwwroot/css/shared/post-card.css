@@ -173,7 +173,7 @@
                 }
             }
 
-            @media (max-width: 450px) {
+            @media (max-width: 590px) {
                 & a {
                     padding: 8px;
                 }
