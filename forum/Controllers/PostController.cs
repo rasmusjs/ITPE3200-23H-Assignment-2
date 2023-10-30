@@ -83,7 +83,12 @@ public class PostController : Controller
         var posts = await GetAllPosts(sortby);
 
         //If no posts found return NotFound
-        if (posts == null) return NotFound("Item list not found");
+        if (posts == null)
+        {
+            _logger.LogError("[PostController] Card failed, posts is null while executing GetAllPosts()");
+            return NotFound("Post list not found");
+        }
+
 
         //Update session variable, used for determining which view to use
         HttpContext.Session.SetString("viewModel", "Card");
@@ -98,7 +103,11 @@ public class PostController : Controller
         var posts = await GetAllPosts(sortby);
 
         //If no posts found return NotFound
-        if (posts == null) return NotFound("Item list not found");
+        if (posts == null)
+        {
+            _logger.LogError("[PostController] Compact failed, posts is null while executing GetAllPosts()");
+            return NotFound("Post list not found");
+        }
 
         //Update session variable, used for determining which view to use
         HttpContext.Session.SetString("viewModel", "Compact");
@@ -111,10 +120,10 @@ public class PostController : Controller
         // Get all posts
         var posts = await _postRepository.GetAllPosts(GetUserId());
 
-        // If no posts, return NotFound
+        // If no posts, return null
         if (posts == null)
         {
-            _logger.LogError("[PostController] GetAllPosts failed while executing GetAll()");
+            _logger.LogError("[PostController] GetAllPosts failed while executing GetAllPosts()");
             return null;
         }
 
@@ -204,11 +213,14 @@ public class PostController : Controller
 
         // Returns the user to create post if unsuccessful
         var postViewModel = await GetPostViewModel();
+        if (postViewModel == null) return StatusCode(500, "Internal server error while creating post please try again");
+
+
         return View(postViewModel);
     }
 
     // Method for giving the user the view for creating a post 
-    private async Task<PostViewModel> GetPostViewModel()
+    private async Task<PostViewModel?> GetPostViewModel()
     {
         // Fetching the categories and tags data
         var categories = await _categoryRepository.GetAll();
@@ -216,7 +228,11 @@ public class PostController : Controller
 
         // Exception if there are no tags or categories to show the user
         if (categories == null || tags == null)
-            throw new InvalidOperationException("Categories or tags not found, cannot create post");
+        {
+            _logger.LogError(
+                "[Post controller] GetPostViewModel failed, _categoryRepository.GetAll() and/or _tagsRepository.GetAll() returned null");
+            return null;
+        }
 
         // New view model for creating a post
         var postViewModel = new PostViewModel
@@ -248,15 +264,20 @@ public class PostController : Controller
         // Fetching the post based on id
         var post = await _postRepository.GetPostById(id);
 
+        // Error handling if the post is not found
+        if (post == null)
+        {
+            _logger.LogError("[Post controller] Update failed, GetPostById() returned null");
+            return NotFound("Post not found, cannot update post");
+        }
+
+        // Fetches the tags and checks if the post has category and tags
+        var selectedTags = post.Tags;
+
         // Fetching categories and tags
         var categories = await _categoryRepository.GetAll();
         var tags = await _tags.GetAll();
 
-        // Error handling if the post is not found
-        if (post == null) return NotFound("Post not found, cannot update post");
-
-        // Fetches the tags and checks if the post has category and tags
-        var selectedTags = post.Tags;
         if (categories == null || tags == null) return NotFound("Categories or tags not found, cannot update post");
 
         // Creates a new view model
@@ -288,6 +309,7 @@ public class PostController : Controller
     public async Task<IActionResult> Update(Post post)
     {
         var postViewModel = await GetPostViewModel();
+        if (postViewModel == null) return StatusCode(500, "Internal server error while updating post please try again");
 
         // Sanitizing the post content
         post.Content = new HtmlSanitizer().Sanitize(post.Content);
@@ -298,10 +320,14 @@ public class PostController : Controller
         // Fetch the post from database, based on id needed to update
         var postFromDb = await _postRepository.GetTById(post.PostId);
 
-        if (postFromDb == null) return NotFound("Post not found, cannot update post");
+        if (postFromDb == null)
+        {
+            _logger.LogError("[Post controller] Update failed, GetPostById() returned null");
+            return NotFound("Post not found, cannot update post");
+        }
 
         // Checks if the user is the owner of the post
-        if (!GetUserId().Equals(postFromDb.UserId)) // TODO: Add error message
+        if (!GetUserId().Equals(postFromDb.UserId))
             return StatusCode(403, "You are not the owner of the post");
 
         // Detach the entity from the DbContext to avoid tracking conflicts
@@ -314,7 +340,11 @@ public class PostController : Controller
         // Adds the required tags again
         var allTags = await _tags.GetAll();
 
-        if (allTags == null) return NotFound("Tags not found, cannot update post");
+        if (allTags == null)
+        {
+            _logger.LogError("[Post controller] Update failed, GetAll() for tags returned null");
+            return NotFound("Tags not found, cannot update post");
+        }
 
         // Link tags to post
         postFromDb.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId)).ToList();
@@ -326,7 +356,11 @@ public class PostController : Controller
         postFromDb.CategoryId = post.CategoryId;
 
         // Update post
-        if (!await _postRepository.Update(postFromDb)) return NotFound("Post not found, cannot update post");
+        if (!await _postRepository.Update(postFromDb))
+        {
+            _logger.LogError("[PostController] Update failed, while executing Update()");
+            return StatusCode(500, "Internal server error while updating post please try again");
+        }
 
         // Sends the user back to the updated post
         return GoToPost(postFromDb.PostId);
@@ -339,12 +373,15 @@ public class PostController : Controller
     {
         // Fetch the post to be deleted by id. Returns error if not found.
         var post = await _postRepository.GetTById(id);
-        if (post == null) return NotFound();
+        if (post == null)
+        {
+            _logger.LogError("[PostController] Delete failed, while executing GetTById() returned null");
+            return NotFound("Post not found, cannot delete post");
+        }
 
-        // Checks if the user is the owner of the post, // TODO: Add error message
+        // Checks if the user is the owner of the post
         if (post.UserId != GetUserId() && !IsAdmin())
-            // If the user is not the owner of the post, return to the post
-            return GoToPost(id);
+            return StatusCode(403, "You are not the owner of the post");
 
         // Return the post to be deleted
         return View(post);
@@ -356,16 +393,26 @@ public class PostController : Controller
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var post = await _postRepository.GetTById(id);
-        if (post == null) return NotFound();
+        if (post == null)
+        {
+            _logger.LogError("[PostController] DeleteConfirmed failed, failed while executing GetTById()");
+            return NotFound("Post not found, cannot delete post");
+        }
 
-        // Checks if the user is the owner of the post, // TODO: Add error message
+        // Checks if the user is the owner of the post
         if (post.UserId != GetUserId() && !IsAdmin())
-            return GoToPost(id); // Send user back to the post if not owner
+        {
+            _logger.LogError("[PostController] DeleteConfirmed failed, user is not the owner of the comment");
+            return StatusCode(403, "You are not the owner of the post");
+        }
 
         // Delete post. If post not found, return NotFound
         var confirmedDeleted = await _postRepository.Delete(id);
-        if (confirmedDeleted == false) // TODO: Add error message
-            return NotFound();
+        if (confirmedDeleted == false)
+        {
+            _logger.LogError("[PostController] DeleteConfirmed failed, failed while executing Delete()");
+            return StatusCode(500, "Internal server error while deleting post please try again");
+        }
 
         // Get the current view model from session. Returns Card view by default
         var viewModel = HttpContext.Session.GetString("viewModel") ?? "Card";
@@ -381,27 +428,25 @@ public class PostController : Controller
         comment.Content = new HtmlSanitizer().Sanitize(comment.Content);
 
         // Error handling to check if the model is correct
-        if (!ModelState.IsValid)
-            return GoToPost(comment.PostId); // TODO: Add error message
+        if (!ModelState.IsValid) return GoToPost(comment.PostId);
 
-
-        //return Redirect($"{Url.Action("Post", new { id = comment.PostId })}"); // Redirect to the post with the comment
-
-        // Sets current time to comment and creates comment. Returns NotFound with message if there is no comment
+        // Sets current time to comment
         comment.DateCreated = DateTime.Now;
         comment.UserId = GetUserId();
 
+        // Creates the comment
         var newComment = await _commentRepository.Create(comment);
 
-        // TODO: Add error message
         if (newComment == null) return GoToPost(comment.PostId); // Redirect to the post with the comment 
 
         // Fetches the user
         var user = await _userManager.FindByIdAsync(comment.UserId);
 
+        // If the user has no comments, create a new list of comments, else add the comment to the user's comments
         user.Comments ??= new List<Comment>();
         user.Comments.Add(newComment);
-        // Updates the user attribute
+
+        // Updates the users comments
         await _userManager.UpdateAsync(user);
 
         return GoToPostComment(newComment.PostId, newComment.PostId);
@@ -415,20 +460,25 @@ public class PostController : Controller
         // Sanitizing the post content
         comment.Content = new HtmlSanitizer().Sanitize(comment.Content);
 
-        // Checks if the model for comments is valid and returns error message.  // TODO: Add error message
+        // Checks if the model for comments is valid and returns error message.
         if (!ModelState.IsValid) return GoToPostComment(comment.PostId, comment.CommentId);
-
-        Console.WriteLine(comment.CommentId);
 
         // Fetch the comment from database, based on id
         var commentFromDb = await _commentRepository.GetTById(comment.CommentId);
 
+        // Error handling if no comment is found
+        if (commentFromDb == null)
+        {
+            _logger.LogError("[PostController] UpdateComment failed, while executing GetTById() returned null");
+            return GoToPostComment(comment.PostId, comment.CommentId);
+        }
 
-        // Error handling if no comment is found // TODO: Add error message
-        if (commentFromDb == null) return GoToPostComment(comment.PostId, comment.CommentId);
-
-        // Checks if the user is the owner of the comment  // TODO: Add error message
-        if (commentFromDb.UserId != GetUserId()) return GoToPostComment(comment.PostId, comment.CommentId);
+        // Checks if the user is the owner of the comment
+        if (commentFromDb.UserId != GetUserId())
+        {
+            _logger.LogError("[PostController] UpdateComment failed, user is not the owner of the comment");
+            return StatusCode(403, "You are not the owner of the comment");
+        }
 
 
         // Updates the comment in the database
@@ -436,7 +486,6 @@ public class PostController : Controller
         commentFromDb.Content = comment.Content;
         await _commentRepository.Update(commentFromDb);
 
-        /* Validation not working, fix later */ // TODO: Remove or fix?
         return GoToPostComment(comment.PostId, comment.CommentId);
     }
 
@@ -449,13 +498,22 @@ public class PostController : Controller
         var post = await _postRepository.GetTById(id);
 
         // Error handling if the post is not found
-        if (post == null) return Refresh(); // TODO: Add error message
+        if (post == null)
+        {
+            _logger.LogError("[PostController] LikePost failed, failed while executing GetTById() returned null");
+            return NotFound("Post not found, cannot like post");
+        }
 
         // Fetches the user
         var user = await _userManager.FindByIdAsync(GetUserId());
 
         // Error handling if the user is not found
-        if (user == null) return RedirectToPage("/Account/Login", new { area = "Identity" });
+        if (user == null)
+        {
+            _logger.LogError(
+                "[PostController] LikePost failed, failed while executing _userManager.FindByIdAsync(GetUserId()) returned null");
+            return RedirectToPage("/Account/Login", new { area = "Identity" });
+        }
 
         // Checks if the user has already liked the post
         if (user.LikedPosts != null && user.LikedPosts.Any(t => t.PostId == id))
@@ -470,7 +528,7 @@ public class PostController : Controller
         // Increments like on the post
         post.TotalLikes++;
 
-        // Adds the post to the user's liked posts
+        // If the user has liked posts, create a new list of posts, else add the post to the user's liked posts
         user.LikedPosts ??= new List<Post>();
         user.LikedPosts.Add(post);
 
@@ -493,13 +551,22 @@ public class PostController : Controller
         var comment = await _commentRepository.GetTById(id);
 
         // Error handling if the comment is not found
-        if (comment == null) return NotFound(); // TODO: Add error message
+        if (comment == null)
+        {
+            _logger.LogError("[PostController] LikeComment failed, failed while executing GetTById() returned null");
+            return NotFound("Comment not found, cannot like comment");
+        }
 
         // Fetches the user
         var user = await _userManager.FindByIdAsync(GetUserId());
 
         // Error handling if the user is not found
-        if (user == null) return RedirectToPage("/Account/Login", new { area = "Identity" });
+        if (user == null)
+        {
+            _logger.LogError(
+                "[PostController] LikeComment failed, failed while executing _userManager.FindByIdAsync(GetUserId()) returned null");
+            return RedirectToPage("/Account/Login", new { area = "Identity" });
+        }
 
         // Checks if the user has already liked the comment
         if (user.LikedComments != null && user.LikedComments.Any(t => t.CommentId == id))
@@ -508,6 +575,7 @@ public class PostController : Controller
             user.LikedComments.Remove(comment); // Removes the comment from the user's liked comments
             await _userManager.UpdateAsync(user); // Updates the user
             await _commentRepository.Update(comment); // Updates the comment
+
             if (redirect) return GoToPostComment(comment.PostId, comment.CommentId);
 
             // Refreshes the site
@@ -532,7 +600,6 @@ public class PostController : Controller
         // Refreshes the post
         return Refresh();
     }
-    // Get request for adding likes to a comment
 
     [HttpGet]
     [Authorize]
@@ -542,11 +609,18 @@ public class PostController : Controller
         var commentFromDb = await _commentRepository.GetTById(id);
 
         // Error handling if no comment is found
-        if (commentFromDb == null) return Refresh(); // TODO: Add error message
+        if (commentFromDb == null)
+        {
+            _logger.LogError("[Post controller] DeleteComment failed, GetTById() for tags returned null");
+            return NotFound("Comment not found, cannot show post");
+        }
 
         // Checks if the user is the owner of the comment, if not, return to the post
-        if (commentFromDb.UserId != GetUserId() && !IsAdmin()) // TODO: Add error message
+        if (commentFromDb.UserId != GetUserId() && !IsAdmin())
+        {
+            _logger.LogError("[PostController] DeleteComment failed, user is not the owner of the comment");
             return GoToPostComment(commentFromDb.PostId, commentFromDb.PostId);
+        }
 
         // Checks if the model for comments is valid and returns error message, if not, return to the post
         if (!ModelState.IsValid)
