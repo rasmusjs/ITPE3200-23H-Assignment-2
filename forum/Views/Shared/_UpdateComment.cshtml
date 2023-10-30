@@ -3,14 +3,44 @@
 <form asp-controller="Post" asp-action="UpdateComment" class="update-comment">
     @* Hidden input *@
     <input type="hidden" asp-for="CommentId"/>
+    <input type="hidden" asp-for="ParentCommentId"/>
+    <input type="hidden" asp-for="PostId"/>
 
     @* Visible inputs *@
     <div class="form-group">
         <label asp-for="Content">Edit:</label>
-        <textarea asp-for="Content" rows="3"></textarea>
+        <textarea required asp-for="Content" onkeyup="validateComment(this)" rows="3"></textarea>
         <span asp-validation-for="Content" class="error"></span>
     </div>
     <div class="actions">
         <button type="submit">Submit</button>
     </div>
+    <script>
+        /*
+        The reason for this code is that validation for the textarea is working with jQuery Validation, so I made my own.
+        It reads the data values that are injected using ASP.NET Core's Annotations, and uses it for client side validation.
+        The selectors are a bit messy, this is because _CreateComment is a partial view so I couldn't use selectors with IDs.  
+        
+        Source for pattern attribute:
+        https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern
+        */
+        
+        // Only create the function if it doesn't already exist, this is to avoid errors when the page is loaded do to the partial view multiple times            
+        if (typeof validateComment !== validateComment) {
+            function validateComment(element) {
+    
+               // Get the min max length from the element attribute (it's set in the model from Annotations)   
+               const minLength = element.getAttribute("data-val-length-min");
+               const maxLength = element.getAttribute("data-val-length-max");
+               // Source https://stackoverflow.com/questions/62408646/select-an-object-property-within-an-attribute-of-the-dom
+                 
+               // Navigate to the button element
+               const submitButton = element.parentElement.parentElement.querySelector('.actions button'); 
+               //Source: https://www.w3schools.com/jsref/prop_node_parentelement.asp
+                
+                // Disable the submit button if the length of the textarea is less than the min length or greater than the max length
+                submitButton.disabled=element.value.length > maxLength || element.value.length < minLength;
+             }
+        }
+        </script>
 </form>

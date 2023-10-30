@@ -3,7 +3,7 @@ BracketBros
 
 * * *
 
-BracketBros is a programming discussion forum made for the ITPE3200 portfolio exam (project 1). The forum is made with .NET Core 6.0, C# and with a MVC framework. This is a MVP solution where the focus is the back-end. The front-end is made with ~~basic Bootstrap~~.
+BracketBros is a programming discussion forum made for the ITPE3200 portfolio exam (project 1). The forum is made with .NET Core 6.0, C# and with a MVC framework. This is a MVP solution where the focus is the back-end. The front-end is made with HTML, CSS, and JavaScript.
 
 **⚡ Quick start**
 ---
@@ -59,7 +59,7 @@ Something cool about the views. discuss why you chose a particular structure or 
 Something about how the database works
 
 ### Design
-Spør Ole
+The website uses a dark theme designed to follow certain guidelines from [Google's Material Design](https://m3.material.io/) system but with additions and changes that make it look and feel unique.
 
 **📝 Functionality**
 ---
