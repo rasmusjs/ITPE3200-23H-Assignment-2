@@ -10,8 +10,9 @@ public class Post
     public int PostId { get; set; }
 
     // Regex for error handling the post title
-    [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ \-/:/?/./!]{2,64}",
-        ErrorMessage = "The title can only contain numbers, letters or characters -:?.!, and must be between 2 to 64 characters.")]
+    [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ \-/:/?/./!/#]{2,64}",
+        ErrorMessage =
+            "The title can only contain numbers, letters or characters -:?.!, and must be between 2 to 64 characters.")]
     [Display(Name = "Title")]
 
     // Getters and setters for post title
@@ -34,6 +35,7 @@ public class Post
     public virtual ApplicationUser? User { get; set; }
     [Required] public int CategoryId { get; set; }
 
+    // navigation property
     public virtual Category? Category { get; set; }
 
     // navigation property
