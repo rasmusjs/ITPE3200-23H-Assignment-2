@@ -35,7 +35,7 @@ public class SearchController : Controller
     public IActionResult Refresh(string success = "", string error = "")
     {
         // Handling for the success message
-        TempData["success"] = error;
+        TempData["success"] = success;
         TempData["error"] = error;
         return Redirect(Request.Headers["Referer"].ToString());
     }
@@ -50,8 +50,6 @@ public class SearchController : Controller
     [HttpGet]
     public async Task<IActionResult> Search(string term, string sortby = "")
     {
-        return Refresh("", "Search term must be at least 2 characters long");
-
         // Error handling for the search term
         if (string.IsNullOrWhiteSpace(term) || term.Length < 2)
             return Refresh("", "Search term must be at least 2 characters long");
@@ -63,6 +61,7 @@ public class SearchController : Controller
         if (posts == null)
         {
             _logger.LogInformation("[Search controller] Search(), No posts found for search term: " + term);
+            TempData["success"] = "No posts found for search term: " + term;
             // Return view with all the posts matching the search term
             return View(new PostsListViewModel(new List<Post>(), "Search"));
         }
