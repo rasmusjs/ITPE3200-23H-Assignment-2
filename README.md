@@ -3,7 +3,7 @@ BracketBros
 
 * * *
 
-BracketBros is a programming discussion forum made for the ITPE3200 portfolio exam (project 1). The forum is made with .NET Core 6.0, C# and with a MVC framework. This is a MVP solution where the focus is the back-end. The front-end is made with HTML, CSS, and JavaScript.
+BracketBros is a programming discussion forum made for the ITPE3200 portfolio exam (project 1). The forum is made with .NET Core 6.0, C# and with a MVC framework. This is a MVP solution where the focus is the back-end. The front-end is made with HTML, CSS, JavaScript and jQuery for input validation.
 
 **⚡ Quick start**
 ---
@@ -14,14 +14,15 @@ To interact with the site, you need to register a user. Register a username, ema
 
 When you have logged in you can create/edit posts, comment and like posts. You get a dashboard with overview of your post, comments and likes. In the upper right corner you have your profile panel. Here you can change username, upload a profile picture, change mail/password, enable 2FA and download all your user data. You can delete your user and data under "personal data". Then all your posts and comments will be marked as posted by Anonymous.
 
+**📝 Functionality**
+---
+This forum website allows users to browse posts and comment. Both in a feed, by searching or by using categories. The user can register an account to create posts, comment on other posts and like posts. When the user is logged in it gets a dashboard view with an overview over the users posts, comments and likes. 
+
+
 **🔨 Project architecture**
 ---
 
 BracketBros is built using the Model-View-Controller (MVC) architecture as required for this task. This is the architecture we would have chosen anyways, as it offers different advantages like seperation of the different components, easy to maintain and scale, reusable code and good support in .NET Core to mention some.
-
-The following sections break down the architecture into its different layers and component and providing detail for how they contribute to the application as a whole.
-
-*The tables needs to be rewritten to provide more concrete example of use.*
 
 ### Architectural layers
 
@@ -45,60 +46,33 @@ The following sections break down the architecture into its different layers and
 | Component | Description |
 |---|---|
 | Migrations | Contains the changes to our database schema. These are auto generated. They allow us to version our database schema in a way that corresponds with the changes in our codebase. |
-| Logs | Contains error logging. What do we log??? How??? |
+| Logs | Contains error and information logging for debugging and error handling. |
 
 ### Diagrams
 
-_**UMLs GOES HERE**_
+<p align="center">
+    <img src="./forum/wwwroot/images/documentation/webapp_architecture.png" alt="Diagram of the application architecture" width="auto" height="auto">
+  Diagram of the application architecture
+</p>
 
-### Views
+<p align="center">
+    <img src="./forum/wwwroot/images/documentation/ForumDatabase.png" alt="Entity Relationship diagram of the database" width="auto" height="auto">
+  Entity Relationship diagram of the database
+</p>
 
-Something cool about the views. discuss why you chose a particular structure or design pattern for your views.ViewModels. Partial views? How data is passed to the views. Layouts. 
+### 
 
-### Database
-Something about how the database works
 
-### Design
-The website uses a dark theme designed to follow certain guidelines from [Google's Material Design](https://m3.material.io/) system but with additions and changes that make it look and feel unique.
-
-**📝 Functionality**
----
-This forum website allows users to browse posts and comment. Both in a feed, by searching or by using categories. The user can register an account to create posts, comment on other posts and like posts. When the user is logged in it gets a dashboard view with an overview over the users posts, comments and likes. The following sections break down the functionality into different aspects.
-
-### Navigation
-Different feed views. What the user can do with posts (edit, delete, like, etc). Menu and navigation bars. Search functionality. Pagination and scrolling, filtering and sorting, responsiveness (different screens?), dynamic features, call to action (sent to register account), browsing by categories. Markdown support
-
-### Content
-ALL about posts baby 
-
-### Error handling
-Error handling, input validation authentication/authorization, etc.
-
-Identity, try/catches in ForumRepository, error logging with LogError method, regex for input validation + html sanitizer
-
-### User management
-
-We use `Microsoft.AspNetCore.Identity` for authentication and authorization. This is an ASP.NET Core API that supports user interface for login functionality. It manages users, passwords, profile data and more. Identity creates a Razor Class Library with the 'Identity' area endpoint, e.g. '/Identity/Account/Login'. The user is not authorized to do anything other than to browse the forum without an user account. The user must register with a username, email and password. The password must consist of at least 8 characters, one alphanumeric character, one lowercase and one uppercase letter. 
-
-When a user is authenticated it can create/edit posts, comment and like posts. The user has access to a dashboard with overview of their post, comments and likes. In the upper right corner they have your profile panel. Here they can change username, upload a profile picture, change mail/password, enable 2FA and download all their user data. They can delete their user and data under "personal data". Then all the users posts and comments will be marked as posted by 'Anonymous'.
-
-We use `Jdenticon.AspNetCore` for generating random profile pictures if the user has not uploaded one. The image is generated by converting the username into a hash, which is used as a unique id for generation. The user can later upload a custom profile picture in their profile settings.
 
 **⌨️ Code**
 ---
 We have tried to follow the C# coding convention for syntax and naming conventions to make sure the code is readable and managable. However, we haven't focused much on this, so the code might sometimes break conventions.
-
-*If there's something unique or innovative about the way you've coded the project, this is the place to mention it.*
-
-The project is structured in a typical MVC fashion. We have different directories for each layer, components and resources. Controllers are located in /Controllers, user account management under /Area, the different views in /Views, ViewModels under /ViewModels, static files like CSS, HTML and Javascript under /wwwroot, data access layer under /DAL. 
 
 The code is documented with comments throughout the project. The code should either be self explanatory or explained with comments. We have also provided comments with links where we have found inspiration or code from the internet.
 
 ### Packages
 
 These are the packages that we have imported to our project and a description of what they do.
-
-*Need to rewrite more specific what we are using the packages for*
 
 | Package | Description |
 |---|---|
