@@ -270,7 +270,7 @@ public static class DbInit
             },
             new()
             {
-                Title = "SQL Query Help \ud83e\udd14",
+                Title = "SQL Query Help",
                 Content =
                     "I'm working with a SQL database and I'm having trouble constructing a query to retrieve data based on specific conditions. Can anyone help me out?\n\n```sql\nSELECT * FROM users WHERE last_login < '2022-01-01' AND status = 'active';",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
@@ -285,7 +285,7 @@ public static class DbInit
             },
             new()
             {
-                Title = "Database Hosting with Cloudflare \u2601\ufe0f\ud83d\udd12",
+                Title = "Database Hosting with Cloudflare",
                 Content =
                     "I've been researching hosting options for my database and came across Cloudflare's database hosting services. I have a few questions:\n\n1. \ud83d\ude80 How does Cloudflare's performance compare to other providers like AWS and Google Cloud?\n2. \ud83d\udd12 What are the security measures Cloudflare provides for databases?\n3. \ud83d\udcb0 Are there any hidden costs or considerations when using Cloudflare for database hosting?\n4. \ud83d\udd04 How easy is it to migrate an existing database to Cloudflare?\n\nWould love to hear from anyone with experience using Cloudflare for databases. Any insights or recommendations would be greatly appreciated!\n\nThanks!",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
@@ -300,7 +300,7 @@ public static class DbInit
             },
             new()
             {
-                Title = "\ud83d\udcdc Why JavaScript should be considered a gift from GOD! \ud83d\udcdc",
+                Title = "Why JavaScript should be considered a gift from GOD!",
                 Content =
                     "Ladies and gentlemen, gather 'round, for today, we embark on a divine journey through the ethereal realms of JavaScript! \ud83d\ude80\ud83c\udf0c\n\n##  **Unleash the Versatility**\nBehold, for JavaScript is the omnipotent chameleon of coding languages! It dances seamlessly not only in the sacred halls of browsers but also dons the crown of servers (praise be to Node.js) and blesses mobile apps with its touch (hail React Native)!\n\n##  **A Cosmic Force of Popularity**\nIt is not just a language; it's a celestial phenomenon! JavaScript's ubiquity transcends the boundaries of realms, making it one of the most widely-used languages, embraced by mortals and tech gods alike.\n\n##  **A Sacred Evolution**\nJavaScript is on an eternal quest for perfection. ES6, ES7, ES8... it evolves faster than the speed of light, adapting to the celestial needs of modern development.\n\n##  **The Art of Interactivity**\nWitness the magic as JavaScript breathes life into the lifeless! It grants websites the gift of interactivity and dynamism, ensnaring users in a spellbinding trance.\n\n##  **A Cosmic Job Market**\nBy embracing the holy scriptures of JavaScript, you open the gates to an abundance of job opportunities in the ever-expanding tech universe. Devs, rejoice! \ud83d\ude4c\ud83c\udf20\n\n##  **The Fellowship of Community**\nJavaScript's community is not just a community; it's a sacred brotherhood! On StackOverflow, GitHub, and countless other altars, the faithful gather to bestow wisdom upon the seeking souls.\n\nYes, it has its quirks (the enigmatic \"undefined\" and the mystical \"NaN\"), but what godly creation doesn't have its mysteries? \ud83e\udd37\u200d\u2642\ufe0f\ud83c\udf0c\n\nSo, let us kneel before JavaScript, the divine thread that weaves the very fabric of the web, a celestial gift that keeps on giving to us humble developers! \ud83d\ude4f\n\nDo you too believe in the divinity of JavaScript or have celestial tales to share? \ud83c\udf20\ud83d\udd2e #JavaScriptGift #DevotionToCode\n",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
@@ -316,7 +316,7 @@ public static class DbInit
             },
             new()
             {
-                Title = "How to Center Elements in CSS: A Beginner's Guide \ud83c\udfaf",
+                Title = "How to Center Elements in CSS: A Beginner's Guide",
                 Content =
                     "## Introduction \ud83d\udc4b\nCentering elements in CSS can be confusing for beginners. This guide aims to clarify the basics.\n\n## Horizontal Centering \ud83d\udccf\nInline Elements: Use `text-align: center`.\nBlock Elements: Use `margin: auto`.\n\n## Vertical Centering \ud83d\udcd0\nSingle Line of Text: Use `line-height`.\nMultiple Lines: Use Flexbox or Grid.\n\n## Common Pitfalls \u26a0\ufe0f\nForgot `DOCTYPE`: Always declare it.\nParent Dimensions: Make sure parent has defined width and height.\n\n## Resources \ud83d\udcda\nCSS Tricks Guide: [CSS Tricks Guide](https://css-tricks.com/)\nMDN Web Docs: [MDN Web Docs](https://developer.mozilla.org/)\n\nLooking forward to your questions and contributions! \ud83e\udd17",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
@@ -332,7 +332,7 @@ public static class DbInit
             },
             new()
             {
-                Title = "Diving Deep into HTML and CSS \ud83c\udf10\ud83c\udfa8",
+                Title = "Diving Deep into HTML and CSS",
                 Content =
                     "## Introduction \nHey web developers! \ud83d\udc69\u200d\ud83d\udcbb\n\nHTML and CSS are the building blocks of the web. They've evolved over the years, offering more flexibility and power.\n\n### Key HTML5 Features \ud83d\udcdc \n- **Semantic Tags:** Elements like `<article>`, `<nav>`, and `<aside>` make our content more understandable.\n- **Media Elements:** `<audio>` and `<video>` tags have revolutionized media integration without plugins.\n- **Canvas:** Allows for dynamic, scriptable rendering of 2D shapes and bitmap images.\n\n### CSS Flexbox and Grid \ud83c\udf9a\ufe0f \n- **Flexbox:** Simplifies layout, alignment, and distribution of items within a container. Perfect for 1D layouts! \ud83d\udea4\n- **Grid:** Introduces 2D layout control, making complex designs simpler and more responsive. \ud83d\uddf7\n\n## Conclusion \nThe evolving standards and capabilities in HTML and CSS continue to push the boundaries of what's possible on the web. Exciting times ahead! \ud83d\ude80\n\n---\n\nWhat are your favorite HTML and CSS features?\n",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
@@ -348,7 +348,7 @@ public static class DbInit
             },
             new()
             {
-                Title = "Managing Environments in C# Projects with Git Branches \ud83c\udf33\n",
+                Title = "Managing Environments in C# Projects with Git Branches",
                 Content =
                     "## Introduction \ud83d\udc4b\nWhen developing C# projects, you often need to manage multiple environments like development, staging, and production. Using Git branches effectively can simplify this process.\n\n## Why Use Git Branches? \ud83e\udd14\nGit branches allow you to isolate features or environments, making it easier to manage your codebase and deploy to different environments.\n\n## Best Practices \ud83d\udee0\ufe0f\nCreate specific branches for each environment.\nUse a Gitflow or similar workflow.\nAlways merge 'development' into 'staging' and 'staging' into 'production'.\n\n## Version Control in C# \ud83d\udd17\nC# and .NET provide built-in tools like `appsettings.json` to manage environment-specific configurations, making it seamless to integrate with version control systems like Git.",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
@@ -364,7 +364,7 @@ public static class DbInit
             },
             new()
             {
-                Title = "Leveraging Data Science in Back-End Development: A Comprehensive Guide \ud83d\udcca",
+                Title = "Leveraging Data Science in Back-End Development: A Comprehensive Guide",
                 Content =
                     "## Introduction\nData science isn't just for data analysts or machine learning engineers. Back-end developers can also benefit from understanding and implementing data science concepts. This post aims to explore how data science techniques can improve back-end systems.\n\n## Why Data Science Matters in Back-End Development \ud83c\udfaf\nData is the lifeblood of any modern application. As back-end developers, we are responsible for storing, manipulating, and serving that data. Understanding basic data science techniques helps us to optimize these processes, thereby improving application performance and user experience.\n\n## Data Preprocessing \u2699\ufe0f\nOne of the first steps in utilizing data effectively is preprocessing. This includes cleaning and transforming raw data into a format that's easier to work with. For example, you might need to normalize text data or handle missing values before saving it to a database.\n\n## Real-time Analytics \ud83d\udcc8\nWith the advent of big data, analytics have moved beyond batch processing. Real-time analytics provide insights as data flows into the system. This is particularly useful for applications that need to react to data changes instantly, like stock trading platforms.\n\n## Machine Learning Models \ud83e\udd16\nImplementing machine learning models on the back-end can add intelligence to your application. For example, a recommendation engine could improve user engagement, or a fraud detection system could save your company money. You don't need to be a data scientist to implement basic machine learning algorithms.\n\n## Caching Strategies and Data Stores \ud83d\uddc4\ufe0f\nData science also includes making smart decisions about how and where to store data. Different types of databases have their own pros and cons, and your choice can greatly affect performance. Caching frequently accessed data can also reduce database load.\n\n## Conclusion \ud83c\udf1f\nData science isn't a field reserved for specialists. By leveraging data science techniques in back-end development, we can build smarter, faster, and more reliable applications.",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
@@ -379,7 +379,7 @@ public static class DbInit
             },
             new()
             {
-                Title = "Immersive Gaming Experiences with Unity: A Detailed Look \ud83c\udfae",
+                Title = "Immersive Gaming Experiences with Unity: A Detailed Look",
                 Content =
                     "## Introduction\nUnity has become a leading platform for both indie developers and large studios aiming to create compelling gaming experiences. This post will delve into techniques to enrich gameplay and engage players through Unity's various features.\n\n## The Power of Unity in Gaming \ud83d\udd79\ufe0f\nUnity's real strength lies in its versatility and the ease with which developers can create both 2D and 3D games. Its asset store and extensive documentation allow even novices to jump in and start developing their gaming ideas.\n\n## Storytelling through Environment \ud83c\udf0d\nOne way to enhance player engagement is through the game environment. Unity's lighting, shading, and physics tools can add depth and realism, helping to tell a story without words. The use of spatial audio further immerses the player into the game world.\n\n## User Interface and Experience Design \ud83d\udda5\ufe0f\nA well-designed UI is essential for player enjoyment. Unity offers a variety of built-in components for UI development, from basic buttons and sliders to complex scroll views and panels. Custom shaders can add a unique look and feel to your game's interface.\n\n## Multiplayer Functionality \ud83c\udf10\nMultiplayer games are all the rage, and Unity's networking features make it easier to create such experiences. Whether it's a cooperative play or a competitive arena, Unity provides the tools necessary to ensure seamless real-time interactions.\n\n## Virtual Reality and Augmented Reality \ud83d\udd76\ufe0f\nUnity is fully equipped to develop VR and AR games, offering a whole new level of immersion. The platform supports popular VR headsets and allows for intuitive interactions, making it easier for developers to enter the burgeoning VR/AR market.\n\n## Performance Optimization \u2699\ufe0f\nGames need to run smoothly to provide a good user experience. Unity's Profiler tool helps identify bottlenecks in game performance, while its scripting options allow for fine-tuned control over game mechanics, helping ensure that your game runs flawlessly on a range of hardware.\n\n## Conclusion \ud83c\udf1f\nUnity offers an array of tools and features that can be leveraged to create rich, engaging gaming experiences. Whether you're a beginner or a seasoned pro, the platform provides everything you need to bring your gaming vision to life.",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
@@ -410,7 +410,7 @@ public static class DbInit
             },
             new()
             {
-                Title = "Python indentations are annoying\ud83d\udc0d",
+                Title = "Python indentations are annoying",
                 Content =
                     "Hey all!\n\nRan into a quirky Python issue today. Always remember to check for indentation errors, they can be sneaky! \ud83d\udd75\ufe0f\u200d\u2642\ufe0f Any fun debugging stories to share?\n",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
@@ -425,7 +425,7 @@ public static class DbInit
             },
             new()
             {
-                Title = "Debugging in PowerShell \ud83d\udd0d\ud83d\udee0\ufe0f",
+                Title = "Debugging in PowerShell",
                 Content =
                     "### Introduction\nHey PowerShell enthusiasts! \u270c\ufe0f\n\nI've been working on some scripts lately, and I've encountered multiple challenges. Figured I'd share and hopefully help someone out.\n\n### Common Issues \ud83d\udeab\n- **Syntax Errors:** Always double-check for missing brackets or misused symbols. It's easy to overlook!\n- **Execution Policy:** Remember, sometimes your script won't run due to the set execution policy. Use `Get-ExecutionPolicy` to check it.\n- **Path Errors:** Ensure paths are correct and avoid hardcoding them when possible. Use relative paths or variables.\n\n### Tips and Tricks \ud83d\udc8e\n- Use `Set-PSDebug -Trace 1` to step through your script line by line. It's a lifesaver! \ud83e\udd17\n- Always have a backup of your original script before making major changes. \ud83d\udd10\n\nWould love to hear about your own PowerShell debugging adventures and insights!\n",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
@@ -455,7 +455,7 @@ public static class DbInit
             },
             new()
             {
-                Title = "\ud83d\udda5\ufe0f Windows Development: Embracing the Modern Stack",
+                Title = "Windows Development: Embracing the Modern Stack",
                 Content =
                     "**Hey fellow developers!**\n\nWindows development has come a long way, especially with the introduction of tools like Windows Subsystem for Linux (WSL) and the move towards universal apps with the UWP platform.\n\n**WSL 2 - Bridging the Gap \ud83c\udf09**  \nWSL 2 has revolutionized the way we think about cross-platform development on Windows. Now, seamlessly integrating Linux-based tools and workflows is a breeze. It's especially beneficial for those coming from a UNIX background, wanting to maintain a familiar development environment. \ud83d\udc27\n\n**UWP - Universal Windows Platform \ud83c\udf10**  \nThe promise of write-once, run-anywhere is getting closer with UWP. Creating apps that work across PCs, tablets, Xbox, and even HoloLens is now more streamlined. Plus, with tools like Xamarin, you can extend this even further across platforms.\n\n**Staying Updated \ud83d\udd03**  \nWith constant updates to .NET, Visual Studio, and other essential tools, it's crucial to stay updated. Not just for the new features, but for performance improvements and security patches as well\n",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
@@ -485,7 +485,7 @@ public static class DbInit
             },
             new()
             {
-                Title = "Java 16 Released! \u2615\ufe0f\ud83d\ude80",
+                Title = "Java 16 Released!",
                 Content =
                     "**Hey devs!**\n\nJava 16 has just dropped, bringing with it a slew of new features and improvements! Time to brew some fresh code! \u2615\ufe0f Anyone tried the new features yet? Thoughts?\n",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
@@ -530,7 +530,7 @@ public static class DbInit
             },
             new()
             {
-                Title = "Windows OS: Privacy Concerns and Government Policies \ud83d\udda5\ufe0f\ud83d\udd12",
+                Title = "Windows OS: Privacy Concerns and Government Policies",
                 Content =
                     "## Introduction \nIn recent times, the Windows OS has come under scrutiny for its privacy settings and data collection. Let's delve deeper.\n\n### Data Collection & Concerns \ud83d\udd0d \n- **Telemetry Data:** Windows collects data to enhance user experience, but how much is too much?\n- **Default Settings:** Some argue that many privacy-invading settings are on by default, raising concerns. \ud83d\udeab\n- **Data Sharing:** While Microsoft ensures user data security, concerns about sharing with third parties remain.\n\n### Governmental Intervention \ud83c\udfdb\ufe0f \n- **GDPR & Windows:** How does Windows fare against GDPR guidelines?\n- **Policies in Different Countries:** Different countries are imposing varied restrictions and regulations. \ud83c\udf0d\n\n### User Choices & Control \u2699\ufe0f \nEmpowering users by providing clear choices and granular controls is essential. Transparency is the key! \ud83d\udd11\n\n---\n\nDo you believe stricter regulations are needed? Or is it a user's responsibility to tweak settings as they see fit? Let's discuss!\n",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
@@ -560,7 +560,7 @@ public static class DbInit
             },
             new()
             {
-                Title = "Exploring Unity: Beyond Game Development \ud83c\udfae",
+                Title = "Exploring Unity: Beyond Game Development",
                 Content =
                     "**Introduction**  \nGreetings Unity enthusiasts! \u2728\n\nUnity, renowned for game development, is now stretching its wings into other domains.\n\n**Extended Applications** \ud83d\udcc8  \n- **Virtual Reality (VR):** Crafting immersive experiences for users.\n- **Augmented Reality (AR):** From mobile apps to complex AR systems, Unity is at the forefront. \ud83d\udcf1\n- **Film Production:** Unity is becoming a favorite for filmmakers, aiding in real-time rendering and effects.\n\n**Benefits of Unity** \ud83c\udfd6\ufe0f  \n- **Versatile:** Adapts to various projects and needs.\n- **Asset Store:** A plethora of resources available for developers.\n- **Supportive Community:** An active community ready to help and share. \ud83c\udf1f\n\n**Conclusion**  \nUnity's flexibility and capabilities make it a top choice not only for game developers but also for professionals in various industries. From movies to real-world simulations, Unity is shaping the future!\n\nGot any cool Unity projects or experiences? Share away!\n",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
@@ -590,7 +590,7 @@ public static class DbInit
             },
             new()
             {
-                Title = "C# and Quantum Computing: The Leap Forward \u269b\ufe0f",
+                Title = "C# and Quantum Computing: The Leap Forward",
                 Content =
                     "**C# in Quantum Computing**  \nC# is playing a pivotal role in the development of quantum computing applications.\n\n**Quantum and C#: The Synergy** \ud83c\udf0c  \n- **Q# Language:** Developed by Microsoft, it's designed to work seamlessly with C# for quantum programming.\n- **Complex Simulations:** C# provides the robustness needed for intricate quantum simulations. \u269b\ufe0f\n- **Interoperability:** C# interfaces efficiently with quantum hardware and other platforms.\n\n**Potential Outcomes** \ud83c\udf10  \n- **Medical Research:** Envision faster drug discovery and intricate molecule studies.\n- **Cryptography:** Quantum computing promises breakthroughs in secure communication. \ud83d\udd12\n- **Optimization Problems:** Solutions to previously unsolvable problems within reach.\n\n**Wrap Up**  \nC# continues to evolve, not just in traditional software domains, but also in pushing the boundaries of what's possible in science and quantum research. A fascinating journey ahead!\n\nShare your insights on C#, quantum, or both!\n",
                 DateCreated = DateTime.Now - TimeSpan.FromDays(random.Next(999)),
