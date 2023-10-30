@@ -239,6 +239,46 @@ button {
     }
 }
 
+.markdown {
+    & ul,
+    & ol {
+        margin: 4px 0;
+        padding-left: 20px;
+
+        & li {
+            padding: 2px 0;
+        }
+    }
+
+    & code {
+        padding: 0 4px;
+        font-family: monospace;
+        border-radius: 4px;
+        color: white;
+        background-color: black;
+    }
+
+    & pre {
+        padding: 12px 16px;
+        border: 1px solid var(--fg-2);
+        border-radius: 6px;
+        background-color: black;
+
+        & code {
+            padding: 0 !important;
+            font-size: var(--fs-s);
+        }
+    }
+
+    & h2, & h3, & h4, & h5, & h6 {
+        margin-top: 16px;
+    }
+
+    & hr {
+        margin: 16px 0;
+    }
+}
+
 nav {
     position: fixed;
     top: 0;
