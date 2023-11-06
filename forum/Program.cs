@@ -76,6 +76,18 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 //From https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-7.0&tabs=visual-studio
 
+// Configure CORS to allow any origin
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "OpenCorsPolicy",
+        policy =>
+        {
+            policy.AllowAnyOrigin() // Use with caution, allows requests from any source
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
@@ -87,6 +99,8 @@ else
     app.UseExceptionHandler("/Home/Error");
 }
 
+// Use the Open CORS policy
+app.UseCors("OpenCorsPolicy");
 
 app.UseStaticFiles(); // for adding middleware
 app.UseSession();
