@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace forum.Models;
 
@@ -15,12 +16,19 @@ public class Category
     [Display(Name = "Category name")]
 
     // Getters and setters for category name
+    [JsonProperty("Name")]
     public string Name { get; set; } = string.Empty;
 
     // Getters and setters for category color
-    [Display(Name = "Color")] public string Color { get; set; } = string.Empty;
+    [JsonProperty("Color")]
+    [Display(Name = "Color")]
+    public string Color { get; set; } = string.Empty;
 
     // Getters and setters for category PicturePath
-    [Display(Name = "URL")] public string? PicturePath { get; set; } = string.Empty;
-    [NotMapped] public byte[]? PictureBytes { get; set; } // used for file upload
+    
+    [JsonProperty("URL")]
+    [Display(Name = "URL")]
+    public string? PicturePath { get; set; } = string.Empty;
+
+    [JsonIgnore] [NotMapped] public byte[]? PictureBytes { get; set; } // used for file upload
 }

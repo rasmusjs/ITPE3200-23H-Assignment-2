@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace forum.Controllers;
 
 // Controller for the search function
+[ApiController]
+[Route("api/[controller]")]
 public class SearchController : Controller
 {
     private readonly ILogger<SearchController> _logger;
@@ -80,6 +82,40 @@ public class SearchController : Controller
         // Return view with all the posts matching the search term
         return View(new PostsListViewModel(posts, "Search"));
     }
+
+    [HttpGet("{term}/{sortby=newest}")] // Set a default string
+    public async Task<IActionResult> NewSearch(string term, string sortby = "")
+    {
+        // Error handling for the search term
+        if (string.IsNullOrWhiteSpace(term) || term.Length < 2)
+            return Refresh("", "Search term must be at least 2 characters long");
+
+        // Fetch all posts based on the search term
+        var posts = await _postRepository.GetAllPostsByTerm(term, GetUserId());
+
+        // Error handling if the term does not provide any posts
+        if (posts == null)
+        {
+            _logger.LogInformation("[Search controller] Search(), No posts found for search term: " + term);
+            // Return view with all the posts matching the search term
+            return NotFound("No posts found for search term");
+        }
+
+        posts = sortby switch
+        {
+            "newest" => posts.OrderByDescending(post => post.DateCreated),
+            "oldest" => posts.OrderBy(post => post.DateCreated),
+            "likes" => posts.OrderByDescending(post => post.TotalLikes),
+            "leastlikes" => posts.OrderBy(post => post.TotalLikes),
+            "comments" => posts.OrderByDescending(post => post.Comments!.Count),
+            "leastcomments" => posts.OrderBy(post => post.Comments!.Count),
+            _ => posts.OrderByDescending(post => post.DateCreated)
+        };
+
+        // Return view with all the posts matching the search term
+        return Ok(posts);
+    }
+
 
     // Sends user to index
     public IActionResult Index()

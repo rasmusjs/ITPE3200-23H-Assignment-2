@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace forum.Controllers;
 
+[ApiController]
+[Route("api/[controller]")]
 public class PostController : Controller
 {
     private readonly ILogger<PostController> _logger;
@@ -81,7 +83,7 @@ public class PostController : Controller
     public async Task<IActionResult> Card(string sortby = "")
     {
         //Get all posts
-        var posts = await GetAllPosts(sortby);
+        var posts = await OldGetAllPosts(sortby);
 
         //If no posts found return NotFound
         if (posts == null)
@@ -100,7 +102,7 @@ public class PostController : Controller
     public async Task<IActionResult> Compact(string sortby = "")
     {
         //Get all posts
-        var posts = await GetAllPosts(sortby);
+        var posts = await OldGetAllPosts(sortby);
 
         //If no posts found return NotFound
         if (posts == null)
@@ -115,7 +117,7 @@ public class PostController : Controller
     }
 
     // Method for fetching all posts. Used by Card() and Compact()
-    public async Task<IEnumerable<Post>?> GetAllPosts(string sortby = "")
+    public async Task<IEnumerable<Post>?> OldGetAllPosts(string sortby = "")
     {
         // Get all posts
         var posts = await _postRepository.GetAllPosts(GetUserId());
@@ -141,6 +143,35 @@ public class PostController : Controller
         return posts;
     }
 
+    // Method for fetching all posts. Used by Card() and Compact()
+    [HttpGet("posts/{sortby=newest}")] // Set a default string
+    public async Task<IActionResult> GetAllPosts(string sortby = "")
+    {
+        // Get all posts
+        var posts = await _postRepository.GetAllPosts(GetUserId());
+
+        // If no posts, return null
+        if (posts == null)
+        {
+            _logger.LogError("[PostController] GetAllPosts failed while executing GetAllPosts()");
+            return Ok(null);
+        }
+
+        posts = sortby switch
+        {
+            "newest" => posts.OrderByDescending(post => post.DateCreated),
+            "oldest" => posts.OrderBy(post => post.DateCreated),
+            "likes" => posts.OrderByDescending(post => post.TotalLikes),
+            "leastlikes" => posts.OrderBy(post => post.TotalLikes),
+            "comments" => posts.OrderByDescending(post => post.Comments!.Count),
+            "leastcomments" => posts.OrderBy(post => post.Comments!.Count),
+            _ => posts.OrderByDescending(post => post.DateCreated)
+        };
+
+        return Ok(posts);
+    }
+
+
     // Method for fetching post by id
     public async Task<IActionResult> Post(int id)
     {
@@ -156,6 +187,62 @@ public class PostController : Controller
 
         return View(post);
     }
+
+    // Method for fetching post by id
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetPost(int id)
+    {
+        // Fetch post based on provided id
+        var post = await _postRepository.GetPostById(id, GetUserId());
+
+        // If no post for the specified id, return NotFound
+        if (post == null)
+        {
+            _logger.LogError("[PostController] Post failed, while executing GetPostById()");
+            return NotFound("Post not found, cannot show post");
+        }
+
+        return Ok(post);
+    }
+
+
+    // Get request for giving the user the view for creating a post 
+    [HttpGet("GetTags")]
+    public async Task<IActionResult> GetTags()
+    {
+        // Get all tags
+        var tags = await _tags.GetAll();
+        // If tags is null return not found
+        if (tags == null) return NotFound("Tags not found");
+        // Return
+        return Ok(tags);
+    }
+
+
+    // Get request for giving the user the view for creating a post 
+    [HttpGet("GetCategories")]
+    public async Task<IActionResult> GetCategories()
+    {
+        // Get all categories
+        var categories = await _categoryRepository.GetAll();
+        // If tags is null return not found
+        if (categories == null) return NotFound("Tags not found");
+        // Return
+        return Ok(categories);
+    }
+
+    // Get request for giving the user the view for creating a post 
+    [HttpGet("GetComments/{id:int}")]
+    public async Task<IActionResult> GetComments(int id)
+    {
+        // Get all categories
+        var comments = await _commentRepository.GetAllCommentsByPostId(id);
+        // If tags is null return not found
+        if (comments == null) return NotFound("Tags not found");
+        // Return
+        return Ok(comments);
+    }
+
 
     // Get request for giving the user the view for creating a post 
     [HttpGet]
@@ -217,6 +304,55 @@ public class PostController : Controller
 
 
         return View(postViewModel);
+    }
+
+
+    // Post request for publishing a post
+    [HttpPost("CreatePost")]
+    [Authorize]
+    public async Task<IActionResult> NewCreate(Post post)
+    {
+        // Set initial values for the post
+        post.DateCreated = DateTime.Now;
+        post.DateLastEdited = DateTime.Now;
+        post.UserId = GetUserId();
+
+        // Assigning tags to the post
+        var allTags = await _tags.GetAll();
+        if (allTags != null && post.TagsId != null)
+            post.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId)).ToList();
+
+        // Sanitizing the post content
+        post.Content = new HtmlSanitizer().Sanitize(post.Content);
+        // This is done to prevent XSS attacks. Source: https://weblog.west-wind.com/posts/2018/Aug/31/Markdown-and-Cross-Site-Scripting
+
+        // Checks if the post object is valid per the post model and creates the object or return NotFound.
+        if (ModelState.IsValid)
+        {
+            // Try to create the post
+            var newPost = await _postRepository.Create(post);
+
+            // If the post is not created, return 422 Unprocessable Content
+            if (newPost == null)
+            {
+                _logger.LogError("[PostController] Create failed, while executing Create()");
+                return StatusCode(422, "Post not created successfully");
+            }
+
+            // Fetches the user
+            var user = await _userManager.FindByIdAsync(post.UserId);
+            // If the user has no posts, create a new list of posts
+            user.Posts ??= new List<Post>();
+            // Adds the post to the user's posts
+            user.Posts.Add(newPost);
+            // Updates the user attribute
+            await _userManager.UpdateAsync(user);
+
+            // Redirects the user to the newly created post
+            return GoToPost(newPost.PostId);
+        }
+
+        return StatusCode(500, "Internal server error while creating post please try again");
     }
 
     // Method for giving the user the view for creating a post 
@@ -363,6 +499,68 @@ public class PostController : Controller
         // Sends the user back to the updated post
         return GoToPost(postFromDb.PostId);
     }
+
+    // Post request for sending the post update
+    [HttpPost("UpdatePost")]
+    [Authorize]
+    public async Task<IActionResult> UpdatePost(Post post)
+    {
+        // Sanitizing the post content
+        post.Content = new HtmlSanitizer().Sanitize(post.Content);
+
+        // Check if model is valid before updating
+        if (!ModelState.IsValid || post.TagsId == null)
+            return StatusCode(500, "Internal server error while updating post please try again");
+
+        // Fetch the post from database, based on id needed to update
+        var postFromDb = await _postRepository.GetTById(post.PostId);
+
+        if (postFromDb == null)
+        {
+            _logger.LogError("[Post controller] Update failed, GetPostById() returned null");
+            return NotFound("Post not found, cannot update post");
+        }
+
+        // Checks if the user is the owner of the post
+        if (!GetUserId().Equals(postFromDb.UserId))
+            return StatusCode(403, "You are not the owner of the post");
+
+        // Detach the entity from the DbContext to avoid tracking conflicts
+        _forumDbContext.Entry(postFromDb).State = EntityState.Detached;
+        // Source: https://stackoverflow.com/questions/48202403/instance-of-entity-type-cannot-be-tracked-because-another-instance-with-same-key
+
+        // Remove all the old tags from the post
+        await _postRepository.RemoveAllPostTags(postFromDb.PostId);
+
+        // Adds the required tags again
+        var allTags = await _tags.GetAll();
+
+        if (allTags == null)
+        {
+            _logger.LogError("[Post controller] Update failed, GetAll() for tags returned null");
+            return NotFound("Tags not found, cannot update post");
+        }
+
+        // Link tags to post
+        postFromDb.Tags = allTags.Where(tag => post.TagsId.Contains(tag.TagId)).ToList();
+
+        // Update post
+        postFromDb.DateLastEdited = DateTime.Now;
+        postFromDb.Title = post.Title;
+        postFromDb.Content = post.Content;
+        postFromDb.CategoryId = post.CategoryId;
+
+        // Update post
+        if (!await _postRepository.Update(postFromDb))
+        {
+            _logger.LogError("[PostController] Update failed, while executing Update()");
+            return StatusCode(500, "Internal server error while updating post please try again");
+        }
+
+        // Sends the user back to the updated post
+        return GoToPost(postFromDb.PostId);
+    }
+
 
     // Get request for deleting a post
     [HttpGet]

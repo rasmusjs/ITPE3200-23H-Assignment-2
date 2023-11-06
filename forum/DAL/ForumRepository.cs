@@ -15,7 +15,8 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
     private readonly ILogger<ForumRepository<TEntity>> _logger;
 
     // Constructor for initializing the logger and DB
-    public ForumRepository(ForumDbContext db, ILogger<ForumRepository<TEntity>> logger)
+    public ForumRepository(ForumDbContext db,
+        ILogger<ForumRepository<TEntity>> logger)
     {
         _db = db;
         _logger = logger;
@@ -28,6 +29,32 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         try
         {
             return await _db.Set<TEntity>().ToListAsync();
+        }
+        // Exception error handling if it can't fetch entities from the database
+        catch (Exception e)
+        {
+            // Sends function name and error to the LogError function
+            LogError("GetAll", e);
+            return null;
+        }
+    }
+
+    // Function for fetching all entities from the database
+    public async Task<IEnumerable<Comment>?> GetAllCommentsByPostId(int id)
+    {
+        // Tries to retrieve all records from the database as a list
+        try
+        {
+            var comments = await _db.Set<Comment>().Where(comment => comment.PostId == id)
+                .Include(comment => comment.User!).ToListAsync();
+
+
+            foreach (var comment in comments)
+            {
+                comment.UserName = comment.User!.UserName;
+            }
+
+            return comments;
         }
         // Exception error handling if it can't fetch entities from the database
         catch (Exception e)
@@ -89,6 +116,12 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
                 return null;
             }
 
+            // Set the username
+            foreach (var post in posts)
+            {
+                post.UserName = post.User!.UserName;
+            }
+
             // If user is logged in, add likes to posts
             if (userId != "") posts = await AddLikeToPosts(posts, userId);
 
@@ -109,9 +142,16 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         try
         {
             // Query the database for posts by id. Includes tags and categories (eagerly loading)
-            var post = await _db.Posts.Include(post => post.Tags).Include(post => post.Category)
+            var post = await _db.Posts
+                .Include(post => post.Tags)
+                .Include(post => post.Category)
                 .Include(post => post.Comments)
-                .Where(post => post.PostId == id).FirstAsync();
+                .Include(post => post.User)
+                .Where(post => post.PostId == id)
+                .FirstAsync();
+
+            // Set the Username
+            post.UserName = post.User!.UserName;
 
             // If there is a userId, get user data
             if (userId != "")
@@ -154,13 +194,21 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         try
         {
             // Query the database for all posts. Includes tags and categories (eagerly loading)
-            var posts = await _db.Posts.Include(post => post.Tags).Include(post => post.Category).ToListAsync();
+            var posts = await _db.Posts.Include(post => post.Tags).Include(post => post.Category)
+                .Include(post => post.User!).ToListAsync();
 
             if (!posts.Any())
             {
                 _logger.LogInformation("[Forum Repository] GetAllPosts() found no posts");
                 return null;
             }
+
+            // Set the username 
+            foreach (var post in posts)
+            {
+                post.UserName = post.User!.UserName;
+            }
+
 
             // If user is logged in, add likes to posts
             if (userId != "") posts = await AddLikeToPosts(posts, userId);

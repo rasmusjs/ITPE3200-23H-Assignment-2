@@ -53,6 +53,14 @@ loggerConfiguration.Filter.ByExcluding(e => e.Properties.TryGetValue("SourceCont
                                             e.Level == LogEventLevel.Information &&
                                             e.MessageTemplate.Text.Contains("Executed DbCommand"));
 
+// Needed to fix fail: Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware[1]
+// Source https://stackoverflow.com/questions/59199593/net-core-3-0-possible-object-cycle-was-detected-which-is-not-supported
+builder.Services.AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+    );
+
+
 // Add Serilog to the container.
 var logger = loggerConfiguration.CreateLogger();
 builder.Logging.AddSerilog(logger);

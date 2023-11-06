@@ -1,4 +1,5 @@
 using Microsoft.Build.Framework;
+using Newtonsoft.Json;
 
 namespace forum.Models;
 
@@ -11,5 +12,5 @@ public class Tag
     [Required] public string Name { get; init; } = string.Empty;
 
     // navigation property
-    public virtual List<Post>? Posts { get; set; }
+    [JsonIgnore] public virtual List<Post>? Posts { get; set; }
 }

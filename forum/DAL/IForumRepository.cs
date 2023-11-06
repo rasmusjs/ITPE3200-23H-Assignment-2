@@ -16,6 +16,10 @@ public interface IForumRepository<TEntity>
     // Get all posts, with optional user id
     Task<IEnumerable<Post>?> GetAllPosts(string userId = "");
 
+    // Get all comments
+    Task<IEnumerable<Comment>?> GetAllCommentsByPostId(int id);
+
+
     // Get all posts by search term
     Task<IEnumerable<Post>?> GetAllPostsByTerm(string term, string userId = "");
     Task<ApplicationUser?> GetUserActivity(string userId);
