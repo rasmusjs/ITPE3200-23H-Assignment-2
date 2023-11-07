@@ -226,7 +226,7 @@ public class PostController : Controller
         // Get all categories
         var categories = await _categoryRepository.GetAll();
         // If tags is null return not found
-        if (categories == null) return NotFound("Tags not found");
+        if (categories == null) return NotFound("Categories not found");
         // Return
         return Ok(categories);
     }
@@ -327,32 +327,29 @@ public class PostController : Controller
         // This is done to prevent XSS attacks. Source: https://weblog.west-wind.com/posts/2018/Aug/31/Markdown-and-Cross-Site-Scripting
 
         // Checks if the post object is valid per the post model and creates the object or return NotFound.
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid) return StatusCode(422, "Post not valid, cannot create post");
+
+        // Try to create the post
+        var newPost = await _postRepository.Create(post);
+
+        // If the post is not created, return 422 Unprocessable Content
+        if (newPost == null)
         {
-            // Try to create the post
-            var newPost = await _postRepository.Create(post);
-
-            // If the post is not created, return 422 Unprocessable Content
-            if (newPost == null)
-            {
-                _logger.LogError("[PostController] Create failed, while executing Create()");
-                return StatusCode(422, "Post not created successfully");
-            }
-
-            // Fetches the user
-            var user = await _userManager.FindByIdAsync(post.UserId);
-            // If the user has no posts, create a new list of posts
-            user.Posts ??= new List<Post>();
-            // Adds the post to the user's posts
-            user.Posts.Add(newPost);
-            // Updates the user attribute
-            await _userManager.UpdateAsync(user);
-
-            // Redirects the user to the newly created post
-            return GoToPost(newPost.PostId);
+            _logger.LogError("[PostController] Create failed, while executing Create()");
+            return StatusCode(422, "Post not created successfully");
         }
 
-        return StatusCode(500, "Internal server error while creating post please try again");
+        // Fetches the user
+        var user = await _userManager.FindByIdAsync(post.UserId);
+        // If the user has no posts, create a new list of posts
+        user.Posts ??= new List<Post>();
+        // Adds the post to the user's posts
+        user.Posts.Add(newPost);
+        // Updates the user attribute
+        await _userManager.UpdateAsync(user);
+
+        // Redirects the user to the newly created post
+        return Ok(newPost.PostId);
     }
 
     // Method for giving the user the view for creating a post 
@@ -503,7 +500,7 @@ public class PostController : Controller
     // Post request for sending the post update
     [HttpPost("UpdatePost")]
     [Authorize]
-    public async Task<IActionResult> UpdatePost(Post post)
+    public async Task<IActionResult> NewUpdate(Post post)
     {
         // Sanitizing the post content
         post.Content = new HtmlSanitizer().Sanitize(post.Content);
@@ -558,7 +555,7 @@ public class PostController : Controller
         }
 
         // Sends the user back to the updated post
-        return GoToPost(postFromDb.PostId);
+        return Ok("Post updated successfully");
     }
 
 
@@ -615,6 +612,36 @@ public class PostController : Controller
         return RedirectToAction(viewModel, "Post"); // Redirect to the post list
     }
 
+    // Post request for deleting post and confirming for the user
+    [HttpGet("DeletePost/{id:int}")]
+    [Authorize]
+    public async Task<IActionResult> NewDeleteConfirmed(int id)
+    {
+        var post = await _postRepository.GetTById(id);
+        if (post == null)
+        {
+            _logger.LogError("[PostController] DeleteConfirmed failed, failed while executing GetTById()");
+            return NotFound("Post not found, cannot delete post");
+        }
+
+        // Checks if the user is the owner of the post
+        if (post.UserId != GetUserId() && !IsAdmin())
+        {
+            _logger.LogError("[PostController] DeleteConfirmed failed, user is not the owner of the comment");
+            return StatusCode(403, "You are not the owner of the post");
+        }
+
+        // Delete post. If post not found, return NotFound
+        var confirmedDeleted = await _postRepository.Delete(id);
+        if (confirmedDeleted == false)
+        {
+            _logger.LogError("[PostController] DeleteConfirmed failed, failed while executing Delete()");
+            return StatusCode(500, "Internal server error while deleting post please try again");
+        }
+
+        return Ok("Post deleted successfully");
+    }
+
     // Post request for creating a comment
     [HttpPost]
     [Authorize]
@@ -659,6 +686,50 @@ public class PostController : Controller
         return GoToPostComment(newComment.PostId, newComment.PostId);
     }
 
+    // Post request for creating a comment
+    [HttpPost("CreateComment")]
+    [Authorize]
+    public async Task<IActionResult> NewCreateComment(Comment comment)
+    {
+        // Sanitizing the post content
+        comment.Content = new HtmlSanitizer().Sanitize(comment.Content);
+
+        // Error handling to check if the model is correct
+        if (!ModelState.IsValid) return StatusCode(422, "Could not create the comment, the comment is not valid");
+
+        // Sets current time to comment
+        comment.DateCreated = DateTime.Now;
+        comment.UserId = GetUserId();
+
+        // Creates the comment
+        var newComment = await _commentRepository.Create(comment);
+
+        if (newComment == null) return StatusCode(500, "Internal server error while creating comment please try again");
+
+
+        // Fetches the post to update the total comments
+        var post = await _postRepository.GetTById(comment.PostId);
+
+        if (post != null)
+        {
+            post.TotalComments++;
+            await _postRepository.Update(post);
+        }
+
+
+        // Fetches the user
+        var user = await _userManager.FindByIdAsync(comment.UserId);
+
+        // If the user has no comments, create a new list of comments, else add the comment to the user's comments
+        user.Comments ??= new List<Comment>();
+        user.Comments.Add(newComment);
+
+        // Updates the users comments
+        await _userManager.UpdateAsync(user);
+
+        return Ok();
+    }
+
     // Post request for updating a comment
     [HttpPost]
     [Authorize]
@@ -695,6 +766,48 @@ public class PostController : Controller
 
         return GoToPostComment(comment.PostId, comment.CommentId);
     }
+
+
+    // Post request for updating a comment
+    [HttpPost("UpdateComment")]
+    [Authorize]
+    public async Task<IActionResult> NewUpdateComment(Comment comment)
+    {
+        // Sanitizing the post content
+        comment.Content = new HtmlSanitizer().Sanitize(comment.Content);
+
+        // Checks if the model for comments is valid and returns error message.
+        if (!ModelState.IsValid)
+            return StatusCode(422,
+                "Could not update the comment, the comment is not valid"); // 422 Unprocessable Entity
+
+
+        // Fetch the comment from database, based on id
+        var commentFromDb = await _commentRepository.GetTById(comment.CommentId);
+
+        // Error handling if no comment is found
+        if (commentFromDb == null)
+        {
+            _logger.LogError("[PostController] UpdateComment failed, while executing GetTById() returned null");
+            return NotFound("Comment not found, cannot update comment");
+        }
+
+        // Checks if the user is the owner of the comment
+        if (commentFromDb.UserId != GetUserId())
+        {
+            _logger.LogError("[PostController] UpdateComment failed, user is not the owner of the comment");
+            return StatusCode(403, "You are not the owner of the comment");
+        }
+
+
+        // Updates the comment in the database
+        commentFromDb.DateLastEdited = DateTime.Now;
+        commentFromDb.Content = comment.Content;
+        await _commentRepository.Update(commentFromDb);
+
+        return Ok("Comment updated successfully");
+    }
+
 
     // Get request for adding likes to a post
     [HttpGet]
@@ -747,6 +860,59 @@ public class PostController : Controller
 
         // Refreshes the post
         return Refresh();
+    }
+
+
+    // Get request for adding likes to a post
+    [HttpGet("LikePost/{id:int}")]
+    [Authorize]
+    public async Task<IActionResult> NewLikePost(int id)
+    {
+        // Fetches post based on id
+        var post = await _postRepository.GetTById(id);
+
+        // Error handling if the post is not found
+        if (post == null)
+        {
+            _logger.LogError("[PostController] LikePost failed, failed while executing GetTById() returned null");
+            return NotFound("Post not found, cannot like post");
+        }
+
+        // Fetches the user
+        var user = await _userManager.FindByIdAsync(GetUserId());
+
+        // Error handling if the user is not found
+        if (user == null)
+        {
+            _logger.LogError(
+                "[PostController] LikePost failed, failed while executing _userManager.FindByIdAsync(GetUserId()) returned null");
+            return NotFound("User not found, cannot like post. Please log in again");
+        }
+
+        // Checks if the user has already liked the post
+        if (user.LikedPosts != null && user.LikedPosts.Any(t => t.PostId == id))
+        {
+            post.TotalLikes--; // Decrements like on the post
+            user.LikedPosts.Remove(post); // Removes the post from the user's liked posts
+            await _userManager.UpdateAsync(user); // Updates the user
+            await _postRepository.Update(post); // Updates the post
+            return Ok("Post liked successfully");
+        }
+
+        // Increments like on the post
+        post.TotalLikes++;
+
+        // If the user has liked posts, create a new list of posts, else add the post to the user's liked posts
+        user.LikedPosts ??= new List<Post>();
+        user.LikedPosts.Add(post);
+
+        // Updates the user attribute
+        await _userManager.UpdateAsync(user);
+
+        // Updates the post
+        await _postRepository.Update(post);
+
+        return Ok("Post liked successfully");
     }
 
     // Get request for adding likes to a comment
@@ -808,6 +974,60 @@ public class PostController : Controller
         return Refresh();
     }
 
+    // Get request for adding likes to a comment
+    [HttpGet("LikeComment/{id:int}")]
+    [Authorize]
+    public async Task<IActionResult> NewLikeComment(int id)
+    {
+        // Fetches comment based on id
+        var comment = await _commentRepository.GetTById(id);
+
+        // Error handling if the comment is not found
+        if (comment == null)
+        {
+            _logger.LogError("[PostController] LikeComment failed, failed while executing GetTById() returned null");
+            return NotFound("Comment not found, cannot like comment");
+        }
+
+        // Fetches the user
+        var user = await _userManager.FindByIdAsync(GetUserId());
+
+        // Error handling if the user is not found
+        if (user == null)
+        {
+            _logger.LogError(
+                "[PostController] LikeComment failed, failed while executing _userManager.FindByIdAsync(GetUserId()) returned null");
+            return NotFound("User not found, cannot like comment. Please log in again");
+        }
+
+        // Checks if the user has already liked the comment
+        if (user.LikedComments != null && user.LikedComments.Any(t => t.CommentId == id))
+        {
+            comment.TotalLikes--; // Decrements like on the comment
+            user.LikedComments.Remove(comment); // Removes the comment from the user's liked comments
+            await _userManager.UpdateAsync(user); // Updates the user
+            await _commentRepository.Update(comment); // Updates the comment
+
+            // Refreshes the site
+            return Ok();
+        }
+
+        // Increments like on the comment
+        comment.TotalLikes++;
+
+        // Adds the comment to the user's liked comments
+        user.LikedComments ??= new List<Comment>();
+        user.LikedComments.Add(comment);
+
+        // Updates the user attribute
+        await _userManager.UpdateAsync(user);
+
+        // Updates the comment
+        await _commentRepository.Update(comment);
+
+        return Ok();
+    }
+
     [HttpGet]
     [Authorize]
     public async Task<IActionResult> DeleteComment(int id)
@@ -859,5 +1079,56 @@ public class PostController : Controller
 
         // Redirect to the post
         return GoToPost(commentFromDb.PostId);
+    }
+
+    [HttpGet("DeleteComment/{id:int}")]
+    [Authorize]
+    public async Task<IActionResult> NewDeleteComment(int id)
+    {
+        // Fetch the comment from database, based on id
+        var commentFromDb = await _commentRepository.GetTById(id);
+
+        // Error handling if no comment is found
+        if (commentFromDb == null)
+        {
+            _logger.LogError("[Post controller] DeleteComment failed, GetTById() for tags returned null");
+            return NotFound("Comment not found, cannot show post");
+        }
+
+        // Checks if the user is the owner of the comment, if not, return to the post
+        if (commentFromDb.UserId != GetUserId() && !IsAdmin())
+        {
+            _logger.LogError("[PostController] DeleteComment failed, user is not the owner of the comment");
+            return StatusCode(403, "Could not delete the comment, you are not the owner of the comment");
+        }
+
+        // Checks if the model for comments is valid and returns error message, if not, return to the post
+        if (!ModelState.IsValid)
+            return StatusCode(422, "Could not delete the comment, please try again"); // 422 Unprocessable Entity
+
+        // Checks if the comment has replies, if not, delete the comment
+        if (commentFromDb.CommentReplies == null || commentFromDb.CommentReplies.Count == 0)
+        {
+            await _commentRepository.Delete(commentFromDb.CommentId);
+        }
+        else
+        {
+            // Updates the comment in the database
+            commentFromDb.DateLastEdited = DateTime.Now;
+            commentFromDb.Content = "";
+            await _commentRepository.Update(commentFromDb);
+        }
+
+
+        // Fetches the post to update the total comments
+        var post = await _postRepository.GetTById(commentFromDb.PostId);
+
+        if (post != null)
+        {
+            post.TotalComments--;
+            await _postRepository.Update(post);
+        }
+
+        return Ok("Comment deleted successfully");
     }
 }
