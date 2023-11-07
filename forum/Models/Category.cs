@@ -16,17 +16,17 @@ public class Category
     [Display(Name = "Category name")]
 
     // Getters and setters for category name
-    [JsonProperty("Name")]
+    [JsonProperty("name")]
     public string Name { get; set; } = string.Empty;
 
     // Getters and setters for category color
-    [JsonProperty("Color")]
+    [JsonProperty("color")]
     [Display(Name = "Color")]
     public string Color { get; set; } = string.Empty;
 
     // Getters and setters for category PicturePath
     
-    [JsonProperty("URL")]
+    [JsonProperty("url")]
     [Display(Name = "URL")]
     public string? PicturePath { get; set; } = string.Empty;
 

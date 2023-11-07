@@ -11,35 +11,35 @@ namespace forum.Models;
 public class Comment
 {
     // Getters and setters for id
-    [JsonProperty("CommentId")] public int CommentId { get; set; }
+    [JsonProperty("commentId")] public int CommentId { get; set; }
 
     // Getters and setters for data in comments
 
     [StringLength(512, MinimumLength = 2, ErrorMessage = "The content must be between 2 to 512 characters.")]
-    [JsonProperty("Content")]
+    [JsonProperty("content")]
     public string Content { get; set; } = string.Empty; // if set to empty, the comment is "deleted"
 
-    [JsonProperty("TotalLikes")] public int TotalLikes { get; set; }
-    [JsonProperty("DateCreated")] public DateTime DateCreated { get; set; }
-    [JsonProperty("DateLastEdited")] public DateTime? DateLastEdited { get; set; }
+    [JsonProperty("totalLikes")] public int TotalLikes { get; set; }
+    [JsonProperty("dateCreated")] public DateTime DateCreated { get; set; }
+    [JsonProperty("dateLastEdited")] public DateTime? DateLastEdited { get; set; }
 
     // navigation property
-    [JsonProperty("PostId")] public int PostId { get; set; }
+    [JsonProperty("postId")] public int PostId { get; set; }
 
     public virtual Post? Post { get; set; }
 
     public string? UserId { get; set; }
 
     // navigation property
-    [JsonProperty("User")] public virtual ApplicationUser? User { get; set; }
+    [JsonProperty("user")] public virtual ApplicationUser? User { get; set; }
 
-    [JsonProperty("IsLiked")] public bool IsLiked { get; set; } // only used for visualizing a comment like in the view
+    [JsonProperty("isLiked")] public bool IsLiked { get; set; } // only used for visualizing a comment like in the view
     public int? ParentCommentId { get; set; } // Self-referencing foreign key
 
     // navigation property
     public virtual Comment? ParentComment { get; set; } // Self-referencing navigation property
 
-    [JsonProperty("CommentReplies")] public virtual List<Comment>? CommentReplies { get; set; }
+    [JsonProperty("commentReplies")] public virtual List<Comment>? CommentReplies { get; set; }
 
     // navigation property
     public virtual List<ApplicationUser>? UserLikes { get; set; }

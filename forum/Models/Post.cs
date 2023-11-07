@@ -11,7 +11,7 @@ namespace forum.Models;
 public class Post
 {
     // Getters and setters for id
-    [JsonProperty("PostId")] public int PostId { get; set; }
+    [JsonProperty("postId")] public int PostId { get; set; }
 
     // Regex for error handling the post title
     [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ \-/:/?/./!/#]{2,64}",
@@ -19,7 +19,7 @@ public class Post
             "The title can only contain numbers, letters or characters -:?.!, and must be between 2 to 64 characters.")]
     [Display(Name = "Title")]
     // Getters and setters for post title
-    [JsonProperty("Title")]
+    [JsonProperty("title")]
     public string Title { get; set; } = string.Empty;
 
     // Regex for error handling the post content
@@ -27,38 +27,38 @@ public class Post
     [StringLength(4096, MinimumLength = 2, ErrorMessage = "The content must be between 2 to 4096 characters.")]
     [Display(Name = "Content")]
     // Getters and setters for post data
-    [JsonProperty("Content")]
+    [JsonProperty("content")]
     public string Content { get; set; } = string.Empty;
 
-    [JsonProperty("TotalLikes")] public int TotalLikes { get; set; }
-    [JsonProperty("DateCreated")] public DateTime DateCreated { get; set; }
+    [JsonProperty("totalLikes")] public int TotalLikes { get; set; }
+    [JsonProperty("dateCreated")] public DateTime DateCreated { get; set; }
 
-    [JsonProperty("DateLastEdited")] public DateTime? DateLastEdited { get; set; }
+    [JsonProperty("dateLastEdited")] public DateTime? DateLastEdited { get; set; }
 
     public string? UserId { get; set; }
 
     // navigation property
-    [JsonProperty("User")] public virtual ApplicationUser? User { get; set; }
+    [JsonProperty("user")] public virtual ApplicationUser? User { get; set; }
 
     [Required] public int CategoryId { get; set; }
 
     // navigation property
-    [JsonProperty("Category")] public virtual Category? Category { get; set; }
+    [JsonProperty("category")] public virtual Category? Category { get; set; }
 
     // navigation property
     [NotMapped] [Required] public virtual List<int>? TagsId { get; set; } // ony used for creating a post
 
     [NotMapped]
-    [JsonProperty("IsLiked")]
+    [JsonProperty("isLiked")]
     public bool IsLiked { get; set; } // only used for visualizing a post like in the view
 
     // navigation property
-    [JsonProperty("Tags")] public virtual List<Tag>? Tags { get; set; }
+    [JsonProperty("tags")] public virtual List<Tag>? Tags { get; set; }
 
     // navigation property
     public virtual List<Comment>? Comments { get; set; }
 
-    [JsonProperty("TotalComments")] public int TotalComments { get; set; }
+    [JsonProperty("totalComments")] public int TotalComments { get; set; }
 
     // navigation property
     public virtual List<ApplicationUser>? UserLikes { get; set; }
