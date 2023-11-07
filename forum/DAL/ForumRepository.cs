@@ -46,13 +46,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
         try
         {
             var comments = await _db.Set<Comment>().Where(comment => comment.PostId == id)
-                .Include(comment => comment.User!).ToListAsync();
-
-
-            foreach (var comment in comments)
-            {
-                comment.UserName = comment.User!.UserName;
-            }
+                .ToListAsync();
 
             return comments;
         }
@@ -116,11 +110,6 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
                 return null;
             }
 
-            // Set the username
-            foreach (var post in posts)
-            {
-                post.UserName = post.User!.UserName;
-            }
 
             // If user is logged in, add likes to posts
             if (userId != "") posts = await AddLikeToPosts(posts, userId);
@@ -149,9 +138,6 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
                 .Include(post => post.User)
                 .Where(post => post.PostId == id)
                 .FirstAsync();
-
-            // Set the Username
-            post.UserName = post.User!.UserName;
 
             // If there is a userId, get user data
             if (userId != "")
@@ -202,13 +188,6 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
                 _logger.LogInformation("[Forum Repository] GetAllPosts() found no posts");
                 return null;
             }
-
-            // Set the username 
-            foreach (var post in posts)
-            {
-                post.UserName = post.User!.UserName;
-            }
-
 
             // If user is logged in, add likes to posts
             if (userId != "") posts = await AddLikeToPosts(posts, userId);

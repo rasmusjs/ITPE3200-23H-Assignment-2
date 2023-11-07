@@ -4,18 +4,20 @@ using Newtonsoft.Json;
 
 namespace forum.Models;
 
+// https://stackoverflow.com/questions/51144399/json-net-attribute-to-ignore-all-properties
+[JsonObject(MemberSerialization.OptIn)] // Ignore all the base attributes
+
 // Model for the Post class
 public class Post
 {
     // Getters and setters for id
-    public int PostId { get; set; }
+    [JsonProperty("PostId")] public int PostId { get; set; }
 
     // Regex for error handling the post title
     [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ \-/:/?/./!/#]{2,64}",
         ErrorMessage =
             "The title can only contain numbers, letters or characters -:?.!, and must be between 2 to 64 characters.")]
     [Display(Name = "Title")]
-
     // Getters and setters for post title
     [JsonProperty("Title")]
     public string Title { get; set; } = string.Empty;
@@ -33,33 +35,31 @@ public class Post
 
     [JsonProperty("DateLastEdited")] public DateTime? DateLastEdited { get; set; }
 
-    [JsonIgnore] [JsonProperty("UserId")] public string? UserId { get; set; }
-
-    [NotMapped] [JsonProperty("UserName")] public string? UserName { get; set; }
+    public string? UserId { get; set; }
 
     // navigation property
-    [JsonIgnore] public virtual ApplicationUser? User { get; set; }
+    [JsonProperty("User")] public virtual ApplicationUser? User { get; set; }
 
-    [JsonProperty("CategoryId")]
-    [Required]
-    public int CategoryId { get; set; }
+    [Required] public int CategoryId { get; set; }
 
     // navigation property
     [JsonProperty("Category")] public virtual Category? Category { get; set; }
 
     // navigation property
-    [JsonIgnore] [NotMapped] [Required] public virtual List<int>? TagsId { get; set; } // ony used for creating a post
+    [NotMapped] [Required] public virtual List<int>? TagsId { get; set; } // ony used for creating a post
 
-    [JsonProperty("IsLiked")]
     [NotMapped]
+    [JsonProperty("IsLiked")]
     public bool IsLiked { get; set; } // only used for visualizing a post like in the view
 
     // navigation property
-    public virtual List<Tag>? Tags { get; set; }
+    [JsonProperty("Tags")] public virtual List<Tag>? Tags { get; set; }
 
     // navigation property
-    [JsonIgnore] public virtual List<Comment>? Comments { get; set; }
+    public virtual List<Comment>? Comments { get; set; }
+
+    [JsonProperty("TotalComments")] public int TotalComments { get; set; }
 
     // navigation property
-    [JsonIgnore] public virtual List<ApplicationUser>? UserLikes { get; set; }
+    public virtual List<ApplicationUser>? UserLikes { get; set; }
 }

@@ -11,7 +11,7 @@ public static class DbInit
         using var serviceScope = app.ApplicationServices.CreateScope();
         var context = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
 
-        //await context.Database.EnsureDeletedAsync(); // Deletes database if it exists
+        await context.Database.EnsureDeletedAsync(); // Deletes database if it exists
         await context.Database.EnsureCreatedAsync(); // Creates database if it doesn't exist
 
         // Sets categories
@@ -805,6 +805,22 @@ public static class DbInit
 
             await context.SaveChangesAsync();
             Console.WriteLine("Temp comments added");
+
+
+            // Get all posts
+            var posts = context.Posts.ToList();
+
+            // Update total comments for each post
+            foreach (var post in posts)
+            {
+                post.TotalComments = context.Comments.Count(c => c.PostId == post.PostId);
+                Console.WriteLine("Updated total comments for post: " + post.Title + " to " + post.TotalComments);
+
+                context.Posts.Update(post);
+            }
+
+            await context.SaveChangesAsync();
+            Console.WriteLine("Counted all temp comments and updated total comments for each post");
         }
     }
 }

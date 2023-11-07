@@ -238,7 +238,7 @@ public class PostController : Controller
         // Get all categories
         var comments = await _commentRepository.GetAllCommentsByPostId(id);
         // If tags is null return not found
-        if (comments == null) return NotFound("Tags not found");
+        if (comments == null) return NotFound("Comments not found");
         // Return
         return Ok(comments);
     }
@@ -635,6 +635,17 @@ public class PostController : Controller
 
         if (newComment == null) return GoToPost(comment.PostId); // Redirect to the post with the comment 
 
+
+        // Fetches the post to update the total comments
+        var post = await _postRepository.GetTById(comment.PostId);
+
+        if (post != null)
+        {
+            post.TotalComments++;
+            await _postRepository.Update(post);
+        }
+
+
         // Fetches the user
         var user = await _userManager.FindByIdAsync(comment.UserId);
 
@@ -834,6 +845,17 @@ public class PostController : Controller
             commentFromDb.Content = "";
             await _commentRepository.Update(commentFromDb);
         }
+
+
+        // Fetches the post to update the total comments
+        var post = await _postRepository.GetTById(commentFromDb.PostId);
+
+        if (post != null)
+        {
+            post.TotalComments--;
+            await _postRepository.Update(post);
+        }
+
 
         // Redirect to the post
         return GoToPost(commentFromDb.PostId);
