@@ -896,7 +896,7 @@ public class PostController : Controller
             user.LikedPosts.Remove(post); // Removes the post from the user's liked posts
             await _userManager.UpdateAsync(user); // Updates the user
             await _postRepository.Update(post); // Updates the post
-            return Ok("Post liked successfully");
+            return Ok("Post unliked successfully");
         }
 
         // Increments like on the post
@@ -1009,7 +1009,7 @@ public class PostController : Controller
             await _commentRepository.Update(comment); // Updates the comment
 
             // Refreshes the site
-            return Ok();
+            return Ok("Comment unliked successfully");
         }
 
         // Increments like on the comment
@@ -1025,7 +1025,7 @@ public class PostController : Controller
         // Updates the comment
         await _commentRepository.Update(comment);
 
-        return Ok();
+        return Ok("Liked comment successfully");
     }
 
     [HttpGet]
