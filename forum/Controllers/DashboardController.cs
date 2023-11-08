@@ -8,6 +8,8 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace forum.Controllers;
 
+[ApiController]
+[Route("api/[controller]")]
 public class DashBoardController : Controller
 {
     // Connect the controller to the different models
@@ -54,6 +56,47 @@ public class DashBoardController : Controller
         }
 
         return View(userActivity);
+    }
+
+
+    // Get request to fetch the Dashboard view
+    [HttpGet("UserActivity")]
+    [Authorize]
+    public async Task<IActionResult> NewDashboard()
+    {
+        // Initialize variable, and fetch all activity for the user
+        var userActivity = await _userRepository.GetUserActivity(GetUserId());
+
+        // If no posts or catch in ForumRepository, return NotFound and log error
+        if (userActivity == null)
+        {
+            _logger.LogError("[Dashboard controller] Dashboard() failed, error message: userActivity is null");
+            return NotFound("User activity not found");
+        }
+
+        // Create a list of all the post ids, liked post ids, saved post ids, comment ids and liked comment ids
+        List<int> posts = (userActivity.Posts ?? new List<Post>()).Select(post => post.PostId).ToList();
+        List<int> likedPosts = (userActivity.LikedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
+        //List<int> savedPosts = (userActivity.SavedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
+        List<int> comments = (userActivity.Comments ?? new List<Comment>()).Select(comment => comment.CommentId)
+            .ToList();
+        List<int> likedComments = (userActivity.LikedComments ?? new List<Comment>())
+            .Select(comment => comment.CommentId).ToList();
+
+        // Create a custom json object
+        var userActivityJson = new
+        {
+            userActivity.UserName,
+            userActivity.ProfilePicture,
+            userActivity.CreationDate,
+            Posts = posts,
+            LikedPosts = likedPosts,
+            //SavedPosts = savedPosts,
+            Comments = comments,
+            LikedComments = likedComments
+        };
+
+        return Ok(userActivityJson);
     }
 
     // Method for fetching the admin dashboard view

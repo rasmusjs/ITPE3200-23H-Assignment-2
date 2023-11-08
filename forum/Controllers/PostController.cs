@@ -915,6 +915,51 @@ public class PostController : Controller
         return Ok("Post liked successfully");
     }
 
+    /*
+    // Get request for adding saves to a post
+    [HttpGet("SavePost/{id:int}")]
+    [Authorize]
+    public async Task<IActionResult> SavePost(int id)
+    {
+        // Fetches post based on id
+        var post = await _postRepository.GetTById(id);
+
+        // Error handling if the post is not found
+        if (post == null)
+        {
+            _logger.LogError("[PostController] SavePost failed, failed while executing GetTById() returned null");
+            return NotFound("Post not found, cannot save post");
+        }
+
+        // Fetches the user
+        var user = await _userManager.FindByIdAsync(GetUserId());
+
+        // Error handling if the user is not found
+        if (user == null)
+        {
+            _logger.LogError(
+                "[PostController] SavePost failed, failed while executing _userManager.FindByIdAsync(GetUserId()) returned null");
+            return NotFound("User not found, cannot save post. Please log in again");
+        }
+
+        // Checks if the user has already saved the post
+        if (user.SavedPosts != null && user.SavedPosts.Any(t => t.PostId == id))
+        {
+            user.SavedPosts.Remove(post); // Removes the post from the user's saved posts
+            await _userManager.UpdateAsync(user); // Updates the user
+            return Ok("Post unsaved successfully");
+        }
+        
+        // If the user has saved posts, create a new list of posts, else add the post to the user's saved posts
+        user.SavedPosts ??= new List<Post>();
+        user.SavedPosts.Add(post);
+
+        // Updates the user attribute
+        await _userManager.UpdateAsync(user);
+
+        return Ok("Post saved successfully");
+    }
+*/
     // Get request for adding likes to a comment
     [HttpGet]
     [Authorize]

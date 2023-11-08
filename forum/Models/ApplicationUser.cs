@@ -19,10 +19,13 @@ public class ApplicationUser : IdentityUser
     public virtual List<Post>? Posts { get; set; }
 
     // navigation property
-    public virtual List<Comment>? Comments { get; set; }
+    public virtual List<Post>? LikedPosts { get; set; }
 
     // navigation property
-    public virtual List<Post>? LikedPosts { get; set; }
+    //public virtual List<Post>? SavedPosts { get; set; }
+
+    // navigation property
+    public virtual List<Comment>? Comments { get; set; }
 
     // navigation property
     public virtual List<Comment>? LikedComments { get; set; }

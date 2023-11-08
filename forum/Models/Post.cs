@@ -62,4 +62,7 @@ public class Post
 
     // navigation property
     public virtual List<ApplicationUser>? UserLikes { get; set; }
+
+    // navigation property
+    //public virtual List<ApplicationUser>? UserSaves { get; set; }
 }
