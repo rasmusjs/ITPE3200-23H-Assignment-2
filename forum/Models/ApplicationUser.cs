@@ -10,7 +10,7 @@ namespace forum.Models;
 public class ApplicationUser : IdentityUser
 {
     // Get the value from the base class
-    [JsonProperty("userName")] [NotMapped] public override string UserName => base.UserName;
+    [JsonProperty("username")] [NotMapped] public override string UserName => base.UserName;
 
     public DateTime CreationDate { get; set; } = DateTime.Now;
     [JsonProperty("profilePicture")] public byte[]? ProfilePicture { get; set; }
