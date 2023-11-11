@@ -1,0 +1,222 @@
+using System.Text;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.WebUtilities;
+
+namespace forum.Controllers;
+
+using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
+using forum.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+
+[ApiController]
+[Route("api/[controller]")]
+public class AccountController : Controller
+{
+    private readonly IEmailSender _emailSender;
+    private readonly IUserEmailStore<ApplicationUser> _emailStore;
+    private readonly ILogger<RegisterModel> _logger;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IUserStore<ApplicationUser> _userStore;
+
+
+    public AccountController(
+        UserManager<ApplicationUser> userManager,
+        IUserStore<ApplicationUser> userStore,
+        SignInManager<ApplicationUser> signInManager,
+        ILogger<RegisterModel> logger,
+        IEmailSender emailSender)
+    {
+        _userManager = userManager;
+        _userStore = userStore;
+        _emailStore = GetEmailStore();
+        _signInManager = signInManager;
+        _logger = logger;
+        _emailSender = emailSender;
+    }
+
+
+    [HttpGet("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        _logger.LogInformation("User logged out.");
+        return Ok("Logged out successfully");
+    }
+
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Regisrer(RegisterModel model)
+    {
+        // Custom validation for username, anonymous is reserved for deleted users
+        if (model.UserName.ToLower() == "anonymous")
+            ModelState.AddModelError(string.Empty, "Username is not allowed");
+
+
+        if (ModelState.IsValid)
+        {
+            var user = CreateUser();
+
+            model.UserName = model.UserName.ToLower(); // Convert username to lowercase
+
+
+            await _userStore.SetUserNameAsync(user, model.UserName, CancellationToken.None);
+            await _emailStore.SetEmailAsync(user, model.Email, CancellationToken.None);
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User created a new account with password.");
+
+                // Add role to the user
+                var resultRole = await _userManager.AddToRoleAsync(user, "User");
+                if (!resultRole.Succeeded) _logger.LogInformation("User could not be added to role.");
+/*
+                var userId = await _userManager.GetUserIdAsync(user);
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.Page(
+                    "/Account/ConfirmEmail",
+                    null,
+                    new { area = "Identity", userId, code, returnUrl },
+                    Request.Scheme);
+
+                await _emailSender.SendEmailAsync(model.Email, "Confirm your email",
+                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                    return RedirectToPage("RegisterConfirmation",
+                        new { email = model.Email, returnUrl });*/
+
+                await _signInManager.SignInAsync(user, false);
+                return Ok("Registered successfully");
+            }
+        }
+
+        return BadRequest("Invalid registration attempt");
+    }
+
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginModel model)
+    {
+        // The following codeblock is from https://stackoverflow.com/questions/75991569/how-to-login-with-either-username-or-email-in-an-asp-net-core-6-0 
+        if (model.Email.Contains('@')) // If the username contains an @ symbol, then it is an email
+        {
+            //Validate email format
+            var emailRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
+                             @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
+                             @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
+            var re = new Regex(emailRegex);
+            if (!re.IsMatch(model.Email))
+                ModelState.AddModelError("Email", "Email is not valid");
+            else
+                // If the email is valid, try to find the username associated with the email
+                model.Email = _userManager.FindByEmailAsync(model.Email).Result.UserName ??
+                              model.Email; // If the email is not found, then the username is the email
+        }
+        else // If the username does not contain an @ symbol, then it is a username
+        {
+            Console.WriteLine("User using username");
+
+            //validate Username format
+            var userNameRegex = @"^[a-zA-Z0-9]{3,20}$"; // Only letters and numbers, 3-20 characters
+            var re = new Regex(userNameRegex);
+            if (!re.IsMatch(model.Email)) ModelState.AddModelError("Email", "Username is not valid");
+        }
+
+        // End of codeblock from https://stackoverflow.com/questions/75991569/how-to-login-with-either-username-or-email-in-an-asp-net-core-6-0 
+
+        if (ModelState.IsValid)
+        {
+            // This doesn't count login failures towards account lockout
+            // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe,
+                false);
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User logged in.");
+                return Ok("Logged in successfully");
+            }
+
+            if (result.RequiresTwoFactor)
+                return StatusCode(500, "2FA not supported yet");
+            //return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, model.RememberMe });
+
+            if (result.IsLockedOut)
+            {
+                _logger.LogWarning("User account locked out.");
+                return RedirectToPage("./Lockout");
+            }
+
+            return BadRequest("Invalid login attempt");
+        }
+
+        return BadRequest("Invalid login attempt");
+    }
+
+
+    private ApplicationUser CreateUser()
+    {
+        try
+        {
+            return Activator.CreateInstance<ApplicationUser>();
+        }
+        catch
+        {
+            throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
+                                                $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                                                $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
+        }
+    }
+
+    private IUserEmailStore<ApplicationUser> GetEmailStore()
+    {
+        if (!_userManager.SupportsUserEmail)
+            throw new NotSupportedException("The default UI requires a user store with email support.");
+
+        return (IUserEmailStore<ApplicationUser>)_userStore;
+    }
+
+
+    public class RegisterModel
+    {
+        // Custom field
+        [Required]
+        [StringLength(20, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
+            MinimumLength = 3)]
+        [RegularExpression(@"^[a-zA-Z0-9]*$", ErrorMessage = "Only alphanumeric characters are allowed.")]
+        [Display(Name = "Username")]
+        public string UserName { get; set; }
+
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
+            MinimumLength = 8)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; }
+    }
+
+    public class LoginModel
+    {
+        [Required]
+        [Display(Name = "Username/Email")]
+        //[EmailAddress] // We want to allow users to login with their username or email
+        public string Email { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [Display(Name = "Remember me?")] public bool RememberMe { get; set; }
+    }
+}

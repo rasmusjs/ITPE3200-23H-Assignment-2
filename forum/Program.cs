@@ -67,25 +67,37 @@ builder.Logging.AddSerilog(logger);
 builder.Services.ConfigureApplicationCookie(options =>
 {
     // Cookie settings
+    options.Cookie.SameSite = SameSiteMode.Lax;
     options.Cookie.Name = "BracketBros.Session";
-    options.Cookie.HttpOnly = true;
+    //options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // 30 minutes
-    options.LoginPath = "/Identity/Account/Login";
-    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+    /*options.LoginPath = "/Identity/Account/Login";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";*/
     options.SlidingExpiration = true;
 });
 //From https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-7.0&tabs=visual-studio
 
 // Configure CORS to allow any origin
-builder.Services.AddCors(options =>
+/*builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "OpenCorsPolicy",
         policy =>
         {
             policy.AllowAnyOrigin() // Use with caution, allows requests from any source
+                .AllowCredentials()
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         });
+});*/
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOriginFromVue",
+        policy =>
+            policy.WithOrigins("http://localhost:3000")
+                .AllowCredentials()
+                .AllowAnyHeader()
+                .AllowAnyMethod());
 });
 
 var app = builder.Build();
@@ -100,7 +112,8 @@ else
 }
 
 // Use the Open CORS policy
-app.UseCors("OpenCorsPolicy");
+//app.UseCors("OpenCorsPolicy");
+app.UseCors("AllowOriginFromVue");
 
 app.UseStaticFiles(); // for adding middleware
 app.UseSession();
