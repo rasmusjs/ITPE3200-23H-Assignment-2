@@ -11,7 +11,7 @@ namespace forum.Models;
 public class Post
 {
     // Getters and setters for id
-    [JsonProperty("postId")] public int PostId { get; set; }
+    [JsonProperty("id")] public int PostId { get; set; }
 
     // Regex for error handling the post title
     [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ \-/:/?/./!/#]{2,64}",
