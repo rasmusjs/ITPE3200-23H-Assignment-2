@@ -86,14 +86,14 @@ public class DashBoardController : Controller
         // Create a custom json object
         var userActivityJson = new
         {
-            userActivity.UserName,
-            userActivity.ProfilePicture,
-            userActivity.CreationDate,
-            Posts = posts,
-            LikedPosts = likedPosts,
-            //SavedPosts = savedPosts,
-            Comments = comments,
-            LikedComments = likedComments
+            username = userActivity.UserName,
+            profilePicture = userActivity.ProfilePicture,
+            creationdate = userActivity.CreationDate,
+            posts,
+            likedPosts,
+            // savedposts = savedPosts, // uncomment if needed
+            comments,
+            likedComments
         };
 
         return Ok(userActivityJson);
