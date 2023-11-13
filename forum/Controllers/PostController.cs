@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace forum.Controllers;
 
@@ -24,6 +25,7 @@ public class PostController : Controller
     private readonly IForumRepository<Category> _categoryRepository;
     private readonly IForumRepository<Comment> _commentRepository;
     private readonly ForumDbContext _forumDbContext;
+    private readonly IMemoryCache _memoryCache;
 
 
     // Constructor for Dependency Injection to the Data Access Layer from the different repositories
@@ -31,7 +33,7 @@ public class PostController : Controller
         IForumRepository<Tag> tagsRepository, IForumRepository<Post> postRepository,
         ForumDbContext forumDbContext,
         IForumRepository<Comment> commentRepository,
-        UserManager<ApplicationUser> userManager,
+        UserManager<ApplicationUser> userManager, IMemoryCache memoryCache,
         ILogger<PostController> logger)
     {
         _categoryRepository = categoryRepository;
@@ -40,6 +42,7 @@ public class PostController : Controller
         _forumDbContext = forumDbContext;
         _commentRepository = commentRepository;
         _userManager = userManager;
+        _memoryCache = memoryCache;
         _logger = logger;
     }
 
@@ -147,8 +150,22 @@ public class PostController : Controller
     [HttpGet("posts/{sortby=newest}")] // Set a default string
     public async Task<IActionResult> GetAllPosts(string sortby = "")
     {
-        // Get all posts
-        var posts = await _postRepository.GetAllPosts(GetUserId());
+        // Source for cashing is taken from https://learn.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-6.0
+
+        // Define a cache key
+        var cacheKey = "AllPosts";
+
+
+        var posts = null as IEnumerable<Post>;
+        // Try to get the data from the cache
+        if (_memoryCache.TryGetValue(cacheKey, out IEnumerable<Post>? cachedPosts))
+        {
+            Console.WriteLine("Using cached data");
+            posts = cachedPosts; // If the data is in the cache, use it
+        }
+
+        // If the data is not in the cache, fetch it from the database
+        if (posts == null) posts = await _postRepository.GetAllPosts(GetUserId());
 
         // If no posts, return null
         if (posts == null)
@@ -156,6 +173,12 @@ public class PostController : Controller
             _logger.LogError("[PostController] GetAllPosts failed while executing GetAllPosts()");
             return Ok(null);
         }
+
+        // Convert the IEnumerable to an array
+        posts = posts.ToArray();
+
+        // Add the data to the cache with a specified cache duration
+        _memoryCache.Set(cacheKey, posts, TimeSpan.FromMinutes(15));
 
         posts = sortby switch
         {
@@ -170,7 +193,6 @@ public class PostController : Controller
 
         return Ok(posts);
     }
-
 
     // Method for fetching post by id
     public async Task<IActionResult> Post(int id)
@@ -347,6 +369,9 @@ public class PostController : Controller
         user.Posts.Add(newPost);
         // Updates the user attribute
         await _userManager.UpdateAsync(user);
+
+        // Remove the cached data
+        _memoryCache.Remove("AllPosts");
 
         // Redirects the user to the newly created post
         return Ok(newPost.PostId);
@@ -554,6 +579,9 @@ public class PostController : Controller
             return StatusCode(500, "Internal server error while updating post please try again");
         }
 
+        // Remove the cached data
+        _memoryCache.Remove("AllPosts");
+
         // Sends the user back to the updated post
         return Ok("Post updated successfully");
     }
@@ -638,6 +666,9 @@ public class PostController : Controller
             _logger.LogError("[PostController] DeleteConfirmed failed, failed while executing Delete()");
             return StatusCode(500, "Internal server error while deleting post please try again");
         }
+
+        // Remove the cached data
+        _memoryCache.Remove("AllPosts");
 
         return Ok("Post deleted successfully");
     }
@@ -949,7 +980,7 @@ public class PostController : Controller
             await _userManager.UpdateAsync(user); // Updates the user
             return Ok("Post unsaved successfully");
         }
-        
+
         // If the user has saved posts, create a new list of posts, else add the post to the user's saved posts
         user.SavedPosts ??= new List<Post>();
         user.SavedPosts.Add(post);
