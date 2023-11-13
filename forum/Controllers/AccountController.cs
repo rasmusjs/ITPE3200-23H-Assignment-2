@@ -3,11 +3,12 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using forum.Models;
+
 namespace forum.Controllers;
 
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
-using forum.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -134,7 +135,7 @@ public class AccountController : Controller
                 return RedirectToPage("./Lockout");
             }
 
-            return BadRequest("Invalid login attempt");
+            return StatusCode(401, "Invalid login attempt");
         }
 
         return BadRequest("Invalid login attempt");
@@ -171,25 +172,26 @@ public class AccountController : Controller
         [StringLength(20, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
             MinimumLength = 3)]
         [RegularExpression(@"^[a-zA-Z0-9]*$", ErrorMessage = "Only alphanumeric characters are allowed.")]
-        public string UserName { get; set; }
+        public string UserName { get; set; } = string.Empty;
 
-        [Required] [EmailAddress] public string Email { get; }
+        [Required] [EmailAddress] public string Email { get; set; } = string.Empty;
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
             MinimumLength = 8)]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
     }
 
     public class LoginModel
     {
-        [Required] public string? Identifier { get; set; } // Can be either username or email
+        // Can be either username or email 
+        [Required] public string Identifier { get; set; }  = string.Empty;
 
         [Required]
         [DataType(DataType.Password)]
-        public string? Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
-        public bool RememberMe { get; set; }
+        public bool RememberMe { get; set; } = false;
     }
 }
