@@ -60,9 +60,9 @@ public class DashBoardController : Controller
 
 
     // Get request to fetch the Dashboard view
-    [HttpGet("UserActivity")]
+    [HttpGet("UserActivity/{extra=minimal}")] // extra=minimal returns only the username and profile picture
     [Authorize]
-    public async Task<IActionResult> NewDashboard()
+    public async Task<IActionResult> NewDashboard(string extra)
     {
         // Initialize variable, and fetch all activity for the user
         var userActivity = await _userRepository.GetUserActivity(GetUserId());
@@ -74,29 +74,47 @@ public class DashBoardController : Controller
             return NotFound("User activity not found");
         }
 
-        // Create a list of all the post ids, liked post ids, saved post ids, comment ids and liked comment ids
-        List<int> posts = (userActivity.Posts ?? new List<Post>()).Select(post => post.PostId).ToList();
-        List<int> likedPosts = (userActivity.LikedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
-        //List<int> savedPosts = (userActivity.SavedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
-        List<int> comments = (userActivity.Comments ?? new List<Comment>()).Select(comment => comment.CommentId)
-            .ToList();
-        List<int> likedComments = (userActivity.LikedComments ?? new List<Comment>())
-            .Select(comment => comment.CommentId).ToList();
-
-        // Create a custom json object
-        var userActivityJson = new
+        if (extra == "full") // return all data with objects
         {
-            username = userActivity.UserName,
-            profilePicture = userActivity.ProfilePicture,
-            creationdate = userActivity.CreationDate,
-            posts,
-            likedPosts,
-            // savedposts = savedPosts, // uncomment if needed
-            comments,
-            likedComments
-        };
+            var userActivityJson = new
+            {
+                username = userActivity.UserName,
+                profilePicture = userActivity.ProfilePicture,
+                creationdate = userActivity.CreationDate,
+                posts = userActivity.Posts,
+                likedPosts = userActivity.LikedPosts,
+                // savedposts = savedPosts, // uncomment if needed
+                comments = userActivity.Comments,
+                likedComments = userActivity.LikedComments
+            };
 
-        return Ok(userActivityJson);
+            return Ok(userActivityJson);
+        }
+        else // Return the data without objects only the ids
+        {
+            // Create a list of all the post ids, liked post ids, saved post ids, comment ids and liked comment ids
+            List<int> posts = (userActivity.Posts ?? new List<Post>()).Select(post => post.PostId).ToList();
+            List<int> likedPosts = (userActivity.LikedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
+            //List<int> savedPosts = (userActivity.SavedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
+            List<int> comments = (userActivity.Comments ?? new List<Comment>()).Select(comment => comment.CommentId)
+                .ToList();
+            List<int> likedComments = (userActivity.LikedComments ?? new List<Comment>())
+                .Select(comment => comment.CommentId).ToList();
+
+            // Create a custom json object
+            var userActivityJson = new
+            {
+                username = userActivity.UserName,
+                profilePicture = userActivity.ProfilePicture,
+                creationdate = userActivity.CreationDate,
+                posts,
+                likedPosts,
+                // savedposts = savedPosts, // uncomment if needed
+                comments,
+                likedComments
+            };
+            return Ok(userActivityJson);
+        }
     }
 
     // Method for fetching the admin dashboard view
