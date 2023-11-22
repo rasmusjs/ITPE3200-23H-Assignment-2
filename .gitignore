@@ -457,3 +457,13 @@ ForumDatabase.db-shm
 ForumDatabase.db-wal
 .idea
 Logs/*
+
+# Unit testing
+ForumTest/bin
+ForumTest/obj
+ForumTest/obj/*
+ForumTest/*.user
+ForumTest/*.userprefs
+ForumTest/*.vs
+ForumTest/TestResults
+ForumTest/.idea
