@@ -4,6 +4,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using forum.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace forum.Controllers;
 
@@ -141,6 +142,78 @@ public class AccountController : Controller
         return BadRequest("Invalid login attempt");
     }
 
+    [HttpPost("changePassword")]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
+    {
+        if (!ModelState.IsValid) return StatusCode(422, "Invalid password");
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+
+        var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.oldPassword, model.newPassword);
+        if (!changePasswordResult.Succeeded)
+        {
+            return StatusCode(422, "Invalid password");
+        }
+
+        await _signInManager.RefreshSignInAsync(user);
+        _logger.LogInformation("User changed their password successfully.");
+
+        return Ok("Password changed successfully");
+    }
+
+    [HttpPost("changeProfilePicture")]
+    [Authorize]
+    public async Task<IActionResult> ChangeProfilePicture(ChangeProfilePictureModel model)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+
+
+        if (Request.Form.Files.Count > 0) // If the user has selected a file
+        {
+            // Set the max size of the files
+            long maxSize = 1 * 1024 * 1024; // 1Mb
+
+            // Get the file from the form
+            var file = Request.Form.Files.FirstOrDefault();
+
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("File not selected");
+            }
+
+            // If the file is greater than 1Mb
+            if (file.Length > maxSize)
+            {
+                return BadRequest("File size must be less than 1Mb");
+            }
+
+            // Store the file temporarily before saving it to the database
+            using var dataStream = new MemoryStream();
+
+            // Copy the file to the data stream
+            await file.CopyToAsync(dataStream);
+
+            // Update the user's profile picture
+            user.ProfilePicture = dataStream.ToArray();
+        }
+        // Based on https://codewithmukesh.com/blog/user-management-in-aspnet-core-mvc/
+
+        // If RemoveProfilePicture is true, then remove the profile picture
+        if (model.RemoveProfilePicture)
+        {
+            user.ProfilePicture = null;
+        }
+
+        // Update the user
+        await _userManager.UpdateAsync(user);
+        await _signInManager.RefreshSignInAsync(user);
+
+        return Ok("Your profile has been updated");
+    }
+
 
     private ApplicationUser CreateUser()
     {
@@ -186,12 +259,32 @@ public class AccountController : Controller
     public class LoginModel
     {
         // Can be either username or email 
-        [Required] public string Identifier { get; set; }  = string.Empty;
+        [Required] public string Identifier { get; set; } = string.Empty;
 
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; } = string.Empty;
 
         public bool RememberMe { get; set; } = false;
+    }
+
+    public class
+        ChangePasswordModel // This is a copy of the ChangePasswordModel from Areas/Identity/Pages/Account/Manage/ChangePassword.cshtml.cs
+    {
+        [Required]
+        [DataType(DataType.Password)]
+        public string oldPassword { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string newPassword { get; set; }
+    }
+
+    public class ChangeProfilePictureModel
+    {
+        [Display(Name = "Profile Picture")] public byte[] profilePicture { get; set; }
+
+        [Display(Name = "Remove Profile Picture")]
+        public bool RemoveProfilePicture { get; set; }
     }
 }
