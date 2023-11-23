@@ -27,7 +27,6 @@ public class PostController : Controller
     private readonly ForumDbContext _forumDbContext;
     private readonly IMemoryCache _memoryCache;
 
-
     // Constructor for Dependency Injection to the Data Access Layer from the different repositories
     public PostController(IForumRepository<Category> categoryRepository,
         IForumRepository<Tag> tagsRepository, IForumRepository<Post> postRepository,
@@ -167,11 +166,11 @@ public class PostController : Controller
         // If the data is not in the cache, fetch it from the database
         if (posts == null) posts = await _postRepository.GetAllPosts(GetUserId());
 
-        // If no posts, return null
-        if (posts == null)
+        // If no posts, return NotFound
+        if (posts == null || !posts.Any())
         {
             _logger.LogError("[PostController] GetAllPosts failed while executing GetAllPosts()");
-            return Ok(null);
+            return NotFound("No posts found");;
         }
 
         // Convert the IEnumerable to an array
