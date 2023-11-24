@@ -234,7 +234,7 @@ public class PostController : Controller
         // Get all tags
         var tags = await _tags.GetAll();
         // If tags is null return not found
-        if (tags == null) return NotFound("Tags not found");
+        if (tags == null || !tags.Any()) return NotFound("Tags not found");
         // Return
         return Ok(tags);
     }
