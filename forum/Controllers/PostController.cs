@@ -247,7 +247,7 @@ public class PostController : Controller
         // Get all categories
         var categories = await _categoryRepository.GetAll();
         // If tags is null return not found
-        if (categories == null) return NotFound("Categories not found");
+        if (categories == null || !categories.Any()) return NotFound("Categories not found");
         // Return
         return Ok(categories);
     }
