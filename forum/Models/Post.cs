@@ -40,13 +40,18 @@ public class Post
     // navigation property
     [JsonProperty("user")] public virtual ApplicationUser? User { get; set; }
 
-    [Required] public int CategoryId { get; set; }
+    [JsonProperty("categoryId")]
+    [Required]
+    public int CategoryId { get; set; }
 
     // navigation property
     [JsonProperty("category")] public virtual Category? Category { get; set; }
 
     // navigation property
-    [NotMapped] [Required] public virtual List<int>? TagsId { get; set; } // ony used for creating a post
+    [JsonProperty("tagsId")]
+    [Required]
+    [NotMapped]
+    public virtual List<int>? TagsId { get; set; } // ony used for creating a post
 
     [NotMapped]
     [JsonProperty("isLiked")]

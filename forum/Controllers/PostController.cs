@@ -170,7 +170,8 @@ public class PostController : Controller
         if (posts == null || !posts.Any())
         {
             _logger.LogError("[PostController] GetAllPosts failed while executing GetAllPosts()");
-            return NotFound("No posts found");;
+            return NotFound("No posts found");
+            ;
         }
 
         // Convert the IEnumerable to an array
@@ -336,7 +337,8 @@ public class PostController : Controller
         // Set initial values for the post
         post.DateCreated = DateTime.Now;
         post.DateLastEdited = DateTime.Now;
-        post.UserId = GetUserId();
+        post.UserId = GetUserId(); // Assigning user to the post
+        post.Category = await _categoryRepository.GetTById(post.CategoryId); // Assigning category to the post
 
         // Assigning tags to the post
         var allTags = await _tags.GetAll();
