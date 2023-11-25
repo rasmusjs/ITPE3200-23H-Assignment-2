@@ -33,7 +33,7 @@ public class DashBoardController : Controller
 
     // Get request to fetch user identity
     [HttpGet]
-    //[Authorize] TODO: Uncomment when authentication is implemented !!!
+    [Authorize]
     public string GetUserId()
     {
         //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
@@ -61,22 +61,11 @@ public class DashBoardController : Controller
 
     // Get request to fetch the Dashboard view
     [HttpGet("UserActivity/{extra=minimal}")] // extra=minimal returns only the username and profile picture
-    //[Authorize] TODO: Uncomment when authentication is implemented !!!
+    [Authorize]
     public async Task<IActionResult> NewDashboard(string extra)
     {
-        var userId = GetUserId();
-        
-        if (userId == "")
-        {
-            _logger.LogError("[Dashboard controller] NewDashboard() failed, error message: username is null");
-            return NotFound("Username not found");
-        }
-        
-        
-        
-        
         // Initialize variable, and fetch all activity for the user
-        var userActivity = await _userRepository.GetUserActivity(userId);
+        var userActivity = await _userRepository.GetUserActivity(GetUserId());
 
         // If no posts or catch in ForumRepository, return NotFound and log error
         if (userActivity == null)
