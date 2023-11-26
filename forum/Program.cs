@@ -15,12 +15,15 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     {
         // Password settings
-        options.Password.RequireDigit = true;
+        /*options.Password.RequireDigit = true;
         options.Password.RequiredLength = 8;
         options.Password.RequireNonAlphanumeric = true;
         options.Password.RequireUppercase = true;
         options.Password.RequireLowercase = true;
-        options.Password.RequiredUniqueChars = 6;
+        options.Password.RequiredUniqueChars = 6;*/
+        
+        // Using regex instead of the above
+        // Source for regex https://stackoverflow.com/questions/8699033/password-dataannotation-in-asp-net-mvc-3
 
         // Lockout settings
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(60);

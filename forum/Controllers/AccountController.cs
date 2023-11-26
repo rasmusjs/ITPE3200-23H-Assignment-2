@@ -230,10 +230,13 @@ public class AccountController : Controller
 
         [Required] [EmailAddress] public string Email { get; set; } = string.Empty;
 
+        //Source for regex https://stackoverflow.com/questions/8699033/password-dataannotation-in-asp-net-mvc-3
+
+        
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
             MinimumLength = 8)]
-        [DataType(DataType.Password)]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}")] 
         public string Password { get; set; } = string.Empty;
     }
 
@@ -252,12 +255,14 @@ public class AccountController : Controller
     public class
         ChangePasswordModel // This is a copy of the ChangePasswordModel from Areas/Identity/Pages/Account/Manage/ChangePassword.cshtml.cs
     {
+        //Source for regex https://stackoverflow.com/questions/8699033/password-dataannotation-in-asp-net-mvc-3
+
         [Required]
-        [DataType(DataType.Password)]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}")] 
         public string oldPassword { get; set; }
 
         [Required]
-        [DataType(DataType.Password)]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}")] 
         public string newPassword { get; set; }
     }
 
