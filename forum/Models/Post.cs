@@ -14,9 +14,9 @@ public class Post
     [JsonProperty("id")] public int PostId { get; set; }
 
     // Regex for error handling the post title
-    [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ \-/:/?/./!/#]{2,64}",
+    [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ \-/':?.!#]{2,64}",
         ErrorMessage =
-            "The title can only contain numbers, letters or characters -:?.!, and must be between 2 to 64 characters.")]
+            "The title can only contain numbers, letters or characters '-:?.!, and must be between 2 to 64 characters.")]
     [Display(Name = "Title")]
     // Getters and setters for post title
     [JsonProperty("title")]
