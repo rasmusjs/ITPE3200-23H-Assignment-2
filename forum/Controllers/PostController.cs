@@ -524,7 +524,7 @@ public class PostController : Controller
     }
 
     // Post request for sending the post update
-    [HttpPost("UpdatePost")]
+    [HttpPost("SavePost")]
     [Authorize]
     public async Task<IActionResult> NewUpdate(Post post)
     {
@@ -584,7 +584,7 @@ public class PostController : Controller
         _memoryCache.Remove("AllPosts");
 
         // Sends the user back to the updated post
-        return Ok("Post updated successfully");
+        return Ok(post.PostId);
     }
 
 
@@ -1086,7 +1086,7 @@ public class PostController : Controller
             await _commentRepository.Update(comment); // Updates the comment
 
             // Refreshes the site
-            return Ok("Comment unliked successfully");
+            return Ok("Unliked comment successfully");
         }
 
         // Increments like on the comment
