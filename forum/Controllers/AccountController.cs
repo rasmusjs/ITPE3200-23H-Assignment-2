@@ -153,13 +153,29 @@ public class AccountController : Controller
         return Ok("Password changed successfully");
     }
 
-    [HttpPost("changeProfilePicture")]
+    [HttpGet("removeProfilePicture")]
+    public async Task<IActionResult> RemoveProfilePicture()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+       
+        // Set the profile picture to be null
+        user.ProfilePicture = null;
+        // Update the user
+        await _userManager.UpdateAsync(user);
+        await _signInManager.RefreshSignInAsync(user);
+
+        return Ok("Removed profile picture");
+    }
+    
+    [HttpPost("uploadProfilePicture")]
     [Authorize]
-    public async Task<IActionResult> ChangeProfilePicture(ChangeProfilePictureModel model)
+    public async Task<IActionResult> UploadProfilePicture()
     {
         var user = await _userManager.GetUserAsync(User);
         if (user == null) return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
 
+        var form = await Request.ReadFormAsync();
 
         if (Request.Form.Files.Count > 0) // If the user has selected a file
         {
@@ -167,7 +183,7 @@ public class AccountController : Controller
             long maxSize = 1 * 1024 * 1024; // 1Mb
 
             // Get the file from the form
-            var file = Request.Form.Files.FirstOrDefault();
+            var file = form.Files.FirstOrDefault();
 
             if (file == null || file.Length == 0) return BadRequest("File not selected");
 
@@ -183,11 +199,9 @@ public class AccountController : Controller
             // Update the user's profile picture
             user.ProfilePicture = dataStream.ToArray();
         }
+        
         // Based on https://codewithmukesh.com/blog/user-management-in-aspnet-core-mvc/
-
-        // If RemoveProfilePicture is true, then remove the profile picture
-        if (model.RemoveProfilePicture) user.ProfilePicture = null;
-
+        
         // Update the user
         await _userManager.UpdateAsync(user);
         await _signInManager.RefreshSignInAsync(user);
@@ -232,11 +246,11 @@ public class AccountController : Controller
 
         //Source for regex https://stackoverflow.com/questions/8699033/password-dataannotation-in-asp-net-mvc-3
 
-        
+
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
             MinimumLength = 8)]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}")] 
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}")]
         public string Password { get; set; } = string.Empty;
     }
 
@@ -258,19 +272,18 @@ public class AccountController : Controller
         //Source for regex https://stackoverflow.com/questions/8699033/password-dataannotation-in-asp-net-mvc-3
 
         [Required]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}")] 
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}")]
         public string oldPassword { get; set; }
 
         [Required]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}")] 
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}")]
         public string newPassword { get; set; }
     }
 
     public class ChangeProfilePictureModel
     {
-        [Display(Name = "Profile Picture")] public byte[] profilePicture { get; set; }
+        public byte[] profilePicture { get; set; }
 
-        [Display(Name = "Remove Profile Picture")]
         public bool RemoveProfilePicture { get; set; }
     }
 }
