@@ -83,9 +83,10 @@ public class DashBoardController : Controller
                 creationdate = userActivity.CreationDate,
                 posts = userActivity.Posts,
                 likedPosts = userActivity.LikedPosts,
-                // savedposts = savedPosts, // uncomment if needed
+                savedPosts = userActivity.SavedPosts,
                 comments = userActivity.Comments,
-                likedComments = userActivity.LikedComments
+                likedComments = userActivity.LikedComments,
+                savedComments = userActivity.SavedComments
             };
 
             return Ok(userActivityJson);
@@ -95,11 +96,13 @@ public class DashBoardController : Controller
             // Create a list of all the post ids, liked post ids, saved post ids, comment ids and liked comment ids
             var posts = (userActivity.Posts ?? new List<Post>()).Select(post => post.PostId).ToList();
             var likedPosts = (userActivity.LikedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
-            //List<int> savedPosts = (userActivity.SavedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
+            var savedPosts = (userActivity.SavedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
             var comments = (userActivity.Comments ?? new List<Comment>()).Select(comment => comment.CommentId)
                 .ToList();
             var likedComments = (userActivity.LikedComments ?? new List<Comment>())
                 .Select(comment => comment.CommentId).ToList();
+            var savedComments = (userActivity.SavedComments ?? new List<Comment>()).Select(comment => comment.CommentId)
+                .ToList();
 
             // Create a custom json object
             var userActivityJson = new
@@ -109,9 +112,10 @@ public class DashBoardController : Controller
                 creationdate = userActivity.CreationDate,
                 posts,
                 likedPosts,
-                // savedposts = savedPosts, // uncomment if needed
+                savedPosts,
                 comments,
-                likedComments
+                likedComments,
+                savedComments
             };
             return Ok(userActivityJson);
         }
