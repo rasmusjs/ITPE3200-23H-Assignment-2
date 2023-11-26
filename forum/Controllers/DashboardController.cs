@@ -93,12 +93,12 @@ public class DashBoardController : Controller
         else // Return the data without objects only the ids
         {
             // Create a list of all the post ids, liked post ids, saved post ids, comment ids and liked comment ids
-            List<int> posts = (userActivity.Posts ?? new List<Post>()).Select(post => post.PostId).ToList();
-            List<int> likedPosts = (userActivity.LikedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
+            var posts = (userActivity.Posts ?? new List<Post>()).Select(post => post.PostId).ToList();
+            var likedPosts = (userActivity.LikedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
             //List<int> savedPosts = (userActivity.SavedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
-            List<int> comments = (userActivity.Comments ?? new List<Comment>()).Select(comment => comment.CommentId)
+            var comments = (userActivity.Comments ?? new List<Comment>()).Select(comment => comment.CommentId)
                 .ToList();
-            List<int> likedComments = (userActivity.LikedComments ?? new List<Comment>())
+            var likedComments = (userActivity.LikedComments ?? new List<Comment>())
                 .Select(comment => comment.CommentId).ToList();
 
             // Create a custom json object
@@ -122,8 +122,8 @@ public class DashBoardController : Controller
     public async Task<IActionResult> AdminDashboard()
     {
         // Initialize categories and tags and fetch the categories and tags data
-        IEnumerable<Category>? categories = await _categoryRepository.GetAll();
-        IEnumerable<Tag>? tags = await _tagsRepositoryRepository.GetAll();
+        var categories = await _categoryRepository.GetAll();
+        var tags = await _tagsRepositoryRepository.GetAll();
 
         // Throws error and log it if there are no tags or categories to show the user or a catch in ForumRepository
         if (categories == null || tags == null)

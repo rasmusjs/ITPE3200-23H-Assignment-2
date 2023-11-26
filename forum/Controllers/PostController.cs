@@ -16,16 +16,16 @@ namespace forum.Controllers;
 [Route("api/[controller]")]
 public class PostController : Controller
 {
+    private readonly IForumRepository<Category> _categoryRepository;
+    private readonly IForumRepository<Comment> _commentRepository;
+    private readonly ForumDbContext _forumDbContext;
     private readonly ILogger<PostController> _logger;
+    private readonly IMemoryCache _memoryCache;
 
     // Connect the controller to the different models
     private readonly IForumRepository<Post> _postRepository;
     private readonly IForumRepository<Tag> _tags;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IForumRepository<Category> _categoryRepository;
-    private readonly IForumRepository<Comment> _commentRepository;
-    private readonly ForumDbContext _forumDbContext;
-    private readonly IMemoryCache _memoryCache;
 
     // Constructor for Dependency Injection to the Data Access Layer from the different repositories
     public PostController(IForumRepository<Category> categoryRepository,
@@ -524,7 +524,7 @@ public class PostController : Controller
     }
 
     // Post request for sending the post update
-    [HttpPost("SavePost")]
+    [HttpPost("UpdatePost")]
     [Authorize]
     public async Task<IActionResult> NewUpdate(Post post)
     {
@@ -947,7 +947,6 @@ public class PostController : Controller
         return Ok("Post liked successfully");
     }
 
-    /*
     // Get request for adding saves to a post
     [HttpGet("SavePost/{id:int}")]
     [Authorize]
@@ -991,7 +990,7 @@ public class PostController : Controller
 
         return Ok("Post saved successfully");
     }
-*/
+   
     // Get request for adding likes to a comment
     [HttpGet]
     [Authorize]
@@ -1103,6 +1102,56 @@ public class PostController : Controller
         await _commentRepository.Update(comment);
 
         return Ok("Liked comment successfully");
+    }
+    
+     // Get request for adding likes to a comment
+    [HttpGet("SaveComment/{id:int}")]
+    [Authorize]
+    public async Task<IActionResult> SaveComment(int id)
+    {
+        // Fetches comment based on id
+        var comment = await _commentRepository.GetTById(id);
+
+        // Error handling if the comment is not found
+        if (comment == null)
+        {
+            _logger.LogError("[PostController] SaveComment failed, failed while executing GetTById() returned null");
+            return NotFound("Comment not found, cannot save comment");
+        }
+
+        // Fetches the user
+        var user = await _userManager.FindByIdAsync(GetUserId());
+
+        // Error handling if the user is not found
+        if (user == null)
+        {
+            _logger.LogError(
+                "[PostController] SaveComment failed, failed while executing _userManager.FindByIdAsync(GetUserId()) returned null");
+            return NotFound("User not found, cannot save comment. Please log in again");
+        }
+
+        // Checks if the user has already liked the comment
+        if (user.SavedComments != null && user.SavedComments.Any(t => t.CommentId == id))
+        {
+            user.SavedComments.Remove(comment); // Removes the comment from the user's liked comments
+            await _userManager.UpdateAsync(user); // Updates the user
+            await _commentRepository.Update(comment); // Updates the comment
+
+            // Refreshes the site
+            return Ok("Unsaved comment successfully");
+        }
+
+        // Adds the comment to the user's liked comments
+        user.SavedComments ??= new List<Comment>();
+        user.SavedComments.Add(comment);
+
+        // Updates the user attribute
+        await _userManager.UpdateAsync(user);
+
+        // Updates the comment
+        await _commentRepository.Update(comment);
+
+        return Ok("Saved comment successfully");
     }
 
     [HttpGet]

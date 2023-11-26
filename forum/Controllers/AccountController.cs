@@ -3,15 +3,14 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using forum.Models;
-using Microsoft.AspNetCore.Authorization;
-
-namespace forum.Controllers;
-
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
+using forum.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
+namespace forum.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -52,10 +51,7 @@ public class AccountController : Controller
     public async Task<IActionResult> Register(RegisterModel model)
     {
         // Custom validation for username, anonymous is reserved for deleted users
-        if (model.UserName.ToLower() == "anonymous")
-        {
-            return StatusCode(422, "Username is not allowed");
-        }
+        if (model.UserName.ToLower() == "anonymous") return StatusCode(422, "Username is not allowed");
 
         if (ModelState.IsValid)
         {
@@ -106,10 +102,7 @@ public class AccountController : Controller
             //validate Username format
             var userNameRegex = @"^[a-zA-Z0-9]{3,20}$"; // Only letters and numbers, 3-20 characters
             var re = new Regex(userNameRegex);
-            if (!re.IsMatch(model.Identifier))
-            {
-                return StatusCode(422, "Username is not valid");
-            }
+            if (!re.IsMatch(model.Identifier)) return StatusCode(422, "Username is not valid");
         }
 
         // End of codeblock from https://stackoverflow.com/questions/75991569/how-to-login-with-either-username-or-email-in-an-asp-net-core-6-0 
@@ -152,10 +145,7 @@ public class AccountController : Controller
         if (user == null) return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
 
         var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.oldPassword, model.newPassword);
-        if (!changePasswordResult.Succeeded)
-        {
-            return StatusCode(422, "Invalid password");
-        }
+        if (!changePasswordResult.Succeeded) return StatusCode(422, "Invalid password");
 
         await _signInManager.RefreshSignInAsync(user);
         _logger.LogInformation("User changed their password successfully.");
@@ -179,16 +169,10 @@ public class AccountController : Controller
             // Get the file from the form
             var file = Request.Form.Files.FirstOrDefault();
 
-            if (file == null || file.Length == 0)
-            {
-                return BadRequest("File not selected");
-            }
+            if (file == null || file.Length == 0) return BadRequest("File not selected");
 
             // If the file is greater than 1Mb
-            if (file.Length > maxSize)
-            {
-                return BadRequest("File size must be less than 1Mb");
-            }
+            if (file.Length > maxSize) return BadRequest("File size must be less than 1Mb");
 
             // Store the file temporarily before saving it to the database
             using var dataStream = new MemoryStream();
@@ -202,10 +186,7 @@ public class AccountController : Controller
         // Based on https://codewithmukesh.com/blog/user-management-in-aspnet-core-mvc/
 
         // If RemoveProfilePicture is true, then remove the profile picture
-        if (model.RemoveProfilePicture)
-        {
-            user.ProfilePicture = null;
-        }
+        if (model.RemoveProfilePicture) user.ProfilePicture = null;
 
         // Update the user
         await _userManager.UpdateAsync(user);

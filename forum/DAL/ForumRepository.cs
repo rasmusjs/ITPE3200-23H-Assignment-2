@@ -149,17 +149,13 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
                 if (user != null)
                 {
                     if (user.LikedPosts != null)
-                    {
                         // Checks if the user has liked the post
                         if (user.LikedPosts.Any(t => t.PostId == id))
                             post.IsLiked = true;
-                    }
 
                     // If the user have liked comments add the likes to them
                     if (user.LikedComments != null && post.Comments != null)
-                    {
                         post.Comments = await AddLikeToComments(post.Comments, userId);
-                    }
                 }
             }
 
@@ -355,9 +351,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
                 foreach (var post in posts)
                     // Checks if the user has liked the post
                     if (user.LikedPosts.Any(t => t.PostId == post.PostId))
-                    {
                         post.IsLiked = true;
-                    }
             }
             else
             {
@@ -375,10 +369,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
     private async Task<List<Comment>?> AddLikeToComments(List<Comment>? comments, string userId)
     {
         // Check if comments are null or empty
-        if (comments == null || !comments.Any())
-        {
-            return comments;
-        }
+        if (comments == null || !comments.Any()) return comments;
 
         try
         {

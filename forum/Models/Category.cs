@@ -25,7 +25,7 @@ public class Category
     public string Color { get; set; } = string.Empty;
 
     // Getters and setters for category PicturePath
-    
+
     [JsonProperty("url")]
     [Display(Name = "URL")]
     public string? PicturePath { get; set; } = string.Empty;

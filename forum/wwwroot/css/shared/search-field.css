@@ -18,7 +18,7 @@
         @media (max-width: 555px) {
             gap: 8px;
         }
-        
+
         @media (max-width: 520px) {
             flex-direction: column;
             align-items: start;

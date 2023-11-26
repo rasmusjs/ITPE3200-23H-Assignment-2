@@ -6,11 +6,11 @@ namespace forum.ViewModels;
 
 public class PostsListViewModel
 {
-    // Property with a collection of Post objects (forum posts)
-    public IEnumerable<Post> Posts;
-
     // The name of the current view
     public string? CurrentViewName;
+
+    // Property with a collection of Post objects (forum posts)
+    public IEnumerable<Post> Posts;
 
     public PostsListViewModel(IEnumerable<Post> posts, string? currentViewName)
     {

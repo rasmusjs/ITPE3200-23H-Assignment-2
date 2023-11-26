@@ -197,7 +197,7 @@ button {
 .date-hoverable {
     position: relative;
     transition: filter var(--tr-timing);
-    
+
     .exact-date {
         position: absolute;
         top: -2px;
@@ -210,11 +210,11 @@ button {
         color: var(--bg-1) !important;
         background-color: var(--txt-1);
         opacity: 0;
-        filter: drop-shadow(0px 1px 4px rgba(0,0,0,1));
+        filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 1));
         pointer-events: none;
         transition: var(--tr-default);
         transition-delay: 100ms;
-        
+
         &::after {
             content: "";
             position: absolute;
@@ -228,10 +228,10 @@ button {
             border-top: 8px solid var(--txt-1);
         }
     }
-    
+
     &:hover {
         filter: brightness(125%);
-        
+
         .exact-date {
             top: -8px;
             opacity: 100%;

@@ -50,6 +50,26 @@ public class ForumDbContext : IdentityDbContext<ApplicationUser>
             .OnDelete(DeleteBehavior.SetNull);
         // If the user is deleted, the posts will not be deleted. User will show up a anonymous
 
+        // Configuring the many-to-many relationship between User and Comments, for liked comments
+        
+        modelBuilder.Entity<ApplicationUser>().HasMany(u => u.LikedComments).WithMany(c => c.UserLikes)
+            .UsingEntity(j => j.ToTable("UserLikedComments"));
+        
+        // Configuring the many-to-many relationship between User and Comments, for saved comments
+
+        modelBuilder.Entity<ApplicationUser>().HasMany(u => u.SavedComments).WithMany(c => c.SavedByUsers)
+            .UsingEntity(j => j.ToTable("UserSavedComments"));
+        
+        
+        
+        // Configuring the many-to-many relationship between User and Posts, for liked posts
+        modelBuilder.Entity<ApplicationUser>().HasMany(u => u.LikedPosts).WithMany(p => p.UserLikes)
+            .UsingEntity(j => j.ToTable("UserLikedPosts"));
+        
+        // Configuring the many-to-many relationship between User and Posts, for saved posts
+        modelBuilder.Entity<ApplicationUser>().HasMany(u => u.SavedPosts).WithMany(p => p.SavedByUsers)
+            .UsingEntity(j => j.ToTable("UserSavedPosts"));
+        
         //Fixes
         //Unhandled exception. System.InvalidOperationException: The entity type 'IdentityUserLogin<string>' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.
         //Source: https://stackoverflow.com/questions/39576176/is-base-onmodelcreatingmodelbuilder-necessary

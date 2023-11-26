@@ -107,7 +107,7 @@ public static class DbInit
                 new() { Name = "Java" },
                 new() { Name = "Humor" },
                 new() { Name = "SQL" },
-                new() { Name = "Cloudflare" },
+                new() { Name = "Cloudflare" }
             };
 
             // Add tags
@@ -249,7 +249,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "Algorithms").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "Python"),
+                    tags.First(t => t.Name == "Python")
                 }
             },
             new()
@@ -280,7 +280,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "Database").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "SQL"),
+                    tags.First(t => t.Name == "SQL")
                 }
             },
             new()
@@ -295,7 +295,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "Database").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "Cloudflare"),
+                    tags.First(t => t.Name == "Cloudflare")
                 }
             },
             new()
@@ -343,7 +343,7 @@ public static class DbInit
                 Tags = new List<Tag>
                 {
                     tags.First(t => t.Name == "HTML"),
-                    tags.First(t => t.Name == "CSS"),
+                    tags.First(t => t.Name == "CSS")
                 }
             },
             new()
@@ -374,7 +374,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "Back End").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "Data Science"),
+                    tags.First(t => t.Name == "Data Science")
                 }
             },
             new()
@@ -389,7 +389,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "Game Development").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "Unity"),
+                    tags.First(t => t.Name == "Unity")
                 }
             },
             new()
@@ -405,7 +405,7 @@ public static class DbInit
                 Tags = new List<Tag>
                 {
                     tags.First(t => t.Name == "C#"),
-                    tags.First(t => t.Name == "Machine Learning"),
+                    tags.First(t => t.Name == "Machine Learning")
                 }
             },
             new()
@@ -420,7 +420,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "Debugging").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "Python"),
+                    tags.First(t => t.Name == "Python")
                 }
             },
             new()
@@ -435,7 +435,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "Debugging").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "PowerShell"),
+                    tags.First(t => t.Name == "PowerShell")
                 }
             },
             new()
@@ -450,7 +450,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "Development").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "Version Control"),
+                    tags.First(t => t.Name == "Version Control")
                 }
             },
             new()
@@ -465,7 +465,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "Development").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "Windows"),
+                    tags.First(t => t.Name == "Windows")
                 }
             },
             new()
@@ -480,7 +480,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "General").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "Humor"),
+                    tags.First(t => t.Name == "Humor")
                 }
             },
             new()
@@ -495,7 +495,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "News").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "Java"),
+                    tags.First(t => t.Name == "Java")
                 }
             },
             new()
@@ -510,7 +510,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "News").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "Machine Learning"),
+                    tags.First(t => t.Name == "Machine Learning")
                 }
             },
             new()
@@ -525,7 +525,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "News").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "Machine Learning"),
+                    tags.First(t => t.Name == "Machine Learning")
                 }
             },
             new()
@@ -540,7 +540,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "News").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "Windows"),
+                    tags.First(t => t.Name == "Windows")
                 }
             },
             new()
@@ -555,7 +555,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "Technology").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "Machine Learning"),
+                    tags.First(t => t.Name == "Machine Learning")
                 }
             },
             new()
@@ -570,7 +570,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "Technology").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "Unity"),
+                    tags.First(t => t.Name == "Unity")
                 }
             },
             new()
@@ -585,7 +585,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "Science").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "Python"),
+                    tags.First(t => t.Name == "Python")
                 }
             },
             new()
@@ -600,7 +600,7 @@ public static class DbInit
                 CategoryId = categoriesList.First(c => c.Name == "Science").CategoryId,
                 Tags = new List<Tag>
                 {
-                    tags.First(t => t.Name == "C#"),
+                    tags.First(t => t.Name == "C#")
                 }
             },
             new()

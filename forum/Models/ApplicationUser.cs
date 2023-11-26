@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 
 namespace forum.Models;
 
@@ -22,11 +22,14 @@ public class ApplicationUser : IdentityUser
     public virtual List<Post>? LikedPosts { get; set; }
 
     // navigation property
-    //public virtual List<Post>? SavedPosts { get; set; }
+    public virtual List<Post>? SavedPosts { get; set; }
 
     // navigation property
     public virtual List<Comment>? Comments { get; set; }
 
     // navigation property
     public virtual List<Comment>? LikedComments { get; set; }
+
+    // navigation property
+    public virtual List<Comment>? SavedComments { get; set; }
 }
