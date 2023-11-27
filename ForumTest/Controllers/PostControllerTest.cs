@@ -87,32 +87,28 @@ public class PostControllerTest
            {
                PostId = 1, Title = "Title", Content = "This is content", TotalLikes = 1, DateCreated = DateTime.Now,
                DateLastEdited = DateTime.Now, UserId = mockUser.Id, User = mockUser,
-               CategoryId = mockCategories.First().CategoryId, Category = mockCategories.First(), TagsId = mockTagsId,
-               IsLiked = true, Tags = mockTags, Comments = mockComments, TotalComments = 1
+               CategoryId = mockCategories.First().CategoryId, Category = mockCategories.First(), TagsId = mockTagsId, Tags = mockTags, Comments = mockComments, TotalComments = 1
            },
            // Invalid post with script in content to trigger html sanitizer
            new Post
            {
                PostId = 2, Title = "Title", Content = "<script>\n alert('gotcha');\n</script>", TotalLikes = 1, DateCreated = DateTime.Now,
                DateLastEdited = DateTime.Now, UserId = mockUser.Id, User = mockUser,
-               CategoryId = mockCategories.First().CategoryId, Category = mockCategories.First(), TagsId = mockTagsId,
-               IsLiked = true, Tags = mockTags, Comments = mockComments, TotalComments = 1 
+               CategoryId = mockCategories.First().CategoryId, Category = mockCategories.First(), TagsId = mockTagsId, Tags = mockTags, Comments = mockComments, TotalComments = 1 
            },
            // Invalid post with null category
            new Post
            {
                PostId = 3, Title = "Title", Content = "This is content", TotalLikes = 1, DateCreated = DateTime.Now,
                DateLastEdited = DateTime.Now, UserId = mockUser.Id, User = mockUser,
-               CategoryId = 0, Category = null, TagsId = mockTagsId,
-               IsLiked = true, Tags = mockTags, Comments = mockComments, TotalComments = 1 
+               CategoryId = 0, Category = null, TagsId = mockTagsId, Tags = mockTags, Comments = mockComments, TotalComments = 1 
            },
            // Invalid post with null tags
            new Post
            {
                PostId = 4, Title = "Title", Content = "This is content", TotalLikes = 1, DateCreated = DateTime.Now,
                DateLastEdited = DateTime.Now, UserId = mockUser.Id, User = mockUser,
-               CategoryId = mockCategories.First().CategoryId, Category = mockCategories.First(), TagsId = null,
-               IsLiked = true, Tags = null, Comments = mockComments, TotalComments = 1
+               CategoryId = mockCategories.First().CategoryId, Category = mockCategories.First(), TagsId = null, Tags = null, Comments = mockComments, TotalComments = 1
            }
        }; 
     } 
