@@ -332,10 +332,6 @@ public class PostController : Controller
     [Authorize]
     public async Task<IActionResult> NewCreateComment(Comment comment)
     {
-        Console.WriteLine("CreateComment" + comment.Content + ", postid " + comment.PostId + " parentid"+  comment.ParentCommentId);
-        
-        
-        
         // Sanitizing the post content
         comment.Content = new HtmlSanitizer().Sanitize(comment.Content);
 
@@ -371,6 +367,9 @@ public class PostController : Controller
 
         // Updates the users comments
         await _userManager.UpdateAsync(user);
+        
+        // Remove the cached data
+        _memoryCache.Remove("AllPosts");
 
         return Ok("Created comment successfully");
     }
