@@ -87,32 +87,28 @@ public class PostControllerTest
            {
                PostId = 1, Title = "Title", Content = "This is content", TotalLikes = 1, DateCreated = DateTime.Now,
                DateLastEdited = DateTime.Now, UserId = mockUser.Id, User = mockUser,
-               CategoryId = mockCategories.First().CategoryId, Category = mockCategories.First(), TagsId = mockTagsId,
-               IsLiked = true, Tags = mockTags, Comments = mockComments, TotalComments = 1
+               CategoryId = mockCategories.First().CategoryId, Category = mockCategories.First(), TagsId = mockTagsId, Tags = mockTags, Comments = mockComments, TotalComments = 1
            },
            // Invalid post with script in content to trigger html sanitizer
            new Post
            {
                PostId = 2, Title = "Title", Content = "<script>\n alert('gotcha');\n</script>", TotalLikes = 1, DateCreated = DateTime.Now,
                DateLastEdited = DateTime.Now, UserId = mockUser.Id, User = mockUser,
-               CategoryId = mockCategories.First().CategoryId, Category = mockCategories.First(), TagsId = mockTagsId,
-               IsLiked = true, Tags = mockTags, Comments = mockComments, TotalComments = 1 
+               CategoryId = mockCategories.First().CategoryId, Category = mockCategories.First(), TagsId = mockTagsId, Tags = mockTags, Comments = mockComments, TotalComments = 1 
            },
            // Invalid post with null category
            new Post
            {
                PostId = 3, Title = "Title", Content = "This is content", TotalLikes = 1, DateCreated = DateTime.Now,
                DateLastEdited = DateTime.Now, UserId = mockUser.Id, User = mockUser,
-               CategoryId = 0, Category = null, TagsId = mockTagsId,
-               IsLiked = true, Tags = mockTags, Comments = mockComments, TotalComments = 1 
+               CategoryId = 0, Category = null, TagsId = mockTagsId, Tags = mockTags, Comments = mockComments, TotalComments = 1 
            },
            // Invalid post with null tags
            new Post
            {
                PostId = 4, Title = "Title", Content = "This is content", TotalLikes = 1, DateCreated = DateTime.Now,
                DateLastEdited = DateTime.Now, UserId = mockUser.Id, User = mockUser,
-               CategoryId = mockCategories.First().CategoryId, Category = mockCategories.First(), TagsId = null,
-               IsLiked = true, Tags = null, Comments = mockComments, TotalComments = 1
+               CategoryId = mockCategories.First().CategoryId, Category = mockCategories.First(), TagsId = null, Tags = null, Comments = mockComments, TotalComments = 1
            }
        }; 
     } 
@@ -398,6 +394,8 @@ public class PostControllerTest
        _mockCategoryRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockCategory);
        _mockTags.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockTag);
        _mockUserManager.Setup(repo => repo.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(mockUser);
+       // Mock successful user update
+       _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
 
        // Act
        var result = await _controller.NewCreate(mockPost);
@@ -417,7 +415,7 @@ public class PostControllerTest
        var mockCategory = GetMockCategories().First();
        var mockUser = GetMockUser();
        
-       var mockPost = GetMockPosts().Last(); // Use the last post (null tags) from the mock posts
+       var mockPost = GetMockPosts().First(p => p.PostId == 2); // Use the last post (null tags) from the mock posts
        _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).ReturnsAsync(mockPost);
        _mockCategoryRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockCategory);
        _mockTags.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockTag);
@@ -435,6 +433,33 @@ public class PostControllerTest
        Assert.Equal(422, statusCodeResult.StatusCode);
    }
    
+   // Method for testing Create function when model state is invalid because of missing categories
+   [Fact]
+   public async Task Create_NullTagsTest()
+   {
+       // Arrange
+       var mockCategory = GetMockCategories().First();
+       var mockUser = GetMockUser();
+       var mockPost = GetMockPosts().First(p => p.PostId == 4); // Use the post with null tags from the mock posts
+       var mockTags = mockPost.Tags;
+       
+       _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).ReturnsAsync(mockPost);
+       _mockCategoryRepository.Setup(repo => repo.GetTById(mockPost.CategoryId)).ReturnsAsync(mockCategory);
+       _mockTags.Setup(repo => repo.GetAll()).ReturnsAsync(mockTags);
+       _mockUserManager.Setup(repo => repo.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(mockUser); 
+       
+       // Mocking failed Model State
+       // Source: https://stackoverflow.com/questions/17346866/model-state-validation-in-unit-tests
+       _controller.ModelState.AddModelError("Tags", "Tags are required");
+       
+       // Act
+       var result = await _controller.NewCreate(mockPost); 
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(422, statusCodeResult.StatusCode);
+   }  
+   
    // Method for testing Create function with html sanitizer and post with html script tags
    [Fact]
    public async Task Create_HtmlSanitizerTest()
@@ -451,6 +476,8 @@ public class PostControllerTest
        _mockCategoryRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockCategory);
        _mockTags.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockTag);
        _mockUserManager.Setup(repo => repo.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(mockUser); 
+       // Mock successful user update
+       _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
        
        // Act
        var result = await _controller.NewCreate(mockPost); 
@@ -539,7 +566,51 @@ public class PostControllerTest
        Assert.Equal("User not found", resultValue);
    }
    
-   // Method for testing Create function, whether cache is correctly removed after post creation
+   // Method for testing Create function that checks if user is updated and cache deleted
+   // This test does not work because of the `post.UserId = GetUserId(); line in the controller.
+   //[Fact]
+   public async Task Create_UserUpdateSucessTest()
+   {
+       // Arrange
+       var userId = "user1";
+       var mockUser = GetMockUser();
+       mockUser.Id = userId;
+       
+       _mockUserManager.Setup(m => m.FindByIdAsync(userId)).ReturnsAsync(mockUser); // Ensure FindByIdAsync returns the mock user
+       _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success); 
+       
+       var userClaims = new List<Claim>
+       {
+           new Claim(ClaimTypes.NameIdentifier, userId)
+       };
+       var claimsIdentity = new ClaimsIdentity(userClaims, "TestAuthType");
+       var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+        // Set the User property of the controller to our test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       var mockTags = GetMockTags();
+       var mockPost = GetMockPosts().First(p => p.UserId == userId); // Use the first post from user1
+       var mockCategory = mockPost.Category;
+       
+       _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).ReturnsAsync(mockPost);
+       _mockCategoryRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockCategory);
+       _mockTags.Setup(repo => repo.GetAll()).ReturnsAsync(mockTags);
+       
+       // Act
+       var result = await _controller.NewCreate(GetMockPosts().First());
+       
+       // Assert
+       // Verify user update was called
+       //_mockUserManager.Verify(m => m.UpdateAsync(It.Is<ApplicationUser>(user => user == mockUser)), Times.Once);
+       _mockUserManager.Verify(m => m.UpdateAsync(It.Is<ApplicationUser>(u => u.Id == userId)), Times.Once); // Verify UpdateAsync was called
+       // Verify the response
+       var okResult = Assert.IsType<OkObjectResult>(result);
+       Assert.Equal(mockPost.PostId, okResult.Value);
+   }
    
    
    // GetPostViewModel()
