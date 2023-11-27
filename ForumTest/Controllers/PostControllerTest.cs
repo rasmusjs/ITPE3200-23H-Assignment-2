@@ -287,10 +287,47 @@ public class PostControllerTest
                 CommentId = 3, Content = "I don't understand anything", DateCreated = DateTime.Now, PostId = 3,
                 UserId = "user3"
             }
-        };
+        };  
     }
     
-   // GetComments(int id)
+   // Method for testing GetComments function when it returns OK and count amount of comments
+   [Fact]
+   public async Task GetComments_ReturnCommentsOKTest()
+   {
+       // Arrange
+       int commentId = 1;
+       var mockComments = GetMockComments();
+       // Mock the repository to retrieve all comments by comment id to list
+       _mockCommentRepository.Setup(repo => repo.GetAllCommentsByPostId(commentId)).ReturnsAsync(mockComments.Where(c => c.CommentId == commentId).ToList());
+       
+       // Act
+       var result = await _controller.GetComments(commentId);
+       
+       // Assert
+       var okResult = Assert.IsType<OkObjectResult>(result); 
+       var returnedComments = Assert.IsType<List<Comment>>(okResult.Value); 
+       // Check that the count is equal to the amount of comments with the same comment id
+       Assert.Equal(mockComments.Count(c => c.CommentId == commentId), returnedComments.Count); 
+       // Check that the comments are equal to the mock comments
+       Assert.All(returnedComments, comments => Assert.Contains(comments, mockComments));
+   }
+
+   // Method for testing GetComments function when it returns NotFound
+   [Fact]
+   public async Task GetComments_ReturnNotFoundTest()
+   {
+       // Arrange
+       int commentId = 1;
+       var emptyComments = new List<Comment>(); // Empty comment list
+       _mockCommentRepository.Setup(repo => repo.GetAllCommentsByPostId(commentId)).ReturnsAsync(emptyComments.Where(c => c.CommentId == commentId).ToList());
+
+       // Act
+       var result = await _controller.GetComments(commentId);
+
+       // Assert
+       var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+       Assert.Equal("Comments not found", notFoundResult.Value);
+   }
    
    // Create() Get
    
