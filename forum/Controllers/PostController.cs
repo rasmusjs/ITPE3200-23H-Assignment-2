@@ -1,12 +1,10 @@
 ﻿using System.Security.Claims;
 using forum.DAL;
 using forum.Models;
-using forum.ViewModels;
 using Ganss.Xss;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -320,6 +318,10 @@ public class PostController : Controller
     [Authorize]
     public async Task<IActionResult> NewCreateComment(Comment comment)
     {
+        Console.WriteLine("CreateComment" + comment.Content + ", postid " + comment.PostId + " parentid"+  comment.ParentCommentId);
+        
+        
+        
         // Sanitizing the post content
         comment.Content = new HtmlSanitizer().Sanitize(comment.Content);
 
