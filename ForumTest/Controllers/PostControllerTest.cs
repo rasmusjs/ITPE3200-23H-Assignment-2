@@ -409,15 +409,135 @@ public class PostControllerTest
    }
    
    // Method for testing Create function when model state is invalid because of missing tags
+   [Fact]
+   public async Task Create_InvalidModelStateTest()
+   {
+       // Arrange
+       var mockTag = GetMockTags().First();
+       var mockCategory = GetMockCategories().First();
+       var mockUser = GetMockUser();
+       
+       var mockPost = GetMockPosts().Last(); // Use the last post (null tags) from the mock posts
+       _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).ReturnsAsync(mockPost);
+       _mockCategoryRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockCategory);
+       _mockTags.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockTag);
+       _mockUserManager.Setup(repo => repo.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(mockUser);
+
+       // Mocking failed Model State
+       // Source: https://stackoverflow.com/questions/17346866/model-state-validation-in-unit-tests
+       _controller.ModelState.AddModelError("Tags", "Post not valid, cannot create post");
+       
+       // Act
+       var result = await _controller.NewCreate(mockPost); 
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(422, statusCodeResult.StatusCode);
+   }
    
+   // Method for testing Create function with html sanitizer and post with html script tags
+   [Fact]
+   public async Task Create_HtmlSanitizerTest()
+   {
+       // Arrange
+       var mockTag = GetMockTags().First();
+       var mockCategory = GetMockCategories().First();
+       var mockUser = GetMockUser();
+       
+       var mockPost = GetMockPosts().First(p => p.PostId == 2); // Use the post with html input from the mock posts
+       // Mock the repository to create a post and check that the post content does not contain html script tags
+       // Source: https://github.com/devlooped/moq/wiki/Quickstart#callbacks
+       _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).Callback<Post>(p => Assert.DoesNotContain("<script>", p.Content)).ReturnsAsync(mockPost);
+       _mockCategoryRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockCategory);
+       _mockTags.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockTag);
+       _mockUserManager.Setup(repo => repo.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(mockUser); 
+       
+       // Act
+       var result = await _controller.NewCreate(mockPost); 
+       
+       // Assert
+       var okResult = Assert.IsType<OkObjectResult>(result);
+       var returnedPostId = Assert.IsType<int>(okResult.Value);
+       Assert.Equal(mockPost.PostId, returnedPostId);
+   }
    
    // Method for testing Create function when model state is invalid because of missing categories
-   
-   // Method for testing Create function when model state is invalid because of html sanitizer
+   [Fact]
+   public async Task Create_NullCategoriesTest()
+   {
+       // Arrange
+       var mockTag = GetMockTags().First();
+       var mockUser = GetMockUser();
+       
+       var mockPost = GetMockPosts().First(p => p.PostId == 3); // Use the post with null category from the mock posts
+       _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).ReturnsAsync(mockPost);
+       _mockCategoryRepository.Setup(repo => repo.GetTById(mockPost.CategoryId)).ReturnsAsync((Category)null);
+       _mockTags.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockTag);
+       _mockUserManager.Setup(repo => repo.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(mockUser); 
+       
+       // Mocking failed Model State
+       // Source: https://stackoverflow.com/questions/17346866/model-state-validation-in-unit-tests
+       _controller.ModelState.AddModelError("Category", "Category is required");
+       
+       // Act
+       var result = await _controller.NewCreate(mockPost); 
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(422, statusCodeResult.StatusCode);
+   } 
    
    // Method for testing Create function when new post is null
+   [Fact]
+   public async Task Create_NullNewPostTest()
+   {
+       // Arrange
+       var mockTag = GetMockTags().First();
+       var mockCategory = GetMockCategories().First();
+       var mockUser = GetMockUser();
+       var mockPost = GetMockPosts().First(); // Use the first post (valid post) from the mock posts
+       
+       // Simulate failure to create post:
+       _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).ReturnsAsync((Post)null);
+       
+       _mockCategoryRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockCategory);
+       _mockTags.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockTag);
+       _mockUserManager.Setup(repo => repo.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(mockUser); 
+       
+       // Act
+       var result = await _controller.NewCreate(mockPost); 
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(422, statusCodeResult.StatusCode);
+       var resultValue = Assert.IsType<string>(statusCodeResult.Value);
+       Assert.Equal("Post not created successfully", resultValue);
+   }  
    
    // Method for testing Create function when user can't be found
+   [Fact]
+   public async Task Create_UserNotFoundTest()
+   {
+       // Arrange
+       var mockTag = GetMockTags().First();
+       var mockCategory = GetMockCategories().First();
+       var mockPost = GetMockPosts().First(); // Use the first post (valid post) from the mock posts
+       
+       _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).ReturnsAsync(mockPost);
+       // Simulate failure to find user:
+       _mockUserManager.Setup(repo => repo.FindByIdAsync(It.IsAny<string>())).ReturnsAsync((ApplicationUser)null);
+       _mockCategoryRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockCategory);
+       _mockTags.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockTag);
+       
+       // Act
+       var result = await _controller.NewCreate(mockPost); 
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(422, statusCodeResult.StatusCode);
+       var resultValue = Assert.IsType<string>(statusCodeResult.Value);
+       Assert.Equal("User not found", resultValue);
+   }
    
    // Method for testing Create function, whether cache is correctly removed after post creation
    
