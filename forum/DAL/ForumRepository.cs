@@ -109,10 +109,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
                 _logger.LogInformation("[Forum Repository] GetAllPostsByTerm() found no posts");
                 return null;
             }
-
-
-            // If user is logged in, add likes to posts
-            if (userId != "") posts = await AddLikeToPosts(posts, userId);
+            
 
             return posts;
         }
@@ -138,26 +135,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
                 .Include(post => post.User)
                 .Where(post => post.PostId == id)
                 .FirstAsync();
-
-            // If there is a userId, get user data
-            if (userId != "")
-            {
-                // Fetches the user activity
-                var user = await GetUserActivity(userId);
-
-                // If there is a user
-                if (user != null)
-                {
-                    if (user.LikedPosts != null)
-                        // Checks if the user has liked the post
-                        if (user.LikedPosts.Any(t => t.PostId == id))
-                            post.IsLiked = true;
-
-                    // If the user have liked comments add the likes to them
-                    if (user.LikedComments != null && post.Comments != null)
-                        post.Comments = await AddLikeToComments(post.Comments, userId);
-                }
-            }
+            
 
             return post;
         }
@@ -184,9 +162,6 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
                 _logger.LogInformation("[Forum Repository] GetAllPosts() found no posts");
                 return null;
             }
-
-            // If user is logged in, add likes to posts
-            if (userId != "") posts = await AddLikeToPosts(posts, userId);
 
             return posts;
         }
@@ -328,74 +303,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
             return false;
         }
     }
-
-
-    private async Task<List<Post>?> AddLikeToPosts(List<Post>? posts, string userId)
-    {
-        // Check if posts are null or empty
-        if (posts == null || !posts.Any())
-        {
-            _logger.LogWarning(
-                "[Forum Repository] AddLikeToPosts() could not add Likes to posts, warning: Posts are null or empty");
-            return posts;
-        }
-
-        try
-        {
-            // Fetches the user activity
-            var user = await GetUserActivity(userId);
-
-            if (user is { LikedPosts: not null })
-            {
-                // Loops through all posts
-                foreach (var post in posts)
-                    // Checks if the user has liked the post
-                    if (user.LikedPosts.Any(t => t.PostId == post.PostId))
-                        post.IsLiked = true;
-            }
-            else
-            {
-                _logger.LogInformation("[Forum Repository] AddLikeToPosts() user have not liked any posts");
-            }
-        }
-        catch (Exception e)
-        {
-            LogError("AddLikeToPosts", e);
-        }
-
-        return posts;
-    }
-
-    private async Task<List<Comment>?> AddLikeToComments(List<Comment>? comments, string userId)
-    {
-        // Check if comments are null or empty
-        if (comments == null || !comments.Any()) return comments;
-
-        try
-        {
-            // Fetches the user activity
-            var user = await GetUserActivity(userId);
-
-            if (user is { LikedComments: not null })
-            {
-                // Loops through all posts
-                foreach (var comment in comments)
-                    // Checks if the user has liked the comment
-                    if (user.LikedComments.Any(t => t.CommentId == comment.CommentId))
-                        comment.IsLiked = true;
-            }
-            else
-            {
-                LogError("AddLikeToComments", new Exception("GetUserActivity() returned null"));
-            }
-        }
-        catch (Exception e)
-        {
-            LogError("AddLikeToComments", e);
-        }
-
-        return comments;
-    }
+    
 
 // Common method for logging errors
     private void LogError(string methodName, Exception exception)
