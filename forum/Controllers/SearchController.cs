@@ -32,22 +32,13 @@ public class SearchController : Controller
         //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
         return User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
-
-    // Function to refresh
-    public IActionResult Refresh(string success = "", string error = "")
-    {
-        // Handling for the success message
-        TempData["success"] = success;
-        TempData["error"] = error;
-        return Redirect(Request.Headers["Referer"].ToString());
-    }
-
+    
     [HttpGet("{term}/{sortby=newest}")] // Set a default string
     public async Task<IActionResult> NewSearch(string term, string sortby = "")
     {
         // Error handling for the search term
         if (string.IsNullOrWhiteSpace(term) || term.Length < 2)
-            return Refresh("", "Search term must be at least 2 characters long");
+            return BadRequest("Search term must be at least 2 characters long");
 
         // Fetch all posts based on the search term
         var posts = await _postRepository.GetAllPostsByTerm(term, GetUserId());
