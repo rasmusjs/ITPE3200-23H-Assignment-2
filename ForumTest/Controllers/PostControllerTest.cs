@@ -224,8 +224,72 @@ public class PostControllerTest
         Assert.Equal("Tags not found", notFoundResult.Value);
     }
 
-// GetCategories()
-   
+    // Method for getting mock categories for testing
+    private List<Category> GetMockCategories()
+    {
+        return new List<Category>
+        {
+            new Category {CategoryId = 1, Name = "General"},
+            new Category {CategoryId = 2, Name = "Science"},
+            new Category {CategoryId = 3, Name = "Back End"}
+        };
+    }
+    
+    // Method for testing GetCategories function when it returns OK and count amount of categories
+    [Fact]
+    public async Task GetCategiories_ReturnCategoriesOkTest()
+    {
+        // Arrange
+        var mockCategories = GetMockCategories();
+        _mockCategoryRepository.Setup(repo => repo.GetAll()).ReturnsAsync(mockCategories);
+
+        // Act
+        var result = await _controller.GetCategories();
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var returnedCategories = Assert.IsType<List<Category>>(okResult.Value);
+        Assert.Equal(mockCategories.Count, returnedCategories.Count);
+    }
+
+    // Method for testing GetCategories function when it returns NotFound
+    [Fact]
+    public async Task GetCategories_ReturnNotFoundTest()
+    {
+        // Arrange
+        var emptyCategories = new List<Category>(); // Empty category list
+        _mockCategoryRepository.Setup(repo => repo.GetAll()).ReturnsAsync(emptyCategories);
+        
+        // Act
+        var result = await _controller.GetCategories();
+
+        // Assert
+        var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+        Assert.Equal("Categories not found", notFoundResult.Value);
+    }
+
+    private List<Comment> GetMockComments()
+    {
+        return new List<Comment>
+        {
+            new Comment
+            {
+                CommentId = 1, Content = "Hello everyone", DateCreated = DateTime.Now.AddDays(-2), PostId = 1,
+                UserId = "user1"
+            },
+            new Comment
+            {
+                CommentId = 2, Content = "Yeah yeah yeah", DateCreated = DateTime.Now.AddDays(-1), PostId = 2,
+                UserId = "user2"
+            },
+            new Comment
+            {
+                CommentId = 3, Content = "I don't understand anything", DateCreated = DateTime.Now, PostId = 3,
+                UserId = "user3"
+            }
+        };
+    }
+    
    // GetComments(int id)
    
    // Create() Get
