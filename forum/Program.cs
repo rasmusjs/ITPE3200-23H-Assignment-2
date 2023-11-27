@@ -75,8 +75,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.Name = "BracketBros.Session";
     //options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // 30 minutes
-    /*options.LoginPath = "/Identity/Account/Login";
-    options.AccessDeniedPath = "/Identity/Account/AccessDenied";*/
+    options.LoginPath = null;
+    options.AccessDeniedPath = null;
     options.SlidingExpiration = true;
 });
 //From https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-7.0&tabs=visual-studio

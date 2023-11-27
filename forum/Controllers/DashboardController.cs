@@ -33,18 +33,19 @@ public class DashBoardController : Controller
 
     // Get request to fetch user identity
     [HttpGet]
-    [Authorize]
     public string GetUserId()
     {
         //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
         return User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
-    
+
     // Get request to fetch the Dashboard view
-    [HttpGet("UserActivity/{extra=minimal}")] // extra=minimal returns only the username and profile picture
-    [Authorize]
-    public async Task<IActionResult> NewDashboard(string extra)
+    [HttpGet("UserActivity")]
+    public async Task<IActionResult> GetUserActivity()
     {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+
         // Initialize variable, and fetch all activity for the user
         var userActivity = await _userRepository.GetUserActivity(GetUserId());
 
@@ -55,52 +56,63 @@ public class DashBoardController : Controller
             return NotFound("User activity not found");
         }
 
-        if (extra == "full") // return all data with objects
-        {
-            var userActivityJson = new
-            {
-                username = userActivity.UserName,
-                profilePicture = userActivity.ProfilePicture,
-                creationdate = userActivity.CreationDate,
-                posts = userActivity.Posts,
-                likedPosts = userActivity.LikedPosts,
-                savedPosts = userActivity.SavedPosts,
-                comments = userActivity.Comments,
-                likedComments = userActivity.LikedComments,
-                savedComments = userActivity.SavedComments
-            };
+        // Create a list of all the post ids, liked post ids, saved post ids, comment ids and liked comment ids
+        var posts = (userActivity.Posts ?? new List<Post>()).Select(post => post.PostId).ToList();
+        var likedPosts = (userActivity.LikedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
+        var savedPosts = (userActivity.SavedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
+        var comments = (userActivity.Comments ?? new List<Comment>()).Select(comment => comment.CommentId)
+            .ToList();
+        var likedComments = (userActivity.LikedComments ?? new List<Comment>())
+            .Select(comment => comment.CommentId).ToList();
+        var savedComments = (userActivity.SavedComments ?? new List<Comment>()).Select(comment => comment.CommentId)
+            .ToList();
 
-            return Ok(userActivityJson);
-        }
-        else // Return the data without objects only the ids
+        // Create a custom json object
+        var userActivityJson = new
         {
-            // Create a list of all the post ids, liked post ids, saved post ids, comment ids and liked comment ids
-            var posts = (userActivity.Posts ?? new List<Post>()).Select(post => post.PostId).ToList();
-            var likedPosts = (userActivity.LikedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
-            var savedPosts = (userActivity.SavedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
-            var comments = (userActivity.Comments ?? new List<Comment>()).Select(comment => comment.CommentId)
-                .ToList();
-            var likedComments = (userActivity.LikedComments ?? new List<Comment>())
-                .Select(comment => comment.CommentId).ToList();
-            var savedComments = (userActivity.SavedComments ?? new List<Comment>()).Select(comment => comment.CommentId)
-                .ToList();
-
-            // Create a custom json object
-            var userActivityJson = new
-            {
-                username = userActivity.UserName,
-                profilePicture = userActivity.ProfilePicture,
-                creationdate = userActivity.CreationDate,
-                posts,
-                likedPosts,
-                savedPosts,
-                comments,
-                likedComments,
-                savedComments
-            };
-            return Ok(userActivityJson);
-        }
+            username = userActivity.UserName,
+            profilePicture = userActivity.ProfilePicture,
+            creationdate = userActivity.CreationDate,
+            posts,
+            likedPosts,
+            savedPosts,
+            comments,
+            likedComments,
+            savedComments
+        };
+        return Ok(userActivityJson);
     }
+
+    // Get all comments for the user
+    [HttpGet("GetUserComments")]
+    public async Task<IActionResult> GetUserComments()
+    {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        
+        // Initialize variable, and fetch all activity for the user
+        var userActivity = await _userRepository.GetUserActivity(GetUserId());
+
+        // If no posts or catch in ForumRepository, return NotFound and log error
+        if (userActivity == null)
+        {
+            _logger.LogError("[Dashboard controller] GetUserComments() failed, error message: userActivity is null");
+            return NotFound("User activity not found");
+        }
+
+        var userActivityJson = new
+        {
+            comments = userActivity.Comments,
+            likedComments = userActivity.LikedComments,
+            savedComments = userActivity.SavedComments
+        };
+
+        Console.WriteLine("GetUserComments()");
+
+
+        return Ok(userActivityJson);
+    }
+
 
     // Method for fetching the admin dashboard view
     [Authorize(Roles = "Admin")]
