@@ -71,9 +71,109 @@ public class PostControllerTest
     // GetUserID() HELVETE
 
     // IsAdmin() HELVETE
-
+    
     // Method for getting mock posts for testing
     private List<Post> GetMockPosts()
+    {
+       var mockUser = GetMockUser();
+       var mockTags = GetMockTags();
+       var mockCategories = GetMockCategories();
+       var mockTagsId = new List<int> { 1, 2, 3};
+       var mockComments = GetMockComments();
+
+       return new List<Post>
+       {
+           new Post
+           {
+               PostId = 1, Title = "Title", Content = "This is content", TotalLikes = 1, DateCreated = DateTime.Now,
+               DateLastEdited = DateTime.Now, UserId = mockUser.Id, User = mockUser,
+               CategoryId = mockCategories.First().CategoryId, Category = mockCategories.First(), TagsId = mockTagsId,
+               IsLiked = true, Tags = mockTags, Comments = mockComments, TotalComments = 1
+           },
+           // Invalid post with script in content to trigger html sanitizer
+           new Post
+           {
+               PostId = 2, Title = "Title", Content = "<script>\n alert('gotcha');\n</script>", TotalLikes = 1, DateCreated = DateTime.Now,
+               DateLastEdited = DateTime.Now, UserId = mockUser.Id, User = mockUser,
+               CategoryId = mockCategories.First().CategoryId, Category = mockCategories.First(), TagsId = mockTagsId,
+               IsLiked = true, Tags = mockTags, Comments = mockComments, TotalComments = 1 
+           },
+           // Invalid post with null category
+           new Post
+           {
+               PostId = 3, Title = "Title", Content = "This is content", TotalLikes = 1, DateCreated = DateTime.Now,
+               DateLastEdited = DateTime.Now, UserId = mockUser.Id, User = mockUser,
+               CategoryId = 0, Category = null, TagsId = mockTagsId,
+               IsLiked = true, Tags = mockTags, Comments = mockComments, TotalComments = 1 
+           },
+           // Invalid post with null tags
+           new Post
+           {
+               PostId = 4, Title = "Title", Content = "This is content", TotalLikes = 1, DateCreated = DateTime.Now,
+               DateLastEdited = DateTime.Now, UserId = mockUser.Id, User = mockUser,
+               CategoryId = mockCategories.First().CategoryId, Category = mockCategories.First(), TagsId = null,
+               IsLiked = true, Tags = null, Comments = mockComments, TotalComments = 1
+           }
+       }; 
+    } 
+    
+    // Method for getting mock tags for testing
+    private List<Tag> GetMockTags()
+    {
+       return new List<Tag>
+       {
+           new Tag {TagId = 1, Name = "Beginner"},
+           new Tag {TagId = 2, Name = "HTML"},
+           new Tag {TagId = 3, Name = "JavaScript"},
+           new Tag {TagId = 4, Name = "Java"}
+       };
+    }
+    
+    // Method for getting mock categories for testing
+    private List<Category> GetMockCategories()
+    {
+        return new List<Category>
+        {
+            new Category {CategoryId = 1, Name = "General"},
+            new Category {CategoryId = 2, Name = "Science"},
+            new Category {CategoryId = 3, Name = "Back End"}
+        };
+    }
+    
+    // Method for getting mock comments for testing
+    private List<Comment> GetMockComments()
+    {
+        return new List<Comment>
+        {
+            new Comment
+            {
+                CommentId = 1, Content = "Hello everyone", DateCreated = DateTime.Now.AddDays(-2), PostId = 1,
+                UserId = "user1"
+            },
+            new Comment
+            {
+                CommentId = 2, Content = "Yeah yeah yeah", DateCreated = DateTime.Now.AddDays(-1), PostId = 2,
+                UserId = "user2"
+            },
+            new Comment
+            {
+                CommentId = 3, Content = "I don't understand anything", DateCreated = DateTime.Now, PostId = 3,
+                UserId = "user3"
+            }
+        };  
+    }
+    
+    // Method for fetching a mock user
+    private ApplicationUser GetMockUser()
+    {
+        return new ApplicationUser
+        {
+            Id = "user1", UserName = "user1", Email = "mail@mail.com", CreationDate = DateTime.Now
+        };
+    }
+
+    // Method for getting mock posts for testing
+    /*private List<Post> GetMockPosts()
     {
         return new List<Post>
         {
@@ -97,7 +197,7 @@ public class PostControllerTest
                 Tags = new List<Tag> { new() { Name = "Beginner" }, new() { Name = "Java" } }
             }
         };
-    }
+    }*/
 
     // Method for testing GetAllPosts function when it returns OK 
     [Fact]
@@ -179,18 +279,6 @@ public class PostControllerTest
         Assert.Equal("Post not found, cannot show post", notFoundResult.Value);
     }
     
-    // Method for getting mock tags for testing
-    private List<Tag> GetMockTags()
-    {
-        return new List<Tag>
-        {
-            new Tag {TagId = 1, Name = "Beginner"},
-            new Tag {TagId = 2, Name = "HTML"},
-            new Tag {TagId = 3, Name = "JavaScript"},
-            new Tag {TagId = 4, Name = "Java"}
-        };
-    }
-
     // Method for testing GetTags function when it returns OK and count amount of tags
     [Fact]
     public async Task GetTags_ReturnTagsOkTest()
@@ -223,14 +311,116 @@ public class PostControllerTest
         var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
         Assert.Equal("Tags not found", notFoundResult.Value);
     }
+    
+    // Method for testing GetCategories function when it returns OK and count amount of categories
+    [Fact]
+    public async Task GetCategiories_ReturnCategoriesOkTest()
+    {
+        // Arrange
+        var mockCategories = GetMockCategories();
+        _mockCategoryRepository.Setup(repo => repo.GetAll()).ReturnsAsync(mockCategories);
 
-// GetCategories()
+        // Act
+        var result = await _controller.GetCategories();
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var returnedCategories = Assert.IsType<List<Category>>(okResult.Value);
+        Assert.Equal(mockCategories.Count, returnedCategories.Count);
+    }
+
+    // Method for testing GetCategories function when it returns NotFound
+    [Fact]
+    public async Task GetCategories_ReturnNotFoundTest()
+    {
+        // Arrange
+        var emptyCategories = new List<Category>(); // Empty category list
+        _mockCategoryRepository.Setup(repo => repo.GetAll()).ReturnsAsync(emptyCategories);
+        
+        // Act
+        var result = await _controller.GetCategories();
+
+        // Assert
+        var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+        Assert.Equal("Categories not found", notFoundResult.Value);
+    }
+    
+   // Method for testing GetComments function when it returns OK and count amount of comments
+   [Fact]
+   public async Task GetComments_ReturnCommentsOKTest()
+   {
+       // Arrange
+       int commentId = 1;
+       var mockComments = GetMockComments();
+       // Mock the repository to retrieve all comments by comment id to list
+       _mockCommentRepository.Setup(repo => repo.GetAllCommentsByPostId(commentId)).ReturnsAsync(mockComments.Where(c => c.CommentId == commentId).ToList());
+       
+       // Act
+       var result = await _controller.GetComments(commentId);
+       
+       // Assert
+       var okResult = Assert.IsType<OkObjectResult>(result); 
+       var returnedComments = Assert.IsType<List<Comment>>(okResult.Value); 
+       // Check that the count is equal to the amount of comments with the same comment id
+       Assert.Equal(mockComments.Count(c => c.CommentId == commentId), returnedComments.Count); 
+       // Check that the comments are equal to the mock comments
+       Assert.All(returnedComments, comments => Assert.Contains(comments, mockComments));
+   }
+
+   // Method for testing GetComments function when it returns NotFound
+   [Fact]
+   public async Task GetComments_ReturnNotFoundTest()
+   {
+       // Arrange
+       int commentId = 1;
+       var emptyComments = new List<Comment>(); // Empty comment list
+       _mockCommentRepository.Setup(repo => repo.GetAllCommentsByPostId(commentId)).ReturnsAsync(emptyComments.Where(c => c.CommentId == commentId).ToList());
+
+       // Act
+       var result = await _controller.GetComments(commentId);
+
+       // Assert
+       var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+       Assert.Equal("Comments not found", notFoundResult.Value);
+   }
    
-   // GetComments(int id)
+   // Method for testing Create function when it returns OK
+   [Fact]
+   public async Task Create_ReturnPostOkTest()
+   {
+       // Arrange
+       var mockTag = GetMockTags().First();
+       var mockCategory = GetMockCategories().First();
+       var mockUser = GetMockUser();
+       
+       var mockPost = GetMockPosts().First(); // Use the first post (valid post) from the mock posts
+       _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).ReturnsAsync(mockPost);
+       _mockCategoryRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockCategory);
+       _mockTags.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockTag);
+       _mockUserManager.Setup(repo => repo.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(mockUser);
+
+       // Act
+       var result = await _controller.NewCreate(mockPost);
+
+       // Assert
+       var okResult = Assert.IsType<OkObjectResult>(result);
+       var returnedPostId = Assert.IsType<int>(okResult.Value);
+       Assert.Equal(mockPost.PostId, returnedPostId);
+   }
    
-   // Create() Get
+   // Method for testing Create function when model state is invalid because of missing tags
    
-   //NewCreate(Post post)
+   
+   // Method for testing Create function when model state is invalid because of missing categories
+   
+   // Method for testing Create function when model state is invalid because of html sanitizer
+   
+   // Method for testing Create function when new post is null
+   
+   // Method for testing Create function when user can't be found
+   
+   // Method for testing Create function, whether cache is correctly removed after post creation
+   
    
    // GetPostViewModel()
    
