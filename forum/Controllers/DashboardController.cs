@@ -39,26 +39,7 @@ public class DashBoardController : Controller
         //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
         return User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
-
-    // Get request to fetch the Dashboard view
-    [HttpGet]
-    [Authorize]
-    public async Task<IActionResult> Dashboard()
-    {
-        // Initialize variable, and fetch all activity for the user
-        var userActivity = await _userRepository.GetUserActivity(GetUserId());
-
-        // If no posts or catch in ForumRepository, return NotFound and log error
-        if (userActivity == null)
-        {
-            _logger.LogError("[Dashboard controller] Dashboard() failed, error message: userActivity is null");
-            return NotFound("User activity not found");
-        }
-
-        return View(userActivity);
-    }
-
-
+    
     // Get request to fetch the Dashboard view
     [HttpGet("UserActivity/{extra=minimal}")] // extra=minimal returns only the username and profile picture
     [Authorize]
