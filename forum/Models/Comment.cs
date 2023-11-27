@@ -31,8 +31,6 @@ public class Comment
 
     // navigation property
     [JsonProperty("user")] public virtual ApplicationUser? User { get; set; }
-
-    [JsonProperty("isLiked")] public bool IsLiked { get; set; } // only used for visualizing a comment like in the view
     [JsonProperty("ParentCommentId")] public int? ParentCommentId { get; set; } // Self-referencing foreign key
 
     // navigation property

@@ -52,11 +52,7 @@ public class Post
     [Required]
     [NotMapped]
     public virtual List<int>? TagsId { get; set; } // ony used for creating a post
-
-    [NotMapped]
-    [JsonProperty("isLiked")]
-    public bool IsLiked { get; set; } // only used for visualizing a post like in the view
-
+    
     // navigation property
     [JsonProperty("tags")] public virtual List<Tag>? Tags { get; set; }
 
