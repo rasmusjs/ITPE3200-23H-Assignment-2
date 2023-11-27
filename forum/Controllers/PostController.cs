@@ -199,12 +199,26 @@ public class PostController : Controller
 
         // Fetches the user
         var user = await _userManager.FindByIdAsync(post.UserId);
+        
+        // Checks if the user is null
+        if (user == null)
+        {
+            _logger.LogError("[PostController] Create failed, while executing Create(). No user");
+            return StatusCode(422, "User not found");
+        }
+        
         // If the user has no posts, create a new list of posts
         user.Posts ??= new List<Post>();
         // Adds the post to the user's posts
         user.Posts.Add(newPost);
-        // Updates the user attribute
-        await _userManager.UpdateAsync(user);
+        
+        // Attempt to update the user attribute
+        var updateResult = await _userManager.UpdateAsync(user);
+        if (!updateResult.Succeeded)
+        {
+            _logger.LogError("[PostController] Create failed, while executing Create(). Update user failed");
+            return StatusCode(500, "Error occurred while updating user data");
+        }
 
         // Remove the cached data
         _memoryCache.Remove("AllPosts");
