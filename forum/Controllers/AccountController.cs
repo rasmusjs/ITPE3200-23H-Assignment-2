@@ -158,7 +158,7 @@ public class AccountController : Controller
     {
         var user = await _userManager.GetUserAsync(User);
         if (user == null) return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-       
+
         // Set the profile picture to be null
         user.ProfilePicture = null;
         // Update the user
@@ -167,7 +167,7 @@ public class AccountController : Controller
 
         return Ok("Removed profile picture");
     }
-    
+
     [HttpPost("uploadProfilePicture")]
     [Authorize]
     public async Task<IActionResult> UploadProfilePicture()
@@ -199,16 +199,15 @@ public class AccountController : Controller
             // Update the user's profile picture
             user.ProfilePicture = dataStream.ToArray();
         }
-        
+
         // Based on https://codewithmukesh.com/blog/user-management-in-aspnet-core-mvc/
-        
+
         // Update the user
         await _userManager.UpdateAsync(user);
         await _signInManager.RefreshSignInAsync(user);
 
         return Ok("Your profile has been updated");
     }
-
 
     private ApplicationUser CreateUser()
     {
@@ -278,12 +277,5 @@ public class AccountController : Controller
         [Required]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}")]
         public string newPassword { get; set; }
-    }
-
-    public class ChangeProfilePictureModel
-    {
-        public byte[] profilePicture { get; set; }
-
-        public bool RemoveProfilePicture { get; set; }
     }
 }

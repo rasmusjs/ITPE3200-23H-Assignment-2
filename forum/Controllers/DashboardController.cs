@@ -103,12 +103,16 @@ public class DashBoardController : Controller
                 .Select(comment => comment.CommentId).ToList();
             var savedComments = (userActivity.SavedComments ?? new List<Comment>()).Select(comment => comment.CommentId)
                 .ToList();
+            
+            var profilePictureBase64 = "";
+            if (userActivity.ProfilePicture != null)
+                profilePictureBase64 = Convert.ToBase64String(userActivity.ProfilePicture);
 
             // Create a custom json object
             var userActivityJson = new
             {
                 username = userActivity.UserName,
-                profilePicture = userActivity.ProfilePicture,
+                profilePicture = profilePictureBase64,
                 creationdate = userActivity.CreationDate,
                 posts,
                 likedPosts,
