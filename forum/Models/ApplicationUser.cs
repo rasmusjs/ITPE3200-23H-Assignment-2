@@ -13,7 +13,22 @@ public class ApplicationUser : IdentityUser
     [JsonProperty("username")] [NotMapped] public override string UserName => base.UserName;
 
     public DateTime CreationDate { get; set; } = DateTime.Now;
-    [JsonProperty("profilePicture")] public byte[]? ProfilePicture { get; set; }
+
+    [JsonProperty("profilePicture")] [NotMapped]
+    public string ProfilePicture
+    {
+        get
+        {
+            if (ProfilePictureOBytes != null)
+            {
+                return "data:image/*;base64,"+Convert.ToBase64String(ProfilePictureOBytes);
+            }
+
+            return string.Empty; // You might want to handle the case when ProfilePictureOBytes is null
+        }
+    }
+
+    public byte[]? ProfilePictureOBytes { get; set; }
 
     // navigation property
     public virtual List<Post>? Posts { get; set; }

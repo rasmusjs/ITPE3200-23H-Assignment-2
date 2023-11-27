@@ -103,16 +103,12 @@ public class DashBoardController : Controller
                 .Select(comment => comment.CommentId).ToList();
             var savedComments = (userActivity.SavedComments ?? new List<Comment>()).Select(comment => comment.CommentId)
                 .ToList();
-            
-            var profilePictureBase64 = "";
-            if (userActivity.ProfilePicture != null)
-                profilePictureBase64 = Convert.ToBase64String(userActivity.ProfilePicture);
 
             // Create a custom json object
             var userActivityJson = new
             {
                 username = userActivity.UserName,
-                profilePicture = profilePictureBase64,
+                profilePicture = userActivity.ProfilePicture,
                 creationdate = userActivity.CreationDate,
                 posts,
                 likedPosts,
@@ -233,7 +229,7 @@ public class DashBoardController : Controller
         }
         catch (Exception e)
         {
-            // Exception and error logging if the server can't fetch the data 
+            // Exception and error logging if the server can't fetch the data
             _logger.LogError("[Dashboard controller] An exception occurred while updating the category: {e}", e);
             return StatusCode(500, "Internal server error. Please try again later.");
         }
@@ -261,7 +257,7 @@ public class DashBoardController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> NewCategory(Category category)
     {
-        // Sets file as the first file uploaded in the http request form 
+        // Sets file as the first file uploaded in the http request form
         var file = Request.Form.Files.FirstOrDefault();
 
         // If the user has selected a file
@@ -334,7 +330,7 @@ public class DashBoardController : Controller
         }
         catch (Exception e)
         {
-            // Throws exception and logs it if the server can't fetch the category 
+            // Throws exception and logs it if the server can't fetch the category
             _logger.LogError("[Dashboard controller] An exception occurred while fetching category for deletion: {e}",
                 e);
             return StatusCode(500, "Internal server error. Please try again later.");
@@ -437,7 +433,7 @@ public class DashBoardController : Controller
         {
             await using var fs = System.IO.File.Create(filePath);
             await file.CopyToAsync(fs);
-            // Source: https://learn.microsoft.com/en-us/dotnet/api/system.io.file.create?view=net-6.0 
+            // Source: https://learn.microsoft.com/en-us/dotnet/api/system.io.file.create?view=net-6.0
         }
         catch (Exception e)
         {
@@ -458,7 +454,7 @@ public class DashBoardController : Controller
             //Replace the ../ with wwwroot/ to get the correct path
             deletePath = deletePath.Replace("../", "wwwroot/");
 
-            // Check if the file exists, if i does not exist it's probably a external file 
+            // Check if the file exists, if i does not exist it's probably a external file
             if (System.IO.File.Exists(deletePath))
             {
                 // Delete the file
@@ -519,7 +515,7 @@ public class DashBoardController : Controller
         // Checks if the submitted form values passes validation
         if (ModelState.IsValid)
         {
-            // Tries to create tag in repo, logs error if it cannot create tag 
+            // Tries to create tag in repo, logs error if it cannot create tag
             var newTag = await _tagsRepositoryRepository.Create(tag);
             if (newTag == null)
             {

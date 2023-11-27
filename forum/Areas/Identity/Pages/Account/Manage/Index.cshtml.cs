@@ -48,7 +48,7 @@ public class IndexModel : PageModel
     {
         var userName = await _userManager.GetUserNameAsync(user);
         var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-        var profilePicture = user.ProfilePicture;
+        var profilePicture = user.ProfilePictureOBytes;
 
         Username = userName;
 
@@ -118,7 +118,7 @@ public class IndexModel : PageModel
             await file.CopyToAsync(dataStream);
 
             // Update the user's profile picture
-            user.ProfilePicture = dataStream.ToArray();
+            user.ProfilePictureOBytes = dataStream.ToArray();
         }
         // Based on https://codewithmukesh.com/blog/user-management-in-aspnet-core-mvc/ 
 
@@ -126,7 +126,7 @@ public class IndexModel : PageModel
         if (Input.RemoveProfilePicture)
         {
             StatusMessage = "Profile picture removed";
-            user.ProfilePicture = null;
+            user.ProfilePictureOBytes = null;
         }
 
         // Update the user

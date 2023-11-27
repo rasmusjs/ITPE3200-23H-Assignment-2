@@ -160,7 +160,7 @@ public class AccountController : Controller
         if (user == null) return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
 
         // Set the profile picture to be null
-        user.ProfilePicture = null;
+        user.ProfilePictureOBytes = null;
         // Update the user
         await _userManager.UpdateAsync(user);
         await _signInManager.RefreshSignInAsync(user);
@@ -197,7 +197,7 @@ public class AccountController : Controller
             await file.CopyToAsync(dataStream);
 
             // Update the user's profile picture
-            user.ProfilePicture = dataStream.ToArray();
+            user.ProfilePictureOBytes = dataStream.ToArray();
         }
 
         // Based on https://codewithmukesh.com/blog/user-management-in-aspnet-core-mvc/
