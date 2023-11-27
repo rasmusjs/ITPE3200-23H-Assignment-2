@@ -260,7 +260,7 @@ public class PostController : Controller
         // Get all categories
         var comments = await _commentRepository.GetAllCommentsByPostId(id);
         // If tags is null return not found
-        if (comments == null) return NotFound("Comments not found");
+        if (comments == null || !comments.Any()) return NotFound("Comments not found");
         // Return
         return Ok(comments);
     }
