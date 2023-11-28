@@ -770,7 +770,105 @@ public class PostControllerTest
        Assert.Equal("Internal server error while updating post please try again", statusCodeResult.Value);
    }
    
-   // NewDeleteConfirmed(int id)
+   // Method for testing DeleteConfirmed function when it returns OK
+   [Fact]
+   public async Task DeleteConfirmed_ReturnPostOkTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       // Explicitly set the post to user
+       var mockPost = GetMockPosts().First(p => p.UserId == userId);
+       mockPost.User = mockUser;
+       mockPost.UserId = userId;
+       mockUser.Posts = GetMockPosts();;
+       
+       // Mock repos 
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
+       _mockPostRepository.Setup(repo => repo.Delete(It.IsAny<int>())).ReturnsAsync(true);
+       
+       // Act
+       var result = await _controller.NewDeleteConfirmed(mockPost.PostId);
+       
+       // Assert
+       var okResult = Assert.IsType<OkObjectResult>(result);
+       Assert.Equal("Post deleted successfully", okResult.Value); 
+   }
+
+   // Method for testing DeleteConfirmed function when it returns post not found
+   [Fact]
+   public async Task DeleteConfirmed_ReturnPostNotFoundTest()
+   {
+       // Arrange
+       var emptyPost = new Post { PostId = 1 }; // Post that don't exist
+       
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post)null); // Return null post
+       
+       // Act
+       var result = await _controller.NewDeleteConfirmed(emptyPost.PostId); 
+
+       // Assert
+       var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
+       Assert.Equal(404, statusCodeResult.StatusCode);
+       Assert.Equal("Post not found, cannot delete post", statusCodeResult.Value); 
+   }
+
+   // Method for testing DeleteConfirmed function when it returns invalid user
+   [Fact]
+   public async Task DeleteConfirmed_ReturnUserNotFoundTest()
+   {
+       // Arrange
+       var mockPost = GetMockPosts().First(); // Uses posts without user claim
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost); 
+       
+       // Act
+       var result = await _controller.NewUpdate(mockPost);
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(403, statusCodeResult.StatusCode);
+       Assert.Equal("You are not the owner of the post",statusCodeResult.Value); 
+   }
+
+   // Method for testing DeleteConfirmed function when it returns delete failure
+   [Fact]
+   public async Task DeleteConfirmed_ReturnDeleteFailureTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       // Explicitly set the post to user
+       var mockPost = GetMockPosts().First(p => p.UserId == userId);
+       mockPost.User = mockUser;
+       mockPost.UserId = userId;
+       mockUser.Posts = GetMockPosts();;
+       
+       // Mock repos 
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
+       _mockPostRepository.Setup(repo => repo.Delete(It.IsAny<int>())).ReturnsAsync(false); // Mock delete failure
+       
+       // Act
+       var result = await _controller.NewDeleteConfirmed(mockPost.PostId); 
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(500, statusCodeResult.StatusCode);
+       Assert.Equal("Internal server error while deleting post please try again", statusCodeResult.Value);
+   }
    
    // NewCreateComment(Comment comment)
    
