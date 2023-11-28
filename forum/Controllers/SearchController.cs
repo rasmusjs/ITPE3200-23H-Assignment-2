@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using forum.DAL;
 using forum.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace forum.Controllers;
