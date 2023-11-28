@@ -5,6 +5,11 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>forum</RootNamespace>
+        <IsPackable>false</IsPackable>
+        <SpaRoot>BracketBros-frontend/</SpaRoot>
+        <SpaProxyServerUrl>http://localhost:3000</SpaProxyServerUrl>
+        <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
+        <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <ItemGroup>
@@ -32,32 +37,34 @@
         <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\jquery.min.js"/>
         <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\LICENSE"/>
         <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\README.md"/>
-        <_ContentIncludedByDefault Remove="Views\Post\Card.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Post\Compact.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Post\Create.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Post\Delete.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Post\Post.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Post\Update.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Search\Index.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Search\Search.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Shared\_AccountStatus.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Shared\_Comment.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Shared\_Comments.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Shared\_CreateComment.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Shared\_Layout.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Shared\_PostCard.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Shared\_PostCompact.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Shared\_SearchField.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Shared\_SortBy.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Shared\_UpdateComment.cshtml" />
+        <_ContentIncludedByDefault Remove="Views\Post\Card.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Post\Compact.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Post\Create.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Post\Delete.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Post\Post.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Post\Update.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Search\Index.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Search\Search.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Shared\_AccountStatus.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Shared\_Comment.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Shared\_Comments.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Shared\_CreateComment.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Shared\_Layout.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Shared\_PostCard.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Shared\_PostCompact.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Shared\_SearchField.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Shared\_SortBy.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Shared\_UpdateComment.cshtml"/>
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.25"/>
         <PackageReference Include="HtmlSanitizer" Version="8.0.718"/>
         <PackageReference Include="Jdenticon.AspNetCore" Version="3.1.2"/>
         <PackageReference Include="Markdig" Version="0.33.0"/>
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.22"/>
         <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.22"/>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.24"/>
+        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.25"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.11">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -71,11 +78,46 @@
         </PackageReference>
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16"/>
         <PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.0"/>
+        <PackageReference Include="VueCliMiddleware" Version="6.0.0"/>
     </ItemGroup>
+
     <ItemGroup>
-        <Content Update="wwwroot\package-lock.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-        <Content Remove="wwwroot\package.json"/>
+        <!-- Don't publish the SPA source files, but do show them in the project files list -->
+        <Content Remove="$(SpaRoot)**"/>
+        <None Remove="$(SpaRoot)**"/>
+        <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**"/>
     </ItemGroup>
+
+    <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
+        <!-- Ensure Node.js is installed -->
+        <Exec Command="node --version" ContinueOnError="true">
+            <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
+        </Exec>
+        <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE."/>
+        <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..."/>
+        <Exec WorkingDirectory="$(SpaRoot)" Command="npm install"/>
+    </Target>
+    <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+        <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
+        <Exec WorkingDirectory="$(SpaRoot)" Command="npm install"/>
+        <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build -- --configuration production"/>
+
+        <!-- Include the newly-built files in the publish output -->
+        <ItemGroup>
+            <DistFiles Include="$(SpaRoot)dist\**; $(SpaRoot)dist-server\**"/>
+            <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+                <RelativePath>wwwroot\%(RecursiveDir)%(FileName)%(Extension)</RelativePath>
+                <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+                <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            </ResolvedFileToPublish>
+        </ItemGroup>
+    </Target>
+
+
+    <!--  <ItemGroup>
+          <Content Update="wwwroot\package-lock.json">
+              <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+          </Content>
+          <Content Remove="wwwroot\package.json"/>
+      </ItemGroup>-->
 </Project>

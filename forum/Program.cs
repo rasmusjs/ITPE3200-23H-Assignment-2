@@ -21,7 +21,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         options.Password.RequireUppercase = true;
         options.Password.RequireLowercase = true;
         options.Password.RequiredUniqueChars = 6;*/
-        
+
         // Using regex instead of the above
         // Source for regex https://stackoverflow.com/questions/8699033/password-dataannotation-in-asp-net-mvc-3
 
@@ -39,7 +39,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 
 //Taken from lecture, see https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration?view=aspnetcore-7.0 for more info
 
+/*
 builder.Services.AddRazorPages();
+*/
 builder.Services.AddSession();
 
 // Add repositories to the container.
@@ -126,6 +128,14 @@ app.UseSession();
 app.UseJdenticon(); // For using for generating identicons. //https://jdenticon.com/#quick-start-asp-net-core
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapDefaultControllerRoute();
-app.MapRazorPages();
+app.UseRouting();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller}/{action=Index}/{id?}");
+
+app.MapFallbackToFile("index.html");
+;
+
+app.Run();
 app.Run();
