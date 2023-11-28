@@ -1,8 +1,6 @@
 ﻿using System.Security.Claims;
 using forum.DAL;
 using forum.Models;
-using forum.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -37,6 +35,13 @@ public class DashBoardController : Controller
     {
         //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
         return User?.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
+    }
+
+
+    // Method to check if the user is admin
+    public bool IsAdmin()
+    {
+        return User.IsInRole("Admin");
     }
 
     // Get request to fetch the Dashboard view
@@ -89,7 +94,7 @@ public class DashBoardController : Controller
     {
         var userId = GetUserId();
         if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
-        
+
         // Initialize variable, and fetch all activity for the user
         var userActivity = await _userRepository.GetUserActivity(GetUserId());
 
@@ -113,38 +118,15 @@ public class DashBoardController : Controller
         return Ok(userActivityJson);
     }
 
-
-    // Method for fetching the admin dashboard view
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> AdminDashboard()
-    {
-        // Initialize categories and tags and fetch the categories and tags data
-        var categories = await _categoryRepository.GetAll();
-        var tags = await _tagsRepositoryRepository.GetAll();
-
-        // Throws error and log it if there are no tags or categories to show the user or a catch in ForumRepository
-        if (categories == null || tags == null)
-        {
-            _logger.LogError(
-                "[Dashboard controller] _categoryRepository.GetAll() and/or _tagsRepository.GetAll() returned null");
-            return NotFound("Categories or tags not found, cannot create post");
-        }
-
-        // New view model for creating a post
-        var adminDashboardViewModel = new DashboardViewModel
-        {
-            CategoryList = categories,
-            TagList = tags
-        };
-
-        return View(adminDashboardViewModel);
-    }
-
     // Method for updating category (with pictures)
     [HttpPost]
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateCategory(Category category)
     {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+
+        if (!IsAdmin()) return BadRequest("User is not admin");
+
         // Initialize the variable
         Category? dbCategory;
 
@@ -242,14 +224,18 @@ public class DashBoardController : Controller
             _logger.LogInformation("[Dashboard controller] Old picture deleted.");
         }
 
-        return RedirectToAction("AdminDashboard");
+        return Ok("Updated category");
     }
 
     // Function for creating new category
     [HttpPost]
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> NewCategory(Category category)
     {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+
+        if (!IsAdmin()) return BadRequest("User is not admin");
+
         // Sets file as the first file uploaded in the http request form
         var file = Request.Form.Files.FirstOrDefault();
 
@@ -305,14 +291,18 @@ public class DashBoardController : Controller
             return BadRequest("Model state is invalid");
         }
 
-        return RedirectToAction("AdminDashboard");
+        return Ok("Created category");
     }
 
     // Function for deleting a category
     [HttpGet]
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteCategory(int id)
     {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+
+        if (!IsAdmin()) return BadRequest("User is not admin");
+
         // Initialize the variable
         Category? category;
 
@@ -375,7 +365,7 @@ public class DashBoardController : Controller
             return NotFound("Category not found");
         }
 
-        return RedirectToAction("AdminDashboard");
+        return Ok("Deleted category");
     }
 
     // Function for uploading file
@@ -481,9 +471,13 @@ public class DashBoardController : Controller
 
     // Post request to update an existing tag in the repo and redirects to the admin dashboard
     [HttpPost]
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateTag(Tag tag)
     {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+
+        if (!IsAdmin()) return BadRequest("User is not admin");
+
         // Checks if the submitted form values passes validation
         if (ModelState.IsValid)
         {
@@ -496,15 +490,19 @@ public class DashBoardController : Controller
             }
         }
 
-        // Redirects to admin dashboard
-        return RedirectToAction("AdminDashboard");
+        return Ok("Updated tag");
     }
 
     // Post request to create a new tag in the repo and redirect to admin dashboard
     [HttpPost]
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> NewTag(Tag tag)
     {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+
+        if (!IsAdmin()) return BadRequest("User is not admin");
+
+
         // Checks if the submitted form values passes validation
         if (ModelState.IsValid)
         {
@@ -517,15 +515,18 @@ public class DashBoardController : Controller
             }
         }
 
-        // Redirects to admin dashboard
-        return RedirectToAction("AdminDashboard");
+        return Ok("Created tag");
     }
 
     // Get request to delete a tag in the repo
     [HttpGet]
-    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteTag(int id)
     {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+
+        if (!IsAdmin()) return BadRequest("User is not admin");
+
         // Tries to delete the tag, logs and returns error if there is no category to delete
         var deleteTag = await _tagsRepositoryRepository.Delete(id);
         if (!deleteTag)
@@ -534,7 +535,6 @@ public class DashBoardController : Controller
             return NotFound("Category not found");
         }
 
-        // Redirects to admin dashboard
-        return RedirectToAction("AdminDashboard");
+        return Ok("Deleted tag");
     }
 }
