@@ -6,6 +6,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
+using forum.DAL;
 using forum.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,12 +23,14 @@ public class AccountController : Controller
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUserStore<ApplicationUser> _userStore;
+    private readonly IForumRepository<ApplicationUser> _userRepository;
 
 
     public AccountController(
         UserManager<ApplicationUser> userManager,
         IUserStore<ApplicationUser> userStore,
         SignInManager<ApplicationUser> signInManager,
+        IForumRepository<ApplicationUser> userRepository,
         ILogger<RegisterModel> logger
     )
     {
@@ -35,6 +38,7 @@ public class AccountController : Controller
         _userStore = userStore;
         _emailStore = GetEmailStore();
         _signInManager = signInManager;
+        _userRepository = userRepository;
         _logger = logger;
     }
 
@@ -52,6 +56,94 @@ public class AccountController : Controller
         await _signInManager.SignOutAsync();
         _logger.LogInformation("User logged out.");
         return Ok("Logged out successfully");
+    }
+
+
+    // Get request to fetch the Dashboard view
+    [HttpGet("UserActivity")]
+    public async Task<IActionResult> GetUserActivity()
+    {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return StatusCode(403, "User not found, please log in again"); //  403 Forbidden
+
+        // Check if the logged user is is found in the database, if not log out the user
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            await _signInManager.SignOutAsync();
+            _logger.LogInformation(
+                $"Unable to load user with ID '{_userManager.GetUserId(User)}' in GetUserActivity() login the user out.");
+            return NotFound($"Unable to load user with ID, logging you out.");
+        }
+
+        // Initialize variable, and fetch all activity for the user
+        var userActivity = await _userRepository.GetUserActivity(userId);
+
+        // If no posts or catch in ForumRepository, return NotFound and log error
+        if (userActivity == null)
+        {
+            _logger.LogError("[Dashboard controller] Dashboard() failed, error message: userActivity is null");
+            return NotFound("User activity not found");
+        }
+
+        // Create a list of all the post ids, liked post ids, saved post ids, comment ids and liked comment ids
+        var posts = (userActivity.Posts ?? new List<Post>()).Select(post => post.PostId).ToList();
+        var likedPosts = (userActivity.LikedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
+        var savedPosts = (userActivity.SavedPosts ?? new List<Post>()).Select(post => post.PostId).ToList();
+        var comments = (userActivity.Comments ?? new List<Comment>()).Select(comment => comment.CommentId)
+            .ToList();
+        var likedComments = (userActivity.LikedComments ?? new List<Comment>())
+            .Select(comment => comment.CommentId).ToList();
+        var savedComments = (userActivity.SavedComments ?? new List<Comment>()).Select(comment => comment.CommentId)
+            .ToList();
+
+        // Create a custom json object
+        var userActivityJson = new
+        {
+            username = userActivity.UserName,
+            profilePicture = userActivity.ProfilePicture,
+            creationdate = userActivity.CreationDate,
+            posts,
+            likedPosts,
+            savedPosts,
+            comments,
+            likedComments,
+            savedComments
+        };
+        return Ok(userActivityJson);
+    }
+
+    // Get all comments for the user
+    [HttpGet("GetUserComments")]
+    public async Task<IActionResult> GetUserComments()
+    {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return StatusCode(403, "User not found, please log in again"); //  403 Forbidden
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+        }
+
+        // Initialize variable, and fetch all activity for the user
+        var userActivity = await _userRepository.GetUserActivity(GetUserId());
+
+        // If no posts or catch in ForumRepository, return NotFound and log error
+        if (userActivity == null)
+        {
+            _logger.LogError("[Dashboard controller] GetUserComments() failed, error message: userActivity is null");
+            return NotFound("User activity not found");
+        }
+
+        var userActivityJson = new
+        {
+            comments = userActivity.Comments,
+            likedComments = userActivity.LikedComments,
+            savedComments = userActivity.SavedComments
+        };
+
+        return Ok(userActivityJson);
     }
 
 
@@ -147,8 +239,8 @@ public class AccountController : Controller
     public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
-        
+        if (userId.IsNullOrEmpty()) return StatusCode(403, "User not found, please log in again"); //  403 Forbidden
+
         if (!ModelState.IsValid) return StatusCode(422, "Invalid password");
 
         var user = await _userManager.GetUserAsync(User);
