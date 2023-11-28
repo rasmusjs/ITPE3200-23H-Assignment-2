@@ -379,6 +379,7 @@ public class PostControllerTest
        Assert.Equal("Comments not found", notFoundResult.Value);
    }
    
+   // Method for testing Create when user is not logged in
    [Fact]
    public async Task Create_NotLoggedInTest()
    {
@@ -670,6 +671,7 @@ public class PostControllerTest
        Assert.Equal(mockPost.PostId, okResult.Value);
    }
    
+   // Method for testing Update when user is not logged in
    [Fact]
    public async Task Update_NotLoggedInTest()
    {
@@ -877,6 +879,7 @@ public class PostControllerTest
        Assert.Equal("Internal server error while updating post please try again", statusCodeResult.Value);
    }
    
+   // Method for testing DeleteConfirmed when user is not logged in
    [Fact]
    public async Task DeleteConfirmed_NotLoggedInTest()
    {
@@ -1102,6 +1105,7 @@ public class PostControllerTest
        Assert.Equal("You are not the owner of the post", statusCodeResult.Value);
    }
 
+   // Method for testing CreateComment when user is not logged in
    [Fact]
    public async Task CreateComment_NotLoggedInTest()
    {
