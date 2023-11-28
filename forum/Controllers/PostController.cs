@@ -346,7 +346,7 @@ public class PostController : Controller
     public async Task<IActionResult> NewCreateComment(Comment comment)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return Forbid("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403, "User not found, please log in again");
      
         // Sanitizing the post content
         comment.Content = new HtmlSanitizer().Sanitize(comment.Content);
