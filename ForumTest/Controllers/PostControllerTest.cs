@@ -159,7 +159,7 @@ public class PostControllerTest
         };  
     }
     
-    // Method for fetching a mock user
+    // Method for fetching a mock user without a claim
     private ApplicationUser GetMockUser()
     {
         return new ApplicationUser
@@ -168,32 +168,29 @@ public class PostControllerTest
         };
     }
 
-    // Method for getting mock posts for testing
-    /*private List<Post> GetMockPosts()
+    // Method for creating a mock user with a claim to mock logged in users
+    private (ApplicationUser, ClaimsPrincipal) CreateMockUser()
     {
-        return new List<Post>
+        var userId = "user1";
+        var mockUser = new ApplicationUser
         {
-            new Post
-            {
-                PostId = 1, Title = "Simple ToDo App", Content = "Hello everyone",
-                DateCreated = DateTime.Now.AddDays(-2),
-                DateLastEdited = DateTime.Now.AddDays(-2), TotalLikes = 9, UserId = "user1", CategoryId = 1,
-                Tags = new List<Tag> { new() { Name = "Beginner" }, new() { Name = "HTML" } }
-            },
-            new Post
-            {
-                PostId = 2, Title = "Hello", Content = "Yeah yeah yeah", DateCreated = DateTime.Now.AddDays(-1),
-                DateLastEdited = DateTime.Now.AddDays(-1), TotalLikes = 1, UserId = "user2", CategoryId = 2,
-                Tags = new List<Tag> { new() { Name = "JavaScript" }, new() { Name = "Java" } }
-            },
-            new Post
-            {
-                PostId = 3, Title = "HELP", Content = "I don't understand anything", DateCreated = DateTime.Now,
-                DateLastEdited = DateTime.Now, TotalLikes = 11, UserId = "user3", CategoryId = 3,
-                Tags = new List<Tag> { new() { Name = "Beginner" }, new() { Name = "Java" } }
-            }
+            Id = userId,
+            UserName = "user1",
+            Email = "mail@mail.com",
+            CreationDate = DateTime.Now
         };
-    }*/
+        
+        // Mock user claim for user1
+        var userClaims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, userId),
+            new Claim(ClaimTypes.Name, mockUser.UserName)
+        };
+        var claimsIdentity = new ClaimsIdentity(userClaims, "TestAuthType");
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+        return (mockUser, claimsPrincipal);
+    }
 
     // Method for testing GetAllPosts function when it returns OK 
     [Fact]
@@ -567,25 +564,16 @@ public class PostControllerTest
    }
    
    // Method for testing Create function that checks if user is updated and cache deleted
-   // This test does not work because of the `post.UserId = GetUserId(); line in the controller.
-   //[Fact]
+   [Fact]
    public async Task Create_UserUpdateSucessTest()
    {
        // Arrange
-       var userId = "user1";
-       var mockUser = GetMockUser();
-       mockUser.Id = userId;
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
        
        _mockUserManager.Setup(m => m.FindByIdAsync(userId)).ReturnsAsync(mockUser); // Ensure FindByIdAsync returns the mock user
        _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success); 
        
-       var userClaims = new List<Claim>
-       {
-           new Claim(ClaimTypes.NameIdentifier, userId)
-       };
-       var claimsIdentity = new ClaimsIdentity(userClaims, "TestAuthType");
-       var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
         // Set the User property of the controller to our test user
        _controller.ControllerContext = new ControllerContext
        {
@@ -605,7 +593,6 @@ public class PostControllerTest
        
        // Assert
        // Verify user update was called
-       //_mockUserManager.Verify(m => m.UpdateAsync(It.Is<ApplicationUser>(user => user == mockUser)), Times.Once);
        _mockUserManager.Verify(m => m.UpdateAsync(It.Is<ApplicationUser>(u => u.Id == userId)), Times.Once); // Verify UpdateAsync was called
        // Verify the response
        var okResult = Assert.IsType<OkObjectResult>(result);
@@ -613,23 +600,13 @@ public class PostControllerTest
    }
    
    // Method for testing Update function when it returns OK
-   // This does not work because of Identity management which refuses to acknowledge the mock user owning the post
+   // This does not work because of this line in the controller: _forumDbContext.Entry(postFromDb).State = EntityState.Detached;
    //[Fact]
-   public async Task NewUpdate_ReturnPostOkTest()
+   public async Task Update_ReturnPostOkTest()
    {
        // Arrange
-       // Explicitly set the user id to user1
-       var userId = "user1";
-       var mockUser = GetMockUser();
-       mockUser.Id = userId;
-       
-       // Mock user claim for user1
-       var userClaims = new List<Claim>
-       {
-           new Claim(ClaimTypes.NameIdentifier, userId)
-       };
-       var claimsIdentity = new ClaimsIdentity(userClaims, "TestAuthType");
-       var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
 
         // Set the User property of the controller to the test user
        _controller.ControllerContext = new ControllerContext
@@ -637,7 +614,7 @@ public class PostControllerTest
            HttpContext = new DefaultHttpContext { User = claimsPrincipal }
        };
        
-       // Explicitly set the post to user1
+       // Explicitly set the post to user
        var mockPost = GetMockPosts().First(p => p.UserId == userId);
        mockPost.User = mockUser;
        mockPost.UserId = userId;
@@ -652,12 +629,15 @@ public class PostControllerTest
        var result = await _controller.NewUpdate(mockPost);  // This just returns "You are not the owner of this post"
        
        // Assert
-       var okResult = Assert.IsType<ObjectResult>(result);
-       var returnedPostId = Assert.IsType<int>(okResult.Value);
-       Assert.Equal(mockPost.PostId, returnedPostId);
+       var okResult = Assert.IsType<OkObjectResult>(result);
+       Assert.Equal(mockPost.PostId, okResult.Value);
    }
-   
-   // Delete(int id)
+
+   [Fact]
+   public async Task Update_ReturnModelStateInvalidTest()
+   {
+       
+   }
    
    // NewDeleteConfirmed(int id)
    
@@ -667,7 +647,11 @@ public class PostControllerTest
    
    // NewLikePost(int id)
    
+   // SavePost(int id)
+   
    // NewLikeComment(int id)
+   
+   // SaveComment(int id)
    
    // NewDeleteComment(int id)
    
