@@ -67,10 +67,6 @@ public class PostControllerTest
             _mockLogger.Object
         );
     }
-
-    // GetUserID() HELVETE
-
-    // IsAdmin() HELVETE
     
     // Method for getting mock posts for testing
     private List<Post> GetMockPosts()
@@ -192,6 +188,12 @@ public class PostControllerTest
         return (mockUser, claimsPrincipal);
     }
 
+    
+    // GetUserID() HELVETE
+
+    // IsAdmin() HELVETE
+    
+    
     // Method for testing GetAllPosts function when it returns OK 
     [Fact]
     public async Task GetAllPosts_ReturnPostsOKTest()
@@ -731,8 +733,42 @@ public class PostControllerTest
        Assert.Equal(404, statusCodeResult.StatusCode);
        Assert.Equal("Tags not found, cannot update post", statusCodeResult.Value);
    }
-   
-   
+
+   // Method for testing Update function when there is an update failure
+   // This does not work because of this line in the controller: _forumDbContext.Entry(postFromDb).State = EntityState.Detached;
+   //[Fact]
+   public async Task Update_ReturnUpdateFailureTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       // Explicitly set the post to user
+       var mockPost = GetMockPosts().First(p => p.UserId == userId);
+       mockPost.User = mockUser;
+       mockPost.UserId = userId;
+       mockUser.Posts = GetMockPosts();;
+       var mockTags = GetMockTags();
+       
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
+       _mockTags.Setup(repo => repo.GetAll()).ReturnsAsync(mockTags);
+       _mockUserManager.Setup(m => m.FindByIdAsync(userId)).ReturnsAsync(mockUser); // Ensure FindByIdAsync returns the mock user
+       _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(false); 
+
+       // Act
+       var result = await _controller.NewUpdate(mockPost);
+
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(500, statusCodeResult.StatusCode);
+       Assert.Equal("Internal server error while updating post please try again", statusCodeResult.Value);
+   }
    
    // NewDeleteConfirmed(int id)
    
