@@ -4,11 +4,13 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using forum.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace forum.Controllers;
 
@@ -37,6 +39,13 @@ public class AccountController : Controller
         _logger = logger;
     }
 
+    // Get request to fetch user identity
+    [HttpGet]
+    public string GetUserId()
+    {
+        //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
+        return User?.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
+    }
 
     [HttpGet("logout")]
     public async Task<IActionResult> Logout()
@@ -136,9 +145,11 @@ public class AccountController : Controller
     }
 
     [HttpPost("changePassword")]
-    [Authorize]
     public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
     {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        
         if (!ModelState.IsValid) return StatusCode(422, "Invalid password");
 
         var user = await _userManager.GetUserAsync(User);
@@ -169,7 +180,6 @@ public class AccountController : Controller
     }
 
     [HttpPost("uploadProfilePicture")]
-    [Authorize]
     public async Task<IActionResult> UploadProfilePicture()
     {
         var user = await _userManager.GetUserAsync(User);

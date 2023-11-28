@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.IdentityModel.Tokens;
 
 namespace forum.Controllers;
 
@@ -44,7 +45,7 @@ public class PostController : Controller
     }
 
     /*[HttpGet]
-    [Authorize]
+    //[Authorize]
     public string GetUserId()
     {
         // This is needed to see if the user actually is exist in the database
@@ -53,7 +54,7 @@ public class PostController : Controller
             return User.FindFirstValue(ClaimTypes.NameIdentifier);
         return "";
     }*/
-    
+
     // Get request to fetch user identity
     [HttpGet]
     public string GetUserId()
@@ -173,9 +174,11 @@ public class PostController : Controller
 
     // Post request for publishing a post
     [HttpPost("CreatePost")]
-    [Authorize]
     public async Task<IActionResult> NewCreate(Post post)
     {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+
         // Set initial values for the post
         post.DateCreated = DateTime.Now;
         post.DateLastEdited = DateTime.Now;
@@ -206,19 +209,19 @@ public class PostController : Controller
 
         // Fetches the user
         var user = await _userManager.FindByIdAsync(post.UserId);
-        
+
         // Checks if the user is null
         if (user == null)
         {
             _logger.LogError("[PostController] Create failed, while executing Create(). No user");
             return StatusCode(422, "User not found");
         }
-        
+
         // If the user has no posts, create a new list of posts
         user.Posts ??= new List<Post>();
         // Adds the post to the user's posts
         user.Posts.Add(newPost);
-        
+
         // Attempt to update the user attribute
         var updateResult = await _userManager.UpdateAsync(user);
         if (!updateResult.Succeeded)
@@ -237,9 +240,11 @@ public class PostController : Controller
 
     // Post request for sending the post update
     [HttpPost("UpdatePost")]
-    [Authorize]
     public async Task<IActionResult> NewUpdate(Post post)
     {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        
         // Sanitizing the post content
         post.Content = new HtmlSanitizer().Sanitize(post.Content);
 
@@ -302,9 +307,11 @@ public class PostController : Controller
 
     // Post request for deleting post and confirming for the user
     [HttpGet("DeletePost/{id:int}")]
-    [Authorize]
     public async Task<IActionResult> NewDeleteConfirmed(int id)
     {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        
         var post = await _postRepository.GetTById(id);
         if (post == null)
         {
@@ -336,9 +343,11 @@ public class PostController : Controller
 
     // Post request for creating a comment
     [HttpPost("CreateComment")]
-    [Authorize]
     public async Task<IActionResult> NewCreateComment(Comment comment)
     {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        
         // Sanitizing the post content
         comment.Content = new HtmlSanitizer().Sanitize(comment.Content);
 
@@ -374,7 +383,7 @@ public class PostController : Controller
 
         // Updates the users comments
         await _userManager.UpdateAsync(user);
-        
+
         // Remove the cached data
         _memoryCache.Remove("AllPosts");
 
@@ -384,9 +393,11 @@ public class PostController : Controller
 
     // Post request for updating a comment
     [HttpPost("UpdateComment")]
-    [Authorize]
     public async Task<IActionResult> NewUpdateComment(Comment comment)
     {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        
         // Sanitizing the post content
         comment.Content = new HtmlSanitizer().Sanitize(comment.Content);
 
@@ -425,9 +436,12 @@ public class PostController : Controller
 
     // Get request for adding likes to a post
     [HttpGet("LikePost/{id:int}")]
-    [Authorize]
     public async Task<IActionResult> NewLikePost(int id)
     {
+        
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        
         // Fetches post based on id
         var post = await _postRepository.GetTById(id);
 
@@ -477,9 +491,11 @@ public class PostController : Controller
 
     // Get request for adding saves to a post
     [HttpGet("SavePost/{id:int}")]
-    [Authorize]
     public async Task<IActionResult> SavePost(int id)
     {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        
         // Fetches post based on id
         var post = await _postRepository.GetTById(id);
 
@@ -522,9 +538,11 @@ public class PostController : Controller
 
     // Get request for adding likes to a comment
     [HttpGet("LikeComment/{id:int}")]
-    [Authorize]
     public async Task<IActionResult> NewLikeComment(int id)
     {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        
         // Fetches comment based on id
         var comment = await _commentRepository.GetTById(id);
 
@@ -576,9 +594,11 @@ public class PostController : Controller
 
     // Get request for adding likes to a comment
     [HttpGet("SaveComment/{id:int}")]
-    [Authorize]
     public async Task<IActionResult> SaveComment(int id)
     {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        
         // Fetches comment based on id
         var comment = await _commentRepository.GetTById(id);
 
@@ -626,9 +646,11 @@ public class PostController : Controller
 
 
     [HttpGet("DeleteComment/{id:int}")]
-    [Authorize]
     public async Task<IActionResult> NewDeleteComment(int id)
     {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        
         // Fetch the comment from database, based on id
         var commentFromDb = await _commentRepository.GetTById(id);
 

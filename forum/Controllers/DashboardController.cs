@@ -36,7 +36,7 @@ public class DashBoardController : Controller
     public string GetUserId()
     {
         //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
-        return User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return User?.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
     }
 
     // Get request to fetch the Dashboard view
