@@ -43,7 +43,7 @@ public class PostController : Controller
         _logger = logger;
     }
 
-    [HttpGet]
+    /*[HttpGet]
     [Authorize]
     public string GetUserId()
     {
@@ -52,8 +52,15 @@ public class PostController : Controller
             //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
             return User.FindFirstValue(ClaimTypes.NameIdentifier);
         return "";
+    }*/
+    
+    // Get request to fetch user identity
+    [HttpGet]
+    public string GetUserId()
+    {
+        //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
+        return User?.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
     }
-
 
     // Method to check if the user is admin
     public bool IsAdmin()
@@ -172,7 +179,7 @@ public class PostController : Controller
         // Set initial values for the post
         post.DateCreated = DateTime.Now;
         post.DateLastEdited = DateTime.Now;
-        post.UserId = GetUserId(); // Assigning user to the post
+        post.UserId = GetUserId(); // Assigning user to the post 
         post.Category = await _categoryRepository.GetTById(post.CategoryId); // Assigning category to the post
 
         // Assigning tags to the post
