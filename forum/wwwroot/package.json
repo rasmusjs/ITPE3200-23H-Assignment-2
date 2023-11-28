@@ -1,9 +1,0 @@
-{
-  "dependencies": {
-    "@fortawesome/fontawesome-free": "^6.4.2",
-    "jquery": "^3.7.1",
-    "jquery-validate": "^2.0.0",
-    "jquery-validation-unobtrusive": "^4.0.0",
-    "simplemde": "^1.11.2"
-  }
-}

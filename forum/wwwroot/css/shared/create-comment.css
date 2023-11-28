@@ -1,9 +1,0 @@
-.create-comment {
-    padding: 4px;
-    background-color: var(--fg-3);
-    border-radius: 6px;
-
-    .actions {
-        margin-top: 4px;
-    }
-}
