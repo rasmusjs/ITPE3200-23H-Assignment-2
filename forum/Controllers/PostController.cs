@@ -177,7 +177,7 @@ public class PostController : Controller
     public async Task<IActionResult> NewCreate(Post post)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
 
         // Set initial values for the post
         post.DateCreated = DateTime.Now;
@@ -243,7 +243,7 @@ public class PostController : Controller
     public async Task<IActionResult> NewUpdate(Post post)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
         
         // Sanitizing the post content
         post.Content = new HtmlSanitizer().Sanitize(post.Content);
@@ -310,7 +310,7 @@ public class PostController : Controller
     public async Task<IActionResult> NewDeleteConfirmed(int id)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
         
         var post = await _postRepository.GetTById(id);
         if (post == null)
@@ -346,8 +346,8 @@ public class PostController : Controller
     public async Task<IActionResult> NewCreateComment(Comment comment)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
-        
+        if (userId.IsNullOrEmpty()) return Forbid("User not found, please log in again");
+     
         // Sanitizing the post content
         comment.Content = new HtmlSanitizer().Sanitize(comment.Content);
 
@@ -396,7 +396,7 @@ public class PostController : Controller
     public async Task<IActionResult> NewUpdateComment(Comment comment)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
         
         // Sanitizing the post content
         comment.Content = new HtmlSanitizer().Sanitize(comment.Content);
@@ -440,7 +440,7 @@ public class PostController : Controller
     {
         
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
         
         // Fetches post based on id
         var post = await _postRepository.GetTById(id);
@@ -494,7 +494,7 @@ public class PostController : Controller
     public async Task<IActionResult> SavePost(int id)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
         
         // Fetches post based on id
         var post = await _postRepository.GetTById(id);
@@ -541,7 +541,7 @@ public class PostController : Controller
     public async Task<IActionResult> NewLikeComment(int id)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
         
         // Fetches comment based on id
         var comment = await _commentRepository.GetTById(id);
@@ -597,7 +597,7 @@ public class PostController : Controller
     public async Task<IActionResult> SaveComment(int id)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
         
         // Fetches comment based on id
         var comment = await _commentRepository.GetTById(id);
@@ -649,7 +649,7 @@ public class PostController : Controller
     public async Task<IActionResult> NewDeleteComment(int id)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
         
         // Fetch the comment from database, based on id
         var commentFromDb = await _commentRepository.GetTById(id);

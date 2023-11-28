@@ -49,7 +49,7 @@ public class DashBoardController : Controller
     public async Task<IActionResult> GetUserActivity()
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
 
         // Initialize variable, and fetch all activity for the user
         var userActivity = await _userRepository.GetUserActivity(GetUserId());
@@ -93,7 +93,7 @@ public class DashBoardController : Controller
     public async Task<IActionResult> GetUserComments()
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
 
         // Initialize variable, and fetch all activity for the user
         var userActivity = await _userRepository.GetUserActivity(GetUserId());
@@ -123,7 +123,7 @@ public class DashBoardController : Controller
     public async Task<IActionResult> UpdateCategory(Category category)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
 
         if (!IsAdmin()) return BadRequest("User is not admin");
 
@@ -232,7 +232,7 @@ public class DashBoardController : Controller
     public async Task<IActionResult> NewCategory(Category category)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
 
         if (!IsAdmin()) return BadRequest("User is not admin");
 
@@ -299,7 +299,7 @@ public class DashBoardController : Controller
     public async Task<IActionResult> DeleteCategory(int id)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
 
         if (!IsAdmin()) return BadRequest("User is not admin");
 
@@ -474,7 +474,7 @@ public class DashBoardController : Controller
     public async Task<IActionResult> UpdateTag(Tag tag)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
 
         if (!IsAdmin()) return BadRequest("User is not admin");
 
@@ -498,7 +498,7 @@ public class DashBoardController : Controller
     public async Task<IActionResult> NewTag(Tag tag)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
 
         if (!IsAdmin()) return BadRequest("User is not admin");
 
@@ -523,7 +523,7 @@ public class DashBoardController : Controller
     public async Task<IActionResult> DeleteTag(int id)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
 
         if (!IsAdmin()) return BadRequest("User is not admin");
 

@@ -7,7 +7,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using forum.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -148,7 +147,7 @@ public class AccountController : Controller
     public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
     {
         var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return BadRequest("User not found, please log in again");
+        if (userId.IsNullOrEmpty()) return StatusCode(403,  "User not found, please log in again"); //  403 Forbidden
         
         if (!ModelState.IsValid) return StatusCode(422, "Invalid password");
 
