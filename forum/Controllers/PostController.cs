@@ -56,6 +56,7 @@ public class PostController : Controller
     
     // Get request to fetch user identity
     [HttpGet]
+    [Authorize]
     public string GetUserId()
     {
         //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
