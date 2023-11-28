@@ -870,7 +870,88 @@ public class PostControllerTest
        Assert.Equal("Internal server error while deleting post please try again", statusCodeResult.Value);
    }
    
-   // NewCreateComment(Comment comment)
+   // Method for testing CreateComment function when it returns OK
+   [Fact]
+   public async Task CreateComment_ReturnCommentOkTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       // Explicitly set the comment to user
+       mockUser.Posts = GetMockPosts();
+       var mockComment = GetMockComments().First(p => p.UserId == userId);
+       mockComment.User = mockUser;
+       mockComment.UserId = userId;
+       mockUser.Comments = GetMockComments();
+       
+       var mockPost = GetMockPosts().First();
+       mockComment.Post = mockPost;
+
+       // Mock repos
+       _mockCommentRepository.Setup(repo => repo.Create(It.IsAny<Comment>())).ReturnsAsync(mockComment);
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment.Post);
+       _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(true);
+       _mockUserManager.Setup(m => m.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(mockUser);
+       _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+
+       // Act
+       var result = await _controller.NewCreateComment(mockComment); 
+
+       // Assert
+       var okResult = Assert.IsType<OkObjectResult>(result);
+       Assert.Equal("Created comment successfully", okResult.Value);  
+   }
+
+   // Method for testing CreateComment function when it returns invalid Model State
+   [Fact]
+   public async Task CreateComment_ReturnInvalidModelStateTest()
+   {
+       // Arrange
+       var mockComment = GetMockComments().First();
+       
+       // Mocking failed Model State
+       // Source: https://stackoverflow.com/questions/17346866/model-state-validation-in-unit-tests
+       _controller.ModelState.AddModelError("Tags", "Post not valid, cannot create post");
+       
+       // Act
+       var result = await _controller.NewCreateComment(mockComment);
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(422, statusCodeResult.StatusCode);
+       Assert.Equal("Could not create the comment, the comment is not valid", statusCodeResult.Value);
+   }
+
+   [Fact]
+   public async Task CreateComment_ReturnUserNotFound()
+   {
+       // Arrange
+       var mockComment = GetMockComments().First();
+       var mockUser = GetMockUser(); // Mock user without claim
+       
+       _mockCommentRepository.Setup(repo => repo.Create(It.IsAny<Comment>())).ReturnsAsync(mockComment);
+       
+       // Act
+       var result = await _controller.NewCreateComment(mockComment);
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(403, statusCodeResult.StatusCode);
+       Assert.Equal("You are not the owner of the post", statusCodeResult.Value);
+   }
+   
+   [Fact]
+   public async Task CreateComment_ReturnErrorCreatingCommentTest()
+   {
+       
+   }
    
    // NewUpdateComment(Comment comment)
    
