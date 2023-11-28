@@ -43,7 +43,7 @@ public class PostController : Controller
         _logger = logger;
     }
 
-    [HttpGet]
+    /*[HttpGet]
     [Authorize]
     public string GetUserId()
     {
@@ -52,15 +52,15 @@ public class PostController : Controller
             //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
             return User.FindFirstValue(ClaimTypes.NameIdentifier);
         return "";
-    }
+    }*/
     
-    /*// Get request to fetch user identity
+    // Get request to fetch user identity
     [HttpGet]
     public string GetUserId()
     {
         //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
         return User?.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
-    }*/
+    }
 
     // Method to check if the user is admin
     public bool IsAdmin()
