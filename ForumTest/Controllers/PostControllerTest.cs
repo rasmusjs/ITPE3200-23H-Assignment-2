@@ -379,14 +379,34 @@ public class PostControllerTest
        Assert.Equal("Comments not found", notFoundResult.Value);
    }
    
+   [Fact]
+   public async Task Create_NotLoggedInTest()
+   {
+       // Act
+       var result = await _controller.NewCreate(GetMockPosts().First());
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(403, statusCodeResult.StatusCode);
+       Assert.Equal("User not found, please log in again", statusCodeResult.Value); 
+   }
+   
    // Method for testing Create function when it returns OK
    [Fact]
    public async Task Create_ReturnPostOkTest()
    {
        // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
        var mockTag = GetMockTags().First();
        var mockCategory = GetMockCategories().First();
-       var mockUser = GetMockUser();
        var mockPost = GetMockPosts().First(); // Use the first post (valid post) from the mock posts
        
        _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).ReturnsAsync(mockPost);
@@ -410,9 +430,17 @@ public class PostControllerTest
    public async Task Create_InvalidModelStateTest()
    {
        // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
        var mockTag = GetMockTags().First();
        var mockCategory = GetMockCategories().First();
-       var mockUser = GetMockUser();
        
        var mockPost = GetMockPosts().First(p => p.PostId == 2); // Use the last post (null tags) from the mock posts
        _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).ReturnsAsync(mockPost);
@@ -437,8 +465,16 @@ public class PostControllerTest
    public async Task Create_NullTagsTest()
    {
        // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
        var mockCategory = GetMockCategories().First();
-       var mockUser = GetMockUser();
        var mockPost = GetMockPosts().First(p => p.PostId == 4); // Use the post with null tags from the mock posts
        var mockTags = mockPost.Tags;
        
@@ -464,9 +500,17 @@ public class PostControllerTest
    public async Task Create_HtmlSanitizerTest()
    {
        // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
        var mockTag = GetMockTags().First();
        var mockCategory = GetMockCategories().First();
-       var mockUser = GetMockUser();
        
        var mockPost = GetMockPosts().First(p => p.PostId == 2); // Use the post with html input from the mock posts
        // Mock the repository to create a post and check that the post content does not contain html script tags
@@ -492,8 +536,16 @@ public class PostControllerTest
    public async Task Create_NullCategoriesTest()
    {
        // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
        var mockTag = GetMockTags().First();
-       var mockUser = GetMockUser();
        
        var mockPost = GetMockPosts().First(p => p.PostId == 3); // Use the post with null category from the mock posts
        _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).ReturnsAsync(mockPost);
@@ -518,9 +570,17 @@ public class PostControllerTest
    public async Task Create_NullNewPostTest()
    {
        // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
        var mockTag = GetMockTags().First();
        var mockCategory = GetMockCategories().First();
-       var mockUser = GetMockUser();
        var mockPost = GetMockPosts().First(); // Use the first post (valid post) from the mock posts
        
        // Simulate failure to create post:
@@ -545,6 +605,15 @@ public class PostControllerTest
    public async Task Create_UserNotFoundTest()
    {
        // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
        var mockTag = GetMockTags().First();
        var mockCategory = GetMockCategories().First();
        var mockPost = GetMockPosts().First(); // Use the first post (valid post) from the mock posts
@@ -601,6 +670,18 @@ public class PostControllerTest
        Assert.Equal(mockPost.PostId, okResult.Value);
    }
    
+   [Fact]
+   public async Task Update_NotLoggedInTest()
+   {
+       // Act
+       var result = await _controller.NewUpdate(GetMockPosts().First());
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(403, statusCodeResult.StatusCode);
+       Assert.Equal("User not found, please log in again", statusCodeResult.Value); 
+   }
+   
    // Method for testing Update function when it returns OK
    // This does not work because of this line in the controller: _forumDbContext.Entry(postFromDb).State = EntityState.Detached;
    //[Fact]
@@ -640,6 +721,15 @@ public class PostControllerTest
    public async Task Update_ReturnModelStateInvalidTest()
    {
        // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
        var mockPost = GetMockPosts().First();
        
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
@@ -662,6 +752,15 @@ public class PostControllerTest
    public async Task Update_ReturnPostNotFoundTest()
    {
        // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
        var emptyPost = new Post { PostId = 1 }; // Post that don't exist
        
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post)null); // Return null post
@@ -681,9 +780,17 @@ public class PostControllerTest
    public async Task Update_InvalidUserIdTest()
    {
        // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
        var mockPost = GetMockPosts().First();
-       var mockUser = GetMockUser(); // Mock user without claim
-       var userId = mockUser.Id;
+       mockPost.UserId = "forbidden"; // Set invalid user id
        
        // Mock the repos
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
@@ -770,6 +877,18 @@ public class PostControllerTest
        Assert.Equal("Internal server error while updating post please try again", statusCodeResult.Value);
    }
    
+   [Fact]
+   public async Task DeleteConfirmed_NotLoggedInTest()
+   {
+       // Act
+       var result = await _controller.NewDeleteConfirmed(It.IsAny<int>());
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(403, statusCodeResult.StatusCode);
+       Assert.Equal("User not found, please log in again", statusCodeResult.Value); 
+   }
+   
    // Method for testing DeleteConfirmed function when it returns OK
    [Fact]
    public async Task DeleteConfirmed_ReturnPostOkTest()
@@ -807,6 +926,15 @@ public class PostControllerTest
    public async Task DeleteConfirmed_ReturnPostNotFoundTest()
    {
        // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
        var emptyPost = new Post { PostId = 1 }; // Post that don't exist
        
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post)null); // Return null post
@@ -825,7 +953,17 @@ public class PostControllerTest
    public async Task DeleteConfirmed_ReturnUserNotFoundTest()
    {
        // Arrange
-       var mockPost = GetMockPosts().First(); // Uses posts without user claim
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       var mockPost = GetMockPosts().First();
+       mockPost.UserId = "forbidden"; // Set user id to another user
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost); 
        
        // Act
@@ -914,6 +1052,15 @@ public class PostControllerTest
    public async Task CreateComment_ReturnInvalidModelStateTest()
    {
        // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
        var mockComment = GetMockComments().First();
        
        // Mocking failed Model State
@@ -933,8 +1080,16 @@ public class PostControllerTest
    public async Task CreateComment_ReturnUserNotFound()
    {
        // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
        var mockComment = GetMockComments().First();
-       var mockUser = GetMockUser(); // Mock user without claim
        
        _mockCommentRepository.Setup(repo => repo.Create(It.IsAny<Comment>())).ReturnsAsync(mockComment);
        
@@ -945,6 +1100,18 @@ public class PostControllerTest
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
        Assert.Equal(403, statusCodeResult.StatusCode);
        Assert.Equal("You are not the owner of the post", statusCodeResult.Value);
+   }
+
+   [Fact]
+   public async Task CreateComment_NotLoggedInTest()
+   {
+       // Act
+       var result = await _controller.NewCreateComment(GetMockComments().First());
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(403, statusCodeResult.StatusCode);
+       Assert.Equal("User not found, please log in again", statusCodeResult.Value); 
    }
    
    [Fact]
