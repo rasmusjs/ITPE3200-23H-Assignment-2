@@ -626,18 +626,113 @@ public class PostControllerTest
        _mockUserManager.Setup(m => m.FindByIdAsync(userId)).ReturnsAsync(mockUser); // Ensure FindByIdAsync returns the mock user
        
        // Act
-       var result = await _controller.NewUpdate(mockPost);  // This just returns "You are not the owner of this post"
+       var result = await _controller.NewUpdate(mockPost);
        
        // Assert
        var okResult = Assert.IsType<OkObjectResult>(result);
        Assert.Equal(mockPost.PostId, okResult.Value);
    }
 
+   // Method for testing Update function when it returns Internal Server Error because of invalid Model State
    [Fact]
    public async Task Update_ReturnModelStateInvalidTest()
    {
+       // Arrange
+       var mockPost = GetMockPosts().First();
        
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
+       _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(true); 
+       
+       // Mocking failed Model State
+       // Source: https://stackoverflow.com/questions/17346866/model-state-validation-in-unit-tests
+       _controller.ModelState.AddModelError("Tags", "Post not valid, cannot create post");
+       
+       // Act
+       var result = await _controller.NewUpdate(mockPost);
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(500, statusCodeResult.StatusCode); 
    }
+
+   // Method to test Update function when it returns Internal Server Error because of null post
+   [Fact]
+   public async Task Update_ReturnPostNotFoundTest()
+   {
+       // Arrange
+       var emptyPost = new Post { PostId = 1 }; // Post that don't exist
+       
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post)null); // Return null post
+       _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(true);  
+       
+       // Act
+       var result = await _controller.NewUpdate(emptyPost);
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(500, statusCodeResult.StatusCode);
+       Assert.Equal("Internal server error while updating post please try again", statusCodeResult.Value);
+   }
+
+   // Method to test Update function when it returns invalid user 
+   [Fact]
+   public async Task Update_InvalidUserIdTest()
+   {
+       // Arrange
+       var mockPost = GetMockPosts().First();
+       var mockUser = GetMockUser(); // Mock user without claim
+       var userId = mockUser.Id;
+       
+       // Mock the repos
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
+       _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(true);
+       _mockUserManager.Setup(m => m.FindByIdAsync(userId)).ReturnsAsync(mockUser); // Ensure FindByIdAsync returns the mock user
+       
+       // Act
+       var result = await _controller.NewUpdate(mockPost);
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(403, statusCodeResult.StatusCode);
+       Assert.Equal("You are not the owner of the post",statusCodeResult.Value);
+   }
+
+   // Method for testing Update function when there are null tags
+   // This does not work because of this line in the controller: _forumDbContext.Entry(postFromDb).State = EntityState.Detached;
+   //[Fact]
+   public async Task Update_NullTagsTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       // Explicitly set the post to user
+       var mockPost = GetMockPosts().First(p => p.UserId == userId);
+       mockPost.User = mockUser;
+       mockPost.UserId = userId;
+       mockUser.Posts = GetMockPosts();
+       
+       // Mock the repos
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
+       _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(true); 
+       _mockTags.Setup(repo => repo.GetAll()).ReturnsAsync((List<Tag>)null); // Return null tags
+
+       // Act
+       var result = await _controller.NewUpdate(mockPost);
+
+       // Assert
+       var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
+       Assert.Equal(404, statusCodeResult.StatusCode);
+       Assert.Equal("Tags not found, cannot update post", statusCodeResult.Value);
+   }
+   
+   
    
    // NewDeleteConfirmed(int id)
    
