@@ -8,7 +8,8 @@
         <IsPackable>false</IsPackable>
         <SpaRoot>BracketBros-frontend/</SpaRoot>
         <SpaProxyServerUrl>http://localhost:3000</SpaProxyServerUrl>
-        <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
+        <SpaProxyLaunchCommand>npm run build</SpaProxyLaunchCommand>
+        <SpaProxyLaunchCommand>npm run preview</SpaProxyLaunchCommand>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
@@ -16,46 +17,12 @@
         <None Remove="Models\"/>
         <None Remove="Views\"/>
         <None Remove="Controllers\"/>
-        <None Remove="Views\Item\"/>
-        <None Remove="Views\Home\"/>
-        <None Remove="Views\Shared\"/>
         <None Remove="ForumDatabase.db"/>
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Logs\"/>
-        <Folder Include="wwwroot\lib\fontawesome\"/>
     </ItemGroup>
-    <ItemGroup>
-        <_ContentIncludedByDefault Remove="Views\Item\Details.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Item\Grid.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Item\Table.cshtml"/>
-        <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\.gitignore"/>
-        <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\bower.json"/>
-        <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\index-svg.html"/>
-        <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\index.html"/>
-        <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\index.svg"/>
-        <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\jquery.min.js"/>
-        <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\LICENSE"/>
-        <_ContentIncludedByDefault Remove="wwwroot\lib\qrcodejs\README.md"/>
-        <_ContentIncludedByDefault Remove="Views\Post\Card.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Post\Compact.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Post\Create.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Post\Delete.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Post\Post.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Post\Update.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Search\Index.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Search\Search.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Shared\_AccountStatus.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Shared\_Comment.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Shared\_Comments.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Shared\_CreateComment.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Shared\_Layout.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Shared\_PostCard.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Shared\_PostCompact.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Shared\_SearchField.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Shared\_SortBy.cshtml"/>
-        <_ContentIncludedByDefault Remove="Views\Shared\_UpdateComment.cshtml"/>
-    </ItemGroup>
+    
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.25"/>
         <PackageReference Include="HtmlSanitizer" Version="8.0.718"/>
@@ -112,12 +79,4 @@
             </ResolvedFileToPublish>
         </ItemGroup>
     </Target>
-
-
-    <!--  <ItemGroup>
-          <Content Update="wwwroot\package-lock.json">
-              <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-          </Content>
-          <Content Remove="wwwroot\package.json"/>
-      </ItemGroup>-->
 </Project>
