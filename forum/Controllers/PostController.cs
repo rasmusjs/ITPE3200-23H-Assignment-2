@@ -557,7 +557,7 @@ public class PostController : Controller
         }
 
         // Fetches the user
-        var user = await _userManager.FindByIdAsync(GetUserId());
+        var user = await _userManager.FindByIdAsync(userId);
 
         // Error handling if the user is not found
         if (user == null)
@@ -573,7 +573,11 @@ public class PostController : Controller
             comment.TotalLikes--; // Decrements like on the comment
             user.LikedComments.Remove(comment); // Removes the comment from the user's liked comments
             await _userManager.UpdateAsync(user); // Updates the user
-            await _commentRepository.Update(comment); // Updates the comment
+            if (!await _commentRepository.Update(comment)) // Updates the comment
+            {
+                _logger.LogError("[PostController] LikeComment failed, failed while executing Update()");
+                return StatusCode(500, "Internal server error while updating comment please try again");
+            }
 
             // Refreshes the site
             return Ok("Unliked comment successfully");
@@ -590,7 +594,11 @@ public class PostController : Controller
         await _userManager.UpdateAsync(user);
 
         // Updates the comment
-        await _commentRepository.Update(comment);
+        if (!await _commentRepository.Update(comment))
+        {
+            _logger.LogError("[PostController] LikeComment failed, failed while executing Update()");
+            return StatusCode(500, "Internal server error while updating comment please try again");
+        }
 
         return Ok("Liked comment successfully");
     }
@@ -642,7 +650,11 @@ public class PostController : Controller
         await _userManager.UpdateAsync(user);
 
         // Updates the comment
-        await _commentRepository.Update(comment);
+        if (!await _commentRepository.Update(comment))
+        {
+            _logger.LogError("[PostController] SaveComment failed, failed while executing Update()");
+            return StatusCode(500, "Internal server error while updating comment please try again");
+        }
 
         return Ok("Saved comment successfully");
     }
@@ -697,7 +709,11 @@ public class PostController : Controller
         }
 
         post.TotalComments--;
-        await _postRepository.Update(post);
+        if (!await _postRepository.Update(post))
+        {
+            _logger.LogError("[PostController] DeleteComment failed, failed while executing Update()");
+            return StatusCode(500, "Internal server error while updating post please try again");
+        }
 
         return Ok("Comment deleted successfully");
     }
