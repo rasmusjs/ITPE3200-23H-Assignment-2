@@ -388,8 +388,8 @@ public class PostControllerTest
        var mockTag = GetMockTags().First();
        var mockCategory = GetMockCategories().First();
        var mockUser = GetMockUser();
-       
        var mockPost = GetMockPosts().First(); // Use the first post (valid post) from the mock posts
+       
        _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).ReturnsAsync(mockPost);
        _mockCategoryRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockCategory);
        _mockTags.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockTag);
@@ -612,10 +612,50 @@ public class PostControllerTest
        Assert.Equal(mockPost.PostId, okResult.Value);
    }
    
-   
-   // GetPostViewModel()
-   
-   //NewUpdate(Post post)
+   // Method for testing Update function when it returns OK
+   // This does not work because of Identity management which refuses to acknowledge the mock user owning the post
+   //[Fact]
+   public async Task NewUpdate_ReturnPostOkTest()
+   {
+       // Arrange
+       // Explicitly set the user id to user1
+       var userId = "user1";
+       var mockUser = GetMockUser();
+       mockUser.Id = userId;
+       
+       // Mock user claim for user1
+       var userClaims = new List<Claim>
+       {
+           new Claim(ClaimTypes.NameIdentifier, userId)
+       };
+       var claimsIdentity = new ClaimsIdentity(userClaims, "TestAuthType");
+       var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+        // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       // Explicitly set the post to user1
+       var mockPost = GetMockPosts().First(p => p.UserId == userId);
+       mockPost.User = mockUser;
+       mockPost.UserId = userId;
+       mockUser.Posts = GetMockPosts();
+       
+       // Mock the repos
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
+       _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(true);
+       _mockUserManager.Setup(m => m.FindByIdAsync(userId)).ReturnsAsync(mockUser); // Ensure FindByIdAsync returns the mock user
+       
+       // Act
+       var result = await _controller.NewUpdate(mockPost);  // This just returns "You are not the owner of this post"
+       
+       // Assert
+       var okResult = Assert.IsType<ObjectResult>(result);
+       var returnedPostId = Assert.IsType<int>(okResult.Value);
+       Assert.Equal(mockPost.PostId, returnedPostId);
+   }
    
    // Delete(int id)
    
