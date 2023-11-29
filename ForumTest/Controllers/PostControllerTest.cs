@@ -243,7 +243,7 @@ public class PostControllerTest
         {
             HttpContext = new DefaultHttpContext
             {
-                User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                User = new ClaimsPrincipal(new ClaimsIdentity(new[]
                     { new Claim(ClaimTypes.NameIdentifier, userId) }))
             }
         };
@@ -398,7 +398,6 @@ public class PostControllerTest
    {
        // Arrange
        var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
-       var userId = mockUser.Id; // Set user id
 
        // Set the User property of the controller to the test user
        _controller.ControllerContext = new ControllerContext
@@ -432,7 +431,6 @@ public class PostControllerTest
    {
        // Arrange
        var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
-       var userId = mockUser.Id; // Set user id
 
        // Set the User property of the controller to the test user
        _controller.ControllerContext = new ControllerContext
@@ -467,7 +465,6 @@ public class PostControllerTest
    {
        // Arrange
        var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
-       var userId = mockUser.Id; // Set user id
 
        // Set the User property of the controller to the test user
        _controller.ControllerContext = new ControllerContext
@@ -502,7 +499,6 @@ public class PostControllerTest
    {
        // Arrange
        var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
-       var userId = mockUser.Id; // Set user id
 
        // Set the User property of the controller to the test user
        _controller.ControllerContext = new ControllerContext
@@ -538,7 +534,6 @@ public class PostControllerTest
    {
        // Arrange
        var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
-       var userId = mockUser.Id; // Set user id
 
        // Set the User property of the controller to the test user
        _controller.ControllerContext = new ControllerContext
@@ -550,7 +545,7 @@ public class PostControllerTest
        
        var mockPost = GetMockPosts().First(p => p.PostId == 3); // Use the post with null category from the mock posts
        _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).ReturnsAsync(mockPost);
-       _mockCategoryRepository.Setup(repo => repo.GetTById(mockPost.CategoryId)).ReturnsAsync((Category)null);
+       _mockCategoryRepository.Setup(repo => repo.GetTById(mockPost.CategoryId)).ReturnsAsync((Category) null!);
        _mockTags.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockTag);
        _mockUserManager.Setup(repo => repo.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(mockUser); 
        
@@ -572,7 +567,6 @@ public class PostControllerTest
    {
        // Arrange
        var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
-       var userId = mockUser.Id; // Set user id
 
        // Set the User property of the controller to the test user
        _controller.ControllerContext = new ControllerContext
@@ -585,7 +579,7 @@ public class PostControllerTest
        var mockPost = GetMockPosts().First(); // Use the first post (valid post) from the mock posts
        
        // Simulate failure to create post:
-       _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).ReturnsAsync((Post)null);
+       _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).ReturnsAsync((Post) null!);
        
        _mockCategoryRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockCategory);
        _mockTags.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockTag);
@@ -607,7 +601,6 @@ public class PostControllerTest
    {
        // Arrange
        var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
-       var userId = mockUser.Id; // Set user id
 
        // Set the User property of the controller to the test user
        _controller.ControllerContext = new ControllerContext
@@ -621,7 +614,7 @@ public class PostControllerTest
        
        _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).ReturnsAsync(mockPost);
        // Simulate failure to find user:
-       _mockUserManager.Setup(repo => repo.FindByIdAsync(It.IsAny<string>())).ReturnsAsync((ApplicationUser)null);
+       _mockUserManager.Setup(repo => repo.FindByIdAsync(It.IsAny<string>()))!.ReturnsAsync((ApplicationUser) null!);
        _mockCategoryRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockCategory);
        _mockTags.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockTag);
        
@@ -724,7 +717,6 @@ public class PostControllerTest
    {
        // Arrange
        var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
-       var userId = mockUser.Id; // Set user id
 
        // Set the User property of the controller to the test user
        _controller.ControllerContext = new ControllerContext
@@ -755,7 +747,6 @@ public class PostControllerTest
    {
        // Arrange
        var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
-       var userId = mockUser.Id; // Set user id
 
        // Set the User property of the controller to the test user
        _controller.ControllerContext = new ControllerContext
@@ -765,7 +756,7 @@ public class PostControllerTest
        
        var emptyPost = new Post { PostId = 1 }; // Post that don't exist
        
-       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post)null); // Return null post
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post) null!); // Return null post
        _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(true);  
        
        // Act
@@ -832,7 +823,7 @@ public class PostControllerTest
        // Mock the repos
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
        _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(true); 
-       _mockTags.Setup(repo => repo.GetAll()).ReturnsAsync((List<Tag>)null); // Return null tags
+       _mockTags.Setup(repo => repo.GetAll()).ReturnsAsync((List<Tag>) null!); // Return null tags
 
        // Act
        var result = await _controller.NewUpdate(mockPost);
@@ -862,7 +853,7 @@ public class PostControllerTest
        var mockPost = GetMockPosts().First(p => p.UserId == userId);
        mockPost.User = mockUser;
        mockPost.UserId = userId;
-       mockUser.Posts = GetMockPosts();;
+       mockUser.Posts = GetMockPosts();
        var mockTags = GetMockTags();
        
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
@@ -910,7 +901,7 @@ public class PostControllerTest
        var mockPost = GetMockPosts().First(p => p.UserId == userId);
        mockPost.User = mockUser;
        mockPost.UserId = userId;
-       mockUser.Posts = GetMockPosts();;
+       mockUser.Posts = GetMockPosts();
        
        // Mock repos 
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
@@ -930,7 +921,6 @@ public class PostControllerTest
    {
        // Arrange
        var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
-       var userId = mockUser.Id; // Set user id
 
        // Set the User property of the controller to the test user
        _controller.ControllerContext = new ControllerContext
@@ -940,7 +930,7 @@ public class PostControllerTest
        
        var emptyPost = new Post { PostId = 1 }; // Post that don't exist
        
-       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post)null); // Return null post
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post) null!); // Return null post
        
        // Act
        var result = await _controller.NewDeleteConfirmed(emptyPost.PostId); 
@@ -957,7 +947,6 @@ public class PostControllerTest
    {
        // Arrange
        var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
-       var userId = mockUser.Id; // Set user id
 
        // Set the User property of the controller to the test user
        _controller.ControllerContext = new ControllerContext
@@ -996,7 +985,7 @@ public class PostControllerTest
        var mockPost = GetMockPosts().First(p => p.UserId == userId);
        mockPost.User = mockUser;
        mockPost.UserId = userId;
-       mockUser.Posts = GetMockPosts();;
+       mockUser.Posts = GetMockPosts();
        
        // Mock repos 
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
@@ -1056,7 +1045,6 @@ public class PostControllerTest
    {
        // Arrange
        var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
-       var userId = mockUser.Id; // Set user id
 
        // Set the User property of the controller to the test user
        _controller.ControllerContext = new ControllerContext
@@ -1107,7 +1095,7 @@ public class PostControllerTest
       };
        
       var mockComment = GetMockComments().First(p => p.UserId == userId);
-      _mockCommentRepository.Setup(repo => repo.Create(It.IsAny<Comment>())).ReturnsAsync((Comment)null);
+      _mockCommentRepository.Setup(repo => repo.Create(It.IsAny<Comment>())).ReturnsAsync((Comment) null!);
 
       // Act
       var result = await _controller.NewCreateComment(mockComment); 
@@ -1141,7 +1129,7 @@ public class PostControllerTest
        
        // Mock repos
        _mockCommentRepository.Setup(repo => repo.Create(It.IsAny<Comment>())).ReturnsAsync(mockComment);
-       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post) null);
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post) null!);
        
        // Act
        var result = await _controller.NewCreateComment(mockComment);
@@ -1239,12 +1227,12 @@ public class PostControllerTest
        Assert.Equal("User not found, please log in again", statusCodeResult.Value);  
    }
 
+   // Method for testing UpdateComment when model state is invalid
    [Fact]
    public async Task UpdateComment_ReturnInvalidModelStateTest()
    {
        // Arrange
        var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
-       var userId = mockUser.Id; // Set user id
 
        // Set the User property of the controller to the test user
        _controller.ControllerContext = new ControllerContext
@@ -1284,7 +1272,7 @@ public class PostControllerTest
        var mockComment = GetMockComments().First(p => p.UserId == userId);
        
        // Mock repo
-       _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Comment) null);
+       _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Comment) null!);
        
        // Act
        var result = await _controller.NewUpdateComment(mockComment);
@@ -1331,6 +1319,7 @@ public class PostControllerTest
        Assert.Equal("You are not the owner of the comment", statusCodeResult.Value);  
    }
 
+   // Method for testing UpdateComment when the comment is not updated
    [Fact]
    public async Task UpdateComment_ReturnErrorUpdatingCommentTest()
    {
@@ -1367,11 +1356,360 @@ public class PostControllerTest
        Assert.Equal("Internal server error while updating comment please try again", statusCodeResult.Value);   
    }
    
-   // NewLikePost(int id)
+   // Method for testing LikePost when user has liked a post and returns unlike OK
+   [Fact]
+   public async Task LikePost_ReturnUnlikeOkTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       // Fetch a post that the user has liked 
+       var mockPost = GetMockPosts().First();
+       mockUser.LikedPosts = GetMockPosts(); // User has liked all posts
+
+       // Mock repos
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
+       _mockUserManager.Setup(m => m.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(mockUser);
+       _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+       _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(true);
+
+       // Act
+       var result = await _controller.NewLikePost(mockPost.PostId); 
+
+       // Assert
+       var okResult = Assert.IsType<OkObjectResult>(result);
+       Assert.Equal("Post unliked successfully", okResult.Value);  
+   }
+
+   // Method for testing LikePost when user has not liked a post and returns like OK
+   [Fact]
+   public async Task LikePost_ReturnLikeOkTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       // Fetch a post that the user has not liked 
+       var mockPost = GetMockPosts().First();
+
+       // Mock repos
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
+       _mockUserManager.Setup(m => m.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(mockUser);
+       _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+       _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(true);
+
+       // Act
+       var result = await _controller.NewLikePost(mockPost.PostId); 
+
+       // Assert
+       var okResult = Assert.IsType<OkObjectResult>(result);
+       Assert.Equal("Post liked successfully", okResult.Value); 
+   }
+
+   // Method for testing LikePost when user is not logged in
+   [Fact]
+   public async Task LikePost_ReturnUserNotLoggedInTest()
+   {
+       // Act
+       var result = await _controller.NewLikePost(It.IsAny<int>());
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(403, statusCodeResult.StatusCode);
+       Assert.Equal("User not found, please log in again", statusCodeResult.Value);   
+   }
+
+   [Fact]
+   public async Task LikePost_ReturnPostNotFoundTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       }; 
+       
+       // Mock repo to return null post
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post) null!);
+       
+       // Act
+       var result = await _controller.NewLikePost(It.IsAny<int>()); // Pass in any post id
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
+       Assert.Equal(404, statusCodeResult.StatusCode);
+       Assert.Equal("Post not found, cannot like post", statusCodeResult.Value); 
+   }
+
+   // Method for testing LikePost when user is not found
+   [Fact]
+   public async Task LikePost_ReturnUserNotFoundTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       // Fetch a post 
+       var mockPost = GetMockPosts().First();
+
+       // Mock repos
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
+       _mockUserManager.Setup(m => m.FindByIdAsync(It.IsAny<String>()))!.ReturnsAsync((ApplicationUser) null!); // Return null user
+
+       // Act
+       var result = await _controller.NewLikePost(mockPost.PostId);
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
+       Assert.Equal(404, statusCodeResult.StatusCode);
+       Assert.Equal("User not found, cannot like post. Please log in again", statusCodeResult.Value);  
+   }
+
+   // Method for testing LikePost when it fails to update post when unliking
+   [Fact]
+   public async Task LikePost_ReturnUpdateUnlikeFailureTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       // Fetch a post that the user has liked 
+       var mockPost = GetMockPosts().First();
+       mockUser.LikedPosts = GetMockPosts(); // User has liked all posts
+
+       // Mock repos
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
+       _mockUserManager.Setup(m => m.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(mockUser);
+       _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+       _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(false); // Simulate update failure
+
+       // Act
+       var result = await _controller.NewLikePost(mockPost.PostId);
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(500, statusCodeResult.StatusCode);
+       Assert.Equal("Internal server error while updating post please try again", statusCodeResult.Value);  
+   }
+
+   // Method for testing LikePost when it fails to update post when liking
+   [Fact]
+   public async Task LikePost_ReturnUpdateLikeFailureTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       // Fetch a post that the user has not liked 
+       var mockPost = GetMockPosts().First();
+
+       // Mock repos
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
+       _mockUserManager.Setup(m => m.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(mockUser);
+       _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+       _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(false);
+
+       // Act
+       var result = await _controller.NewLikePost(mockPost.PostId);
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(500, statusCodeResult.StatusCode);
+       Assert.Equal("Internal server error while updating post please try again", statusCodeResult.Value);   
+   }
    
-   // SavePost(int id)
+   // LikePost fail to update user attribute??
+   
+   // Method  for testing SavePost when it returns save OK 
+   [Fact]
+   public async Task SavePost_ReturnSavePostOkTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };  
+       
+       var mockPost = GetMockPosts().First();
+       
+       // Mock repos
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost); 
+       _mockUserManager.Setup(m => m.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(mockUser);
+       _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+       
+         // Act
+         var result = await _controller.SavePost(mockPost.PostId); 
+         
+         // Assert
+         var okResult = Assert.IsType<OkObjectResult>(result);
+         Assert.Equal("Post saved successfully", okResult.Value);  
+   }
+   
+   // Method  for testing SavePost when it returns unsave OK 
+   [Fact]
+   public async Task SavePost_ReturnUnsavePostOkTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };  
+       
+       var mockPost = GetMockPosts().First();
+       mockUser.SavedPosts = GetMockPosts(); // Save all posts
+       
+       // Mock repos
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost); 
+       _mockUserManager.Setup(m => m.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(mockUser);
+       _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+       
+       // Act
+       var result = await _controller.SavePost(mockPost.PostId); 
+         
+       // Assert
+       var okResult = Assert.IsType<OkObjectResult>(result);
+       Assert.Equal("Post unsaved successfully", okResult.Value);  
+   }
+   
+   // Method for testing SavePost when user is not logged in
+   [Fact]
+   public async Task SavePost_ReturnUserNotLoggedInTest()
+   {
+       // Act
+       var result = await _controller.SavePost(It.IsAny<int>());
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(403, statusCodeResult.StatusCode);
+       Assert.Equal("User not found, please log in again", statusCodeResult.Value);   
+   }
+
+   // Method for testing SavePost when post is not found
+   [Fact]
+   public async Task SavePost_ReturnPostNotFoundTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };   
+       
+       // Mock repo returning null posts
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post) null!); 
+       
+       // Act
+       var result = await _controller.SavePost(It.IsAny<int>()); 
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
+       Assert.Equal(404, statusCodeResult.StatusCode);
+       Assert.Equal("Post not found, cannot save post", statusCodeResult.Value);  
+   }
+
+   // Method for testing SavePost when user is not found
+   [Fact]
+   public async Task SavePost_ReturnUserNotFound()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };  
+       
+       var mockPost = GetMockPosts().First();
+       
+       // Mock repos
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost); 
+       _mockUserManager.Setup(m => m.FindByIdAsync(It.IsAny<String>()))!.ReturnsAsync((ApplicationUser) null!); // Return null user
+       
+       // Act
+       var result = await _controller.SavePost(mockPost.PostId); 
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
+       Assert.Equal(404, statusCodeResult.StatusCode);
+       Assert.Equal("User not found, cannot save post. Please log in again", statusCodeResult.Value); 
+   }
+   
+   // SavePost failed update test
    
    // NewLikeComment(int id)
+   [Fact]
+   public async Task LikeComment_ReturnLikeOkTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       // Explicitly set the comment to user
+       mockUser.Posts = GetMockPosts();
+       var mockComment = GetMockComments().First(p => p.UserId == userId);
+       mockComment.User = mockUser;
+       mockComment.UserId = mockUser.Id;
+       mockUser.Comments = GetMockComments();
+       
+       var mockPost = GetMockPosts().First();
+       mockComment.Post = mockPost;
+       
+       // Mock repos
+       _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment);
+       _mockUserManager.Setup(m => m.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(mockUser);
+       _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+       _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(true);
+
+       // Act
+       var result = await _controller.NewLikePost(mockPost.PostId); 
+
+       // Assert
+       var okResult = Assert.IsType<OkObjectResult>(result);
+       Assert.Equal("Post liked successfully", okResult.Value);  
+   }
    
    // SaveComment(int id)
    
