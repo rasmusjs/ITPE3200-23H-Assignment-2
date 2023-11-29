@@ -1118,9 +1118,77 @@ public class PostControllerTest
       Assert.Equal("Internal server error while creating comment please try again", statusCodeResult.Value);
    }
    
-   // CreateComment - post = null - Rasmus fix!!!
+   // Method for testing CreateComment when the post for the comment is null and not found 
+   [Fact]
+   public async Task CreateComment_PostNotFoundTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       // Explicitly set the comment to user
+       mockUser.Posts = GetMockPosts();
+       var mockComment = GetMockComments().First(p => p.UserId == userId);
+       mockComment.User = mockUser;
+       mockComment.UserId = userId;
+       mockUser.Comments = GetMockComments();
+       
+       // Mock repos
+       _mockCommentRepository.Setup(repo => repo.Create(It.IsAny<Comment>())).ReturnsAsync(mockComment);
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post) null);
+       
+       // Act
+       var result = await _controller.NewCreateComment(mockComment);
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
+       Assert.Equal(404, statusCodeResult.StatusCode);
+       Assert.Equal("Post not found, cannot like post", statusCodeResult.Value);
+   }
    
-   // CreateComment - update comment - Rasmus fixxxx!!!
+   // Method for testing CreateComment when it fails to update the post with the comment
+   [Fact]
+   public async Task CreateComment_FailedToUpdateTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       // Explicitly set the comment to user
+       mockUser.Posts = GetMockPosts();
+       var mockComment = GetMockComments().First(p => p.UserId == userId);
+       mockComment.User = mockUser;
+       mockComment.UserId = userId;
+       mockUser.Comments = GetMockComments();
+       
+       var mockPost = GetMockPosts().First();
+       mockComment.Post = mockPost;
+       
+       // Mock repos
+       _mockCommentRepository.Setup(repo => repo.Create(It.IsAny<Comment>())).ReturnsAsync(mockComment);
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment.Post);
+       _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(false);
+
+       // Act
+       var result = await _controller.NewCreateComment(mockComment); 
+
+       // Assert 
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(500, statusCodeResult.StatusCode);
+       Assert.Equal("Internal server error while updating post please try again", statusCodeResult.Value); 
+   }
    
    // NewUpdateComment(Comment comment)
    
