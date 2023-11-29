@@ -2,11 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="5;url=http://localhost:3000/">
-    <title>Redirecting... to http://localhost:3000/</title>
+    <script>
+        const interval = setInterval(function () {
+            const url = 'http://localhost:3000/';
+            fetch(url)
+                .then(response => {
+                    if (response.status === 200) {
+                        document.getElementById('status').innerText = 'Site online'
+                        clearInterval(interval);
+                        window.location.href = url;
+                    } else {
+                        document.getElementById('status').innerText = 'Site offline - retrying...'
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+                });
+        }, 5000);
+    </script>
+
+    <title>Redirecting...</title>
 </head>
 <body>
 <h1>Redirecting... to http://localhost:3000/</h1>
 <p>If you are not redirected, <a href="http://localhost:3000/">click here</a>.</p>
+<p id="status">Site status unknown</p>
 </body>
 </html>
