@@ -6,7 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>forum</RootNamespace>
         <IsPackable>false</IsPackable>
-        <SpaRoot>BracketBros-frontend/</SpaRoot>
+        <SpaRoot>frontend/</SpaRoot>
         <SpaProxyServerUrl>http://localhost:3000</SpaProxyServerUrl>
         <SpaProxyLaunchCommand>npm run build</SpaProxyLaunchCommand>
         <SpaProxyLaunchCommand>npm run preview</SpaProxyLaunchCommand>
