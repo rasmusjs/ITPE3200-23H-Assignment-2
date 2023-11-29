@@ -380,7 +380,7 @@ public class PostControllerTest
    public async Task Create_NotLoggedInTest()
    {
        // Act
-       var result = await _controller.NewCreate(GetMockPosts().First());
+       var result = await _controller.Create(GetMockPosts().First());
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -413,7 +413,7 @@ public class PostControllerTest
        _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
 
        // Act
-       var result = await _controller.NewCreate(mockPost);
+       var result = await _controller.Create(mockPost);
 
        // Assert
        var okResult = Assert.IsType<OkObjectResult>(result);
@@ -448,7 +448,7 @@ public class PostControllerTest
        _controller.ModelState.AddModelError("Tags", "Post not valid, cannot create post");
        
        // Act
-       var result = await _controller.NewCreate(mockPost); 
+       var result = await _controller.Create(mockPost); 
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -482,7 +482,7 @@ public class PostControllerTest
        _controller.ModelState.AddModelError("Tags", "Tags are required");
        
        // Act
-       var result = await _controller.NewCreate(mockPost); 
+       var result = await _controller.Create(mockPost); 
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -516,7 +516,7 @@ public class PostControllerTest
        _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
        
        // Act
-       var result = await _controller.NewCreate(mockPost); 
+       var result = await _controller.Create(mockPost); 
        
        // Assert
        var okResult = Assert.IsType<OkObjectResult>(result);
@@ -550,7 +550,7 @@ public class PostControllerTest
        _controller.ModelState.AddModelError("Category", "Category is required");
        
        // Act
-       var result = await _controller.NewCreate(mockPost); 
+       var result = await _controller.Create(mockPost); 
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -582,7 +582,7 @@ public class PostControllerTest
        _mockUserManager.Setup(repo => repo.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(mockUser); 
        
        // Act
-       var result = await _controller.NewCreate(mockPost); 
+       var result = await _controller.Create(mockPost); 
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -615,7 +615,7 @@ public class PostControllerTest
        _mockTags.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockTag);
        
        // Act
-       var result = await _controller.NewCreate(mockPost); 
+       var result = await _controller.Create(mockPost); 
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -650,7 +650,7 @@ public class PostControllerTest
        _mockTags.Setup(repo => repo.GetAll()).ReturnsAsync(mockTags);
        
        // Act
-       var result = await _controller.NewCreate(GetMockPosts().First());
+       var result = await _controller.Create(GetMockPosts().First());
        
        // Assert
        // Verify user update was called
@@ -686,7 +686,7 @@ public class PostControllerTest
        _mockTags.Setup(repo => repo.GetAll()).ReturnsAsync(mockTags);
        
        // Act
-       var result = await _controller.NewCreate(GetMockPosts().First());
+       var result = await _controller.Create(GetMockPosts().First());
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -699,7 +699,7 @@ public class PostControllerTest
    public async Task Update_NotLoggedInTest()
    {
        // Act
-       var result = await _controller.NewUpdate(GetMockPosts().First());
+       var result = await _controller.Update(GetMockPosts().First());
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -734,7 +734,7 @@ public class PostControllerTest
        _mockUserManager.Setup(m => m.FindByIdAsync(userId)).ReturnsAsync(mockUser); // Ensure FindByIdAsync returns the mock user
        
        // Act
-       var result = await _controller.NewUpdate(mockPost);
+       var result = await _controller.Update(mockPost);
        
        // Assert
        var okResult = Assert.IsType<OkObjectResult>(result);
@@ -761,7 +761,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post) null!); // Return null post
        
        // Act
-       var result = await _controller.NewUpdate(mockPost);
+       var result = await _controller.Update(mockPost);
        
        // Assert
        var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
@@ -792,7 +792,7 @@ public class PostControllerTest
        _controller.ModelState.AddModelError("Tags", "Post not valid, cannot create post");
        
        // Act
-       var result = await _controller.NewUpdate(mockPost);
+       var result = await _controller.Update(mockPost);
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -818,7 +818,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(true);  
        
        // Act
-       var result = await _controller.NewUpdate(emptyPost);
+       var result = await _controller.Update(emptyPost);
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -849,7 +849,7 @@ public class PostControllerTest
        _mockUserManager.Setup(m => m.FindByIdAsync(userId)).ReturnsAsync(mockUser); // Ensure FindByIdAsync returns the mock user
        
        // Act
-       var result = await _controller.NewUpdate(mockPost);
+       var result = await _controller.Update(mockPost);
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -884,7 +884,7 @@ public class PostControllerTest
        _mockTags.Setup(repo => repo.GetAll()).ReturnsAsync((List<Tag>) null!); // Return null tags
 
        // Act
-       var result = await _controller.NewUpdate(mockPost);
+       var result = await _controller.Update(mockPost);
 
        // Assert
        var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
@@ -920,7 +920,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(false); 
 
        // Act
-       var result = await _controller.NewUpdate(mockPost);
+       var result = await _controller.Update(mockPost);
 
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -933,7 +933,7 @@ public class PostControllerTest
    public async Task DeleteConfirmed_NotLoggedInTest()
    {
        // Act
-       var result = await _controller.NewDeleteConfirmed(It.IsAny<int>());
+       var result = await _controller.DeleteConfirmed(It.IsAny<int>());
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -966,7 +966,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.Delete(It.IsAny<int>())).ReturnsAsync(true);
        
        // Act
-       var result = await _controller.NewDeleteConfirmed(mockPost.PostId);
+       var result = await _controller.DeleteConfirmed(mockPost.PostId);
        
        // Assert
        var okResult = Assert.IsType<OkObjectResult>(result);
@@ -991,7 +991,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post) null!); // Return null post
        
        // Act
-       var result = await _controller.NewDeleteConfirmed(emptyPost.PostId); 
+       var result = await _controller.DeleteConfirmed(emptyPost.PostId); 
 
        // Assert
        var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
@@ -1017,7 +1017,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost); 
        
        // Act
-       var result = await _controller.NewDeleteConfirmed(mockPost.PostId);
+       var result = await _controller.DeleteConfirmed(mockPost.PostId);
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -1050,7 +1050,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.Delete(It.IsAny<int>())).ReturnsAsync(false); // Mock delete failure
        
        // Act
-       var result = await _controller.NewDeleteConfirmed(mockPost.PostId); 
+       var result = await _controller.DeleteConfirmed(mockPost.PostId); 
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -1090,7 +1090,7 @@ public class PostControllerTest
        _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
 
        // Act
-       var result = await _controller.NewCreateComment(mockComment); 
+       var result = await _controller.CreateComment(mockComment); 
 
        // Assert
        var okResult = Assert.IsType<OkObjectResult>(result);
@@ -1117,7 +1117,7 @@ public class PostControllerTest
        _controller.ModelState.AddModelError("Invalid", "Could not create the comment, the comment is not valid");
        
        // Act
-       var result = await _controller.NewCreateComment(mockComment);
+       var result = await _controller.CreateComment(mockComment);
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -1130,7 +1130,7 @@ public class PostControllerTest
    public async Task CreateComment_NotLoggedInTest()
    {
        // Act
-       var result = await _controller.NewCreateComment(GetMockComments().First());
+       var result = await _controller.CreateComment(GetMockComments().First());
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -1156,7 +1156,7 @@ public class PostControllerTest
       _mockCommentRepository.Setup(repo => repo.Create(It.IsAny<Comment>())).ReturnsAsync((Comment) null!);
 
       // Act
-      var result = await _controller.NewCreateComment(mockComment); 
+      var result = await _controller.CreateComment(mockComment); 
       
       // Assert
       var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -1190,7 +1190,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post) null!);
        
        // Act
-       var result = await _controller.NewCreateComment(mockComment);
+       var result = await _controller.CreateComment(mockComment);
        
        // Assert
        var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
@@ -1228,7 +1228,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(false);
 
        // Act
-       var result = await _controller.NewCreateComment(mockComment); 
+       var result = await _controller.CreateComment(mockComment); 
 
        // Assert 
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -1265,7 +1265,7 @@ public class PostControllerTest
        _mockCommentRepository.Setup(repo => repo.Update(It.IsAny<Comment>())).ReturnsAsync(true);
 
        // Act
-       var result = await _controller.NewUpdateComment(mockComment); 
+       var result = await _controller.UpdateComment(mockComment); 
 
        // Assert
        var okResult = Assert.IsType<OkObjectResult>(result);
@@ -1277,7 +1277,7 @@ public class PostControllerTest
    public async Task UpdateComment_ReturnNotLoggedInTest()
    {
        // Act
-       var result = await _controller.NewUpdateComment(GetMockComments().First());
+       var result = await _controller.UpdateComment(GetMockComments().First());
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -1305,7 +1305,7 @@ public class PostControllerTest
        _controller.ModelState.AddModelError("Invalid", "Could not update the comment, the comment is not valid");
        
        // Act
-       var result = await _controller.NewUpdateComment(mockComment);
+       var result = await _controller.UpdateComment(mockComment);
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -1333,7 +1333,7 @@ public class PostControllerTest
        _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Comment) null!);
        
        // Act
-       var result = await _controller.NewUpdateComment(mockComment);
+       var result = await _controller.UpdateComment(mockComment);
        
        // Assert
        var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
@@ -1369,7 +1369,7 @@ public class PostControllerTest
        _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment);
        
        // Act
-       var result = await _controller.NewUpdateComment(mockComment);
+       var result = await _controller.UpdateComment(mockComment);
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -1406,7 +1406,7 @@ public class PostControllerTest
        _mockCommentRepository.Setup(repo => repo.Update(It.IsAny<Comment>())).ReturnsAsync(false); // Simulate update failure
        
        // Act
-       var result = await _controller.NewUpdateComment(mockComment);
+       var result = await _controller.UpdateComment(mockComment);
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -1438,7 +1438,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(true);
 
        // Act
-       var result = await _controller.NewLikePost(mockPost.PostId); 
+       var result = await _controller.LikePost(mockPost.PostId); 
 
        // Assert
        var okResult = Assert.IsType<OkObjectResult>(result);
@@ -1468,7 +1468,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(true);
 
        // Act
-       var result = await _controller.NewLikePost(mockPost.PostId); 
+       var result = await _controller.LikePost(mockPost.PostId); 
 
        // Assert
        var okResult = Assert.IsType<OkObjectResult>(result);
@@ -1480,7 +1480,7 @@ public class PostControllerTest
    public async Task LikePost_ReturnUserNotLoggedInTest()
    {
        // Act
-       var result = await _controller.NewLikePost(It.IsAny<int>());
+       var result = await _controller.LikePost(It.IsAny<int>());
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -1504,7 +1504,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post) null!);
        
        // Act
-       var result = await _controller.NewLikePost(It.IsAny<int>()); // Pass in any post id
+       var result = await _controller.LikePost(It.IsAny<int>()); // Pass in any post id
        
        // Assert
        var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
@@ -1533,7 +1533,7 @@ public class PostControllerTest
        _mockUserManager.Setup(m => m.FindByIdAsync(It.IsAny<String>()))!.ReturnsAsync((ApplicationUser) null!); // Return null user
 
        // Act
-       var result = await _controller.NewLikePost(mockPost.PostId);
+       var result = await _controller.LikePost(mockPost.PostId);
        
        // Assert
        var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
@@ -1565,7 +1565,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(false); // Simulate update failure
 
        // Act
-       var result = await _controller.NewLikePost(mockPost.PostId);
+       var result = await _controller.LikePost(mockPost.PostId);
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -1596,7 +1596,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(false);
 
        // Act
-       var result = await _controller.NewLikePost(mockPost.PostId);
+       var result = await _controller.LikePost(mockPost.PostId);
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -1753,7 +1753,7 @@ public class PostControllerTest
        _mockCommentRepository.Setup(repo => repo.Update(It.IsAny<Comment>())).ReturnsAsync(true);
 
        // Act
-       var result = await _controller.NewLikeComment(mockComment.CommentId); 
+       var result = await _controller.LikeComment(mockComment.CommentId); 
 
        // Assert
        var okResult = Assert.IsType<OkObjectResult>(result);
@@ -1783,7 +1783,7 @@ public class PostControllerTest
        _mockCommentRepository.Setup(repo => repo.Update(It.IsAny<Comment>())).ReturnsAsync(true);
 
        // Act
-       var result = await _controller.NewLikeComment(mockComment.CommentId); 
+       var result = await _controller.LikeComment(mockComment.CommentId); 
 
        // Assert
        var okResult = Assert.IsType<OkObjectResult>(result);
@@ -1795,7 +1795,7 @@ public class PostControllerTest
    public async Task LikeComment_ReturnUserNotLoggedInTest()
    {
        // Act
-       var result = await _controller.NewLikeComment(It.IsAny<int>());
+       var result = await _controller.LikeComment(It.IsAny<int>());
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -1822,7 +1822,7 @@ public class PostControllerTest
        _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Comment) null!);
 
        // Act
-       var result = await _controller.NewLikeComment(mockComment.CommentId); // Pass in any comment id
+       var result = await _controller.LikeComment(mockComment.CommentId); // Pass in any comment id
        
        // Assert
        var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
@@ -1850,7 +1850,7 @@ public class PostControllerTest
        _mockUserManager.Setup(m => m.FindByIdAsync(It.IsAny<String>()))!.ReturnsAsync((ApplicationUser) null!); // Return null user
 
        // Act
-       var result = await _controller.NewLikeComment(mockComment.CommentId);  
+       var result = await _controller.LikeComment(mockComment.CommentId);  
        
        // Assert
        var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
@@ -1880,7 +1880,7 @@ public class PostControllerTest
        _mockCommentRepository.Setup(repo => repo.Update(It.IsAny<Comment>())).ReturnsAsync(false);
 
        // Act
-       var result = await _controller.NewLikeComment(mockComment.CommentId); 
+       var result = await _controller.LikeComment(mockComment.CommentId); 
 
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -1911,7 +1911,7 @@ public class PostControllerTest
        _mockCommentRepository.Setup(repo => repo.Update(It.IsAny<Comment>())).ReturnsAsync(false);
 
        // Act
-       var result = await _controller.NewLikeComment(mockComment.CommentId); 
+       var result = await _controller.LikeComment(mockComment.CommentId); 
 
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -2132,7 +2132,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(true);
        
        // Act
-       var result = await _controller.NewDeleteComment(mockComment.PostId); 
+       var result = await _controller.DeleteComment(mockComment.PostId); 
          
        // Assert
        var okResult = Assert.IsType<OkObjectResult>(result);
@@ -2144,7 +2144,7 @@ public class PostControllerTest
    public async Task DeleteComment_ReturnUserNotLoggedInTest()
    {
        // Act
-       var result = await _controller.NewDeleteComment(It.IsAny<int>());
+       var result = await _controller.DeleteComment(It.IsAny<int>());
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -2168,7 +2168,7 @@ public class PostControllerTest
        _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Comment) null!); // return null comment
 
        // Act
-       var result = await _controller.NewDeleteComment(It.IsAny<int>()); // Pass in any comment id
+       var result = await _controller.DeleteComment(It.IsAny<int>()); // Pass in any comment id
        
        // Assert
        var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
@@ -2196,7 +2196,7 @@ public class PostControllerTest
        _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment);
 
        // Act
-       var result = await _controller.NewDeleteComment(mockComment.PostId);
+       var result = await _controller.DeleteComment(mockComment.PostId);
 
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -2226,7 +2226,7 @@ public class PostControllerTest
        _controller.ModelState.AddModelError("Invalid", "Could not update the comment, the comment is not valid");
        
        // Act
-       var result = await _controller.NewDeleteComment(mockComment.PostId); 
+       var result = await _controller.DeleteComment(mockComment.PostId); 
          
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -2254,7 +2254,7 @@ public class PostControllerTest
        _mockCommentRepository.Setup(repo => repo.Delete(It.IsAny<int>())).ReturnsAsync(false);
        
        // Act
-       var result = await _controller.NewDeleteComment(mockComment.PostId); 
+       var result = await _controller.DeleteComment(mockComment.PostId); 
          
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -2283,7 +2283,7 @@ public class PostControllerTest
        _mockCommentRepository.Setup(repo => repo.Update(It.IsAny<Comment>())).ReturnsAsync(false);
 
        // Act
-       var result = await _controller.NewDeleteComment(mockComment.PostId);
+       var result = await _controller.DeleteComment(mockComment.PostId);
 
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -2312,7 +2312,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post) null!);
        
        // Act
-       var result = await _controller.NewDeleteComment(mockComment.PostId); 
+       var result = await _controller.DeleteComment(mockComment.PostId); 
          
        // Assert
        var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
@@ -2343,7 +2343,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(false);
        
        // Act
-       var result = await _controller.NewDeleteComment(mockComment.PostId); 
+       var result = await _controller.DeleteComment(mockComment.PostId); 
          
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
