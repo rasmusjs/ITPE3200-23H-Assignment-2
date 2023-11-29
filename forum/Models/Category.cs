@@ -8,7 +8,7 @@ namespace forum.Models;
 public class Category
 {
     // Getters and setters for id
-    public int CategoryId { get; set; }
+   [JsonProperty("categoryId")] public int CategoryId { get; set; }
 
     // Regex for error handling category names
     [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ. \-]{2,1024}",
