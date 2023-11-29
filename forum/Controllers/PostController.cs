@@ -43,17 +43,6 @@ public class PostController : Controller
         _logger = logger;
     }
 
-    /*[HttpGet]
-    //[Authorize]
-    public string GetUserId()
-    {
-        // This is needed to see if the user actually is exist in the database
-        if (_userManager.GetUserAsync(User).Result != null)
-            //https://stackoverflow.com/questions/29485285/can-not-find-user-identity-getuserid-method
-            return User.FindFirstValue(ClaimTypes.NameIdentifier);
-        return "";
-    }*/
-
     // Get request to fetch user identity
     [HttpGet]
     public string GetUserId()
