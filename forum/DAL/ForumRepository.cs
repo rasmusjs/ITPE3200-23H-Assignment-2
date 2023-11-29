@@ -42,6 +42,13 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
     // Function for fetching all entities from the database
     public async Task<IEnumerable<Comment>?> GetAllCommentsByPostId(int id)
     {
+        if (id <= 0) // id is not valid negative or 0
+        {
+            // Sends function name and error to the LogError function
+            LogError("GetAllCommentsByPostId", new Exception($"Entity not found for id {id}"));
+            return null;
+        }
+
         // Tries to retrieve all records from the database as a list
         try
         {
@@ -109,7 +116,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
                 _logger.LogInformation("[Forum Repository] GetAllPostsByTerm() found no posts");
                 return null;
             }
-            
+
 
             return posts;
         }
@@ -125,6 +132,13 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
     // Fetches posts from the database, based on post id
     public async Task<Post?> GetPostById(int id, string userId = "")
     {
+        if (id <= 0) // id is not valid negative or 0
+        {
+            // Sends function name and error to the LogError function
+            LogError("GetPostById", new Exception($"Entity not found for id {id}"));
+            return null;
+        }
+
         try
         {
             // Query the database for posts by id. Includes tags and categories (eagerly loading)
@@ -135,7 +149,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
                 .Include(post => post.User)
                 .Where(post => post.PostId == id)
                 .FirstAsync();
-            
+
 
             return post;
         }
@@ -162,7 +176,6 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
                 _logger.LogInformation("[Forum Repository] GetAllPosts() found no posts");
                 return null;
             }
-
             return posts;
         }
         // Error handling if it can't fetch posts from db
@@ -178,6 +191,12 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
     // Generic method to fetch any entity based on id
     public async Task<TEntity?> GetTById(int id)
     {
+        if (id <= 0) // id is not valid negative or 0
+        {
+            // Sends function name and error to the LogError function
+            LogError("GetTById", new Exception($"Entity not found for id {id}"));
+            return null;
+        }
         try
         {
             // Query the database for all entities with primary key as id
@@ -236,9 +255,10 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
     // Generic method to delete an entity based on id
     public async Task<bool> Delete(int id)
     {
-        if (id < 0) // id is not valid (negative)
+        if (id <= 0) // id is not valid negative or 0
         {
-            LogError($"Delete, entity not found for id {id}", new Exception("Entity not found"));
+            // Sends function name and error to the LogError function
+            LogError("Delete", new Exception($"Entity not found for id {id}"));
             return false;
         }
 
@@ -271,7 +291,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
     // Method for deleting all the tags from a post based on entity id
     public async Task<bool> RemoveAllPostTags(int id)
     {
-        if (id < 0) // id is not valid (negative)
+        if (id <= 0) // id is not valid negative or 0
         {
             // Sends function name and error to the LogError function
             LogError("RemoveAllPostTags", new Exception($"Entity not found for id {id}"));
@@ -303,7 +323,7 @@ public class ForumRepository<TEntity> : IForumRepository<TEntity> where TEntity 
             return false;
         }
     }
-    
+
 
 // Common method for logging errors
     private void LogError(string methodName, Exception exception)
