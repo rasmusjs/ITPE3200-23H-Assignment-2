@@ -173,7 +173,7 @@ public class PostController : Controller
 
     // Post request for publishing a post
     [HttpPost("CreatePost")]
-    public async Task<IActionResult> NewCreate(Post post)
+    public async Task<IActionResult> Create(Post post)
     {
         var userId = GetUserId();
         if (userId.IsNullOrEmpty()) return StatusCode(403, "User not found, please log in again"); //  403 Forbidden
@@ -239,7 +239,7 @@ public class PostController : Controller
 
     // Post request for sending the post update
     [HttpPost("UpdatePost")]
-    public async Task<IActionResult> NewUpdate(Post post)
+    public async Task<IActionResult> Update(Post post)
     {
         var userId = GetUserId();
         if (userId.IsNullOrEmpty()) return StatusCode(403, "User not found, please log in again"); //  403 Forbidden
@@ -306,7 +306,7 @@ public class PostController : Controller
 
     // Post request for deleting post and confirming for the user
     [HttpGet("DeletePost/{id:int}")]
-    public async Task<IActionResult> NewDeleteConfirmed(int id)
+    public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var userId = GetUserId();
         if (userId.IsNullOrEmpty()) return StatusCode(403, "User not found, please log in again"); //  403 Forbidden
@@ -342,7 +342,7 @@ public class PostController : Controller
 
     // Post request for creating a comment
     [HttpPost("CreateComment")]
-    public async Task<IActionResult> NewCreateComment(Comment comment)
+    public async Task<IActionResult> CreateComment(Comment comment)
     {
         var userId = GetUserId();
         if (userId.IsNullOrEmpty()) return StatusCode(403, "User not found, please log in again");
@@ -403,7 +403,7 @@ public class PostController : Controller
 
     // Post request for updating a comment
     [HttpPost("UpdateComment")]
-    public async Task<IActionResult> NewUpdateComment(Comment comment)
+    public async Task<IActionResult> UpdateComment(Comment comment)
     {
         var userId = GetUserId();
         if (userId.IsNullOrEmpty()) return StatusCode(403, "User not found, please log in again"); //  403 Forbidden
@@ -451,7 +451,7 @@ public class PostController : Controller
 
     // Get request for adding likes to a post
     [HttpGet("LikePost/{id:int}")]
-    public async Task<IActionResult> NewLikePost(int id)
+    public async Task<IActionResult> LikePost(int id)
     {
         var userId = GetUserId();
         if (userId.IsNullOrEmpty()) return StatusCode(403, "User not found, please log in again"); //  403 Forbidden
@@ -562,7 +562,7 @@ public class PostController : Controller
 
     // Get request for adding likes to a comment
     [HttpGet("LikeComment/{id:int}")]
-    public async Task<IActionResult> NewLikeComment(int id)
+    public async Task<IActionResult> LikeComment(int id)
     {
         var userId = GetUserId();
         if (userId.IsNullOrEmpty()) return StatusCode(403, "User not found, please log in again"); //  403 Forbidden
@@ -687,7 +687,7 @@ public class PostController : Controller
 
 
     [HttpGet("DeleteComment/{id:int}")]
-    public async Task<IActionResult> NewDeleteComment(int id)
+    public async Task<IActionResult> DeleteComment(int id)
     {
         var userId = GetUserId();
         if (userId.IsNullOrEmpty()) return StatusCode(403, "User not found, please log in again"); //  403 Forbidden
