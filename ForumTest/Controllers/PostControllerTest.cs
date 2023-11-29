@@ -1861,9 +1861,194 @@ public class PostControllerTest
        Assert.Equal("Internal server error while updating comment please try again", statusCodeResult.Value);   
    }
    
+   // Method  for testing SaveComment when it returns save OK 
+   [Fact]
+   public async Task SaveComment_ReturnSaveCommentOkTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };  
+       
+       var mockComment = GetMockComments().First();
+       
+       // Mock repos
+       _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment); 
+       _mockUserManager.Setup(m => m.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(mockUser);
+       _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+       _mockCommentRepository.Setup(repo => repo.Update(It.IsAny<Comment>())).ReturnsAsync(true);
+       
+       // Act
+       var result = await _controller.SaveComment(mockComment.PostId); 
+         
+       // Assert
+       var okResult = Assert.IsType<OkObjectResult>(result);
+       Assert.Equal("Saved comment successfully", okResult.Value);  
+   } 
    
+   // Method  for testing SaveComment when it returns save OK 
+   [Fact]
+   public async Task SaveComment_ReturnUnsaveCommentOkTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };  
+       
+       var mockComment = GetMockComments().First();
+       mockUser.SavedComments = GetMockComments(); // Save all comments
+       
+       // Mock repos
+       _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment); 
+       _mockUserManager.Setup(m => m.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(mockUser);
+       _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+       _mockCommentRepository.Setup(repo => repo.Update(It.IsAny<Comment>())).ReturnsAsync(true);
+       
+       // Act
+       var result = await _controller.SaveComment(mockComment.PostId); 
+         
+       // Assert
+       var okResult = Assert.IsType<OkObjectResult>(result);
+       Assert.Equal("Unsaved comment successfully", okResult.Value);  
+   } 
    
-   // SaveComment(int id)
+   // Method for testing SaveComment when user is not logged in
+   [Fact]
+   public async Task SaveComment_ReturnUserNotLoggedInTest()
+   {
+       // Act
+       var result = await _controller.SaveComment(It.IsAny<int>());
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(403, statusCodeResult.StatusCode);
+       Assert.Equal("User not found, please log in again", statusCodeResult.Value);    
+   }  
+   
+   // Method for testing SaveComment when comment is not found
+   [Fact]
+   public async Task SaveComment_ReturnCommentNotFoundTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };  
+       
+       var mockComment = GetMockComments().First();
+       
+       // Mock repos
+       _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Comment) null!); 
+       
+       // Act
+       var result = await _controller.SaveComment(mockComment.PostId); 
+         
+       // Assert
+       var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
+       Assert.Equal(404, statusCodeResult.StatusCode);
+       Assert.Equal("Comment not found, cannot save comment", statusCodeResult.Value);
+   }
+   
+   // Method  for testing SaveComment when it returns user not found
+   [Fact]
+   public async Task SaveComment_ReturnUserNotFoundTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };  
+       
+       var mockComment = GetMockComments().First();
+       
+       // Mock repos
+       _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment); 
+       _mockUserManager.Setup(m => m.FindByIdAsync(It.IsAny<String>())).ReturnsAsync((ApplicationUser) null!);
+       
+       // Act
+       var result = await _controller.SaveComment(mockComment.PostId); 
+         
+       // Assert
+       var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
+       Assert.Equal(404, statusCodeResult.StatusCode);
+       Assert.Equal("User not found, cannot save comment. Please log in again", statusCodeResult.Value);
+   }  
+   
+   // Method  for testing SaveComment when it returns update failed for like
+   [Fact]
+   public async Task SaveComment_ReturnUpdateLikeFailedTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };  
+       
+       var mockComment = GetMockComments().First();
+       
+       // Mock repos
+       _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment); 
+       _mockUserManager.Setup(m => m.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(mockUser);
+       _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+       _mockCommentRepository.Setup(repo => repo.Update(It.IsAny<Comment>())).ReturnsAsync(false);
+       
+       // Act
+       var result = await _controller.SaveComment(mockComment.PostId); 
+         
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(500, statusCodeResult.StatusCode);
+       Assert.Equal("Internal server error while updating comment please try again", statusCodeResult.Value);
+   }  
+   
+   // Method  for testing SaveComment when it returns update failed for unlike
+   [Fact]
+   public async Task SaveComment_ReturnUpdateUnlikeFailedTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };  
+       
+       var mockComment = GetMockComments().First();
+       mockUser.SavedComments = GetMockComments(); // Save all comments
+
+       
+       // Mock repos
+       _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment); 
+       _mockUserManager.Setup(m => m.FindByIdAsync(It.IsAny<String>())).ReturnsAsync(mockUser);
+       _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+       _mockCommentRepository.Setup(repo => repo.Update(It.IsAny<Comment>())).ReturnsAsync(false);
+       
+       // Act
+       var result = await _controller.SaveComment(mockComment.PostId); 
+         
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(500, statusCodeResult.StatusCode);
+       Assert.Equal("Internal server error while updating comment please try again", statusCodeResult.Value);
+   }  
    
    // NewDeleteComment(int id)
    
