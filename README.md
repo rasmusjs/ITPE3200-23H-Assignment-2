@@ -7,6 +7,10 @@ BracketBros is a programming discussion forum made for the ITPE3200 portfolio ex
 .NET Core 6.0, C# and with a MVC framework. This is a MVP solution where the focus is the back-end. The front-end is
 made with HTML, CSS, JavaScript and jQuery for input validation.
 
+Frontend repository:
+[https://github.com/ole-kristian-rudjord/BracketBros-frontend
+](https://github.com/ole-kristian-rudjord/BracketBros-frontend)
+
 **⚡ Quick start**
 ---
 
@@ -84,7 +88,7 @@ components, easy to maintain and scale, reusable code and good support in .NET C
   Entity Relationship diagram of the database
 </p>
 
-###  
+###   
 
 **⌨️ Code**
 ---
