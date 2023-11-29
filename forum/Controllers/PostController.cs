@@ -86,7 +86,7 @@ public class PostController : Controller
         }
 
         // If the data is not in the cache, fetch it from the database
-        if (posts == null) posts = await _postRepository.GetAllPosts(GetUserId());
+        posts ??= await _postRepository.GetAllPosts(GetUserId());
 
         // If no posts, return NotFound
         if (posts == null || !posts.Any())
