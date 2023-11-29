@@ -27,14 +27,11 @@ public class PostControllerTest
     private readonly Mock<UserManager<ApplicationUser>> _mockUserManager;
     private readonly Mock<IForumRepository<Category>> _mockCategoryRepository;
     private readonly Mock<IForumRepository<Comment>> _mockCommentRepository;
-
     private readonly Mock<ForumDbContext> _mockForumDbContext;
-
-    //private readonly Mock<IMemoryCache> _mockMemoryCache;
     private readonly Mock<ILogger<PostController>> _mockLogger;
 
-    private readonly PostController _controller;
-    private readonly IMemoryCache _memoryCache;
+    private readonly PostController _controller; // Controller to test
+    private readonly IMemoryCache _memoryCache; // New memory cache to avoid having to mocking it
 
     // Mock constructor from PostController
     public PostControllerTest()
