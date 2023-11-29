@@ -149,8 +149,8 @@ public class DashBoardController : Controller
     }
 
     // Function for creating new category
-    [HttpPost]
-    public async Task<IActionResult> NewCategory(Category category)
+    [HttpPost("newCategory")]
+    public async Task<IActionResult> NewCategory([FromForm] Category category)
     {
         var userId = GetUserId();
         if (userId.IsNullOrEmpty()) return StatusCode(403, "User not found, please log in again"); //  403 Forbidden
@@ -159,6 +159,11 @@ public class DashBoardController : Controller
 
         // Sets file as the first file uploaded in the http request form
         var file = Request.Form.Files.FirstOrDefault();
+
+        if (file != null)
+        {
+            Console.WriteLine("File is not null");
+        }
 
         // If the user has selected a file
         if (file != null)
@@ -216,7 +221,7 @@ public class DashBoardController : Controller
     }
 
     // Function for deleting a category
-    [HttpGet]
+    [HttpGet("deleteCategory/{id}")]
     public async Task<IActionResult> DeleteCategory(int id)
     {
         var userId = GetUserId();
@@ -415,7 +420,7 @@ public class DashBoardController : Controller
     }
 
     // Post request to update an existing tag in the repo and redirects to the admin dashboard
-    [HttpPost]
+    [HttpPost("updateTag")]
     public async Task<IActionResult> UpdateTag(Tag tag)
     {
         var userId = GetUserId();
@@ -440,7 +445,7 @@ public class DashBoardController : Controller
     }
 
     // Get request to delete a tag in the repo
-    [HttpGet]
+    [HttpGet("deleteTag/{id}")]
     public async Task<IActionResult> DeleteTag(int id)
     {
         var userId = GetUserId();
