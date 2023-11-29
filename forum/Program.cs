@@ -1,6 +1,5 @@
 ﻿using forum.DAL;
 using forum.Models;
-using Jdenticon.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -22,7 +21,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         options.Password.RequireLowercase = true;
         options.Password.RequiredUniqueChars = 6;*/
 
-        // Using regex instead of the above
+        // Using regex instead of the above, this was done to use the same regex in frontend
         // Source for regex https://stackoverflow.com/questions/8699033/password-dataannotation-in-asp-net-mvc-3
 
         // Lockout settings
@@ -39,9 +38,6 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 
 //Taken from lecture, see https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration?view=aspnetcore-7.0 for more info
 
-/*
-builder.Services.AddRazorPages();
-*/
 builder.Services.AddSession();
 
 // Add repositories to the container.
@@ -66,7 +62,6 @@ builder.Services.AddControllersWithViews()
         options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
     );
 
-
 // Add Serilog to the container.
 var logger = loggerConfiguration.CreateLogger();
 builder.Logging.AddSerilog(logger);
@@ -82,19 +77,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 //From https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-7.0&tabs=visual-studio
-
-// Configure CORS to allow any origin
-/*builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: "OpenCorsPolicy",
-        policy =>
-        {
-            policy.AllowAnyOrigin() // Use with caution, allows requests from any source
-                .AllowCredentials()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
-});*/
 
 builder.Services.AddCors(options =>
 {
@@ -117,15 +99,13 @@ else
     app.UseExceptionHandler("/Home/Error");
 }
 
-// Use the Open CORS policy
-//app.UseCors("OpenCorsPolicy");
+// Use the new CORS policy
 app.UseCors("AllowOriginFromVue");
 
 app.UseStaticFiles(); // for adding middleware
 app.UseSession();
 
 //Taken from lecture, see https://learn.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-7.0&viewFallbackFrom=aspnetcore-3.0 for more info
-app.UseJdenticon(); // For using for generating identicons. //https://jdenticon.com/#quick-start-asp-net-core
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseRouting();
