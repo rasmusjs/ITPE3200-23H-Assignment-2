@@ -187,12 +187,6 @@ public class PostControllerTest
 
         return (mockUser, claimsPrincipal);
     }
-
-    
-    // GetUserID() HELVETE
-
-    // IsAdmin() HELVETE
-    
     
     // Method for testing GetAllPosts function when it returns OK 
     [Fact]
@@ -664,6 +658,40 @@ public class PostControllerTest
        Assert.Equal(mockPost.PostId, okResult.Value);
    }
    
+   // Method for testing Create function when it returns update error
+   [Fact]
+   public async Task Create_UserUpdateFailTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+       
+       _mockUserManager.Setup(m => m.FindByIdAsync(userId)).ReturnsAsync(mockUser); // Ensure FindByIdAsync returns the mock user
+       _mockUserManager.Setup(m => m.UpdateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Failed()); // Fail user update
+       
+       // Set the User property of the controller to our test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       var mockTags = GetMockTags();
+       var mockPost = GetMockPosts().First(p => p.UserId == userId); // Use the first post from user1
+       var mockCategory = mockPost.Category;
+       
+       _mockPostRepository.Setup(repo => repo.Create(It.IsAny<Post>())).ReturnsAsync(mockPost);
+       _mockCategoryRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockCategory);
+       _mockTags.Setup(repo => repo.GetAll()).ReturnsAsync(mockTags);
+       
+       // Act
+       var result = await _controller.NewCreate(GetMockPosts().First());
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(500, statusCodeResult.StatusCode);
+       Assert.Equal("Error occurred while updating user data", statusCodeResult.Value); 
+   } 
+   
    // Method for testing Update when user is not logged in
    [Fact]
    public async Task Update_NotLoggedInTest()
@@ -679,7 +707,7 @@ public class PostControllerTest
    
    // Method for testing Update function when it returns OK
    // This does not work because of this line in the controller: _forumDbContext.Entry(postFromDb).State = EntityState.Detached;
-   //[Fact]
+   [Fact]
    public async Task Update_ReturnPostOkTest()
    {
        // Arrange
@@ -709,6 +737,34 @@ public class PostControllerTest
        // Assert
        var okResult = Assert.IsType<OkObjectResult>(result);
        Assert.Equal(mockPost.PostId, okResult.Value);
+   }
+   
+   // Method for testing Update function when it returns OK
+   [Fact]
+   public async Task Update_ReturnPostNotFoundTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+       var userId = mockUser.Id; // Set user id
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+       
+       var mockPost = GetMockPosts().First(p => p.UserId == userId);
+       
+       // Mock the repos
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post) null!); // Return null post
+       
+       // Act
+       var result = await _controller.NewUpdate(mockPost);
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
+       Assert.Equal(404, statusCodeResult.StatusCode);
+       Assert.Equal("Post not found, cannot update post", statusCodeResult.Value);
    }
 
    // Method for testing Update function when it returns Internal Server Error because of invalid Model State
@@ -743,7 +799,7 @@ public class PostControllerTest
 
    // Method to test Update function when it returns Internal Server Error because of null post
    [Fact]
-   public async Task Update_ReturnPostNotFoundTest()
+   public async Task Update_ReturnFailedUpdateTest()
    {
        // Arrange
        var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
@@ -801,7 +857,7 @@ public class PostControllerTest
 
    // Method for testing Update function when there are null tags
    // This does not work because of this line in the controller: _forumDbContext.Entry(postFromDb).State = EntityState.Detached;
-   //[Fact]
+   [Fact]
    public async Task Update_NullTagsTest()
    {
        // Arrange
@@ -836,7 +892,7 @@ public class PostControllerTest
 
    // Method for testing Update function when there is an update failure
    // This does not work because of this line in the controller: _forumDbContext.Entry(postFromDb).State = EntityState.Detached;
-   //[Fact]
+   [Fact]
    public async Task Update_ReturnUpdateFailureTest()
    {
        // Arrange
@@ -959,7 +1015,7 @@ public class PostControllerTest
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost); 
        
        // Act
-       var result = await _controller.NewUpdate(mockPost);
+       var result = await _controller.NewDeleteConfirmed(mockPost.PostId);
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -1219,7 +1275,7 @@ public class PostControllerTest
    public async Task UpdateComment_ReturnNotLoggedInTest()
    {
        // Act
-       var result = await _controller.NewCreateComment(GetMockComments().First());
+       var result = await _controller.NewUpdateComment(GetMockComments().First());
        
        // Assert
        var statusCodeResult = Assert.IsType<ObjectResult>(result);
@@ -2050,6 +2106,241 @@ public class PostControllerTest
        Assert.Equal("Internal server error while updating comment please try again", statusCodeResult.Value);
    }  
    
-   // NewDeleteComment(int id)
+   // Method for testing DeletePost when it returns delete OK
+   [Fact]
+   public async Task DeleteComment_ReturnDeleteOkTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };   
+       
+       var mockComment = GetMockComments().First();
+       var mockPost = GetMockPosts().First();
+       
+       _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment);  
+       _mockCommentRepository.Setup(repo => repo.Delete(It.IsAny<int>())).ReturnsAsync(true);
+       _mockCommentRepository.Setup(repo => repo.Update(It.IsAny<Comment>())).ReturnsAsync(true);
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
+       _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(true);
+       
+       // Act
+       var result = await _controller.NewDeleteComment(mockComment.PostId); 
+         
+       // Assert
+       var okResult = Assert.IsType<OkObjectResult>(result);
+       Assert.Equal("Comment deleted successfully", okResult.Value);  
+   }
    
+   // Method for testing SaveComment when user is not logged in
+   [Fact]
+   public async Task DeleteComment_ReturnUserNotLoggedInTest()
+   {
+       // Act
+       var result = await _controller.NewDeleteComment(It.IsAny<int>());
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(403, statusCodeResult.StatusCode);
+       Assert.Equal("User not found, please log in again", statusCodeResult.Value);    
+   }
+   
+   // Method for testing DeletePost when it returns comment not found
+   [Fact]
+   public async Task DeleteComment_ReturnCommentNotFoundTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+
+       _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Comment) null!); // return null comment
+
+       // Act
+       var result = await _controller.NewDeleteComment(It.IsAny<int>()); // Pass in any comment id
+       
+       // Assert
+       var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
+       Assert.Equal(404, statusCodeResult.StatusCode);
+       Assert.Equal("Comment not found, cannot show post", statusCodeResult.Value);
+   }
+   
+   
+   // Method for testing DeletePost when it returns you are not the owner of the post
+   [Fact]
+   public async Task DeleteComment_ReturnNotOwnerTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+
+       var mockComment = GetMockComments().First();
+       mockComment.UserId = "123456789"; // Set userId to another user
+
+       _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment);
+
+       // Act
+       var result = await _controller.NewDeleteComment(mockComment.PostId);
+
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(403, statusCodeResult.StatusCode);
+       Assert.Equal("Could not delete the comment, you are not the owner of the comment", statusCodeResult.Value);
+   }
+   
+   // Method for testing DeletePost when it returns invalid Model State
+   [Fact]
+   public async Task DeleteComment_ReturnInvalidModelStateTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };   
+       
+       var mockComment = GetMockComments().First();
+       
+       _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment);  
+       
+       // Mocking failed Model State
+       // Source: https://stackoverflow.com/questions/17346866/model-state-validation-in-unit-tests
+       _controller.ModelState.AddModelError("Invalid", "Could not update the comment, the comment is not valid");
+       
+       // Act
+       var result = await _controller.NewDeleteComment(mockComment.PostId); 
+         
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(422, statusCodeResult.StatusCode);
+       Assert.Equal("Could not delete the comment, please try again", statusCodeResult.Value);
+   }
+
+   // Method for testing DeletePost when it returns delete fail when there are no subcomments
+   [Fact]
+   public async Task DeleteComment_ReturnDeleteFailNoCommentsTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };   
+       
+       var mockComment = GetMockComments().First();
+       
+       _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment);  
+       _mockCommentRepository.Setup(repo => repo.Delete(It.IsAny<int>())).ReturnsAsync(false);
+       
+       // Act
+       var result = await _controller.NewDeleteComment(mockComment.PostId); 
+         
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(500, statusCodeResult.StatusCode);
+       Assert.Equal("Internal server error while updating comment please try again", statusCodeResult.Value);
+   } 
+   
+   // Method for testing DeletePost when it returns delete OK
+   [Fact]
+   public async Task DeleteComment_ReturnDeleteFailWithCommentsTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };
+
+       var mockComment = GetMockComments().First();
+       mockComment.CommentReplies = GetMockComments(); // Add subcomments
+
+       _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment);
+       _mockCommentRepository.Setup(repo => repo.Update(It.IsAny<Comment>())).ReturnsAsync(false);
+
+       // Act
+       var result = await _controller.NewDeleteComment(mockComment.PostId);
+
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(500, statusCodeResult.StatusCode);
+       Assert.Equal("Internal server error while updating comment please try again", statusCodeResult.Value);
+   }
+   
+   // Method for testing DeletePost when it returns could not find post from db
+   [Fact]
+   public async Task DeleteComment_ReturnCouldNotFindPostTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };   
+       
+       var mockComment = GetMockComments().First();
+       
+       _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment);  
+       _mockCommentRepository.Setup(repo => repo.Delete(It.IsAny<int>())).ReturnsAsync(true);
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post) null!);
+       
+       // Act
+       var result = await _controller.NewDeleteComment(mockComment.PostId); 
+         
+       // Assert
+       var statusCodeResult = Assert.IsType<NotFoundObjectResult>(result);
+       Assert.Equal(404, statusCodeResult.StatusCode);
+       Assert.Equal("Post not found, cannot update post", statusCodeResult.Value);
+   }
+   
+   // Method for testing DeletePost when it returns failed to update
+   [Fact]
+   public async Task DeleteComment_ReturnUpdateFailTest()
+   {
+       // Arrange
+       var (mockUser, claimsPrincipal) = CreateMockUser(); // Create user with claim
+
+       // Set the User property of the controller to the test user
+       _controller.ControllerContext = new ControllerContext
+       {
+           HttpContext = new DefaultHttpContext { User = claimsPrincipal }
+       };   
+       
+       var mockComment = GetMockComments().First();
+       var mockPost = GetMockPosts().First();
+       
+       _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment);  
+       _mockCommentRepository.Setup(repo => repo.Delete(It.IsAny<int>())).ReturnsAsync(true);
+       _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
+       _mockPostRepository.Setup(repo => repo.Update(It.IsAny<Post>())).ReturnsAsync(false);
+       
+       // Act
+       var result = await _controller.NewDeleteComment(mockComment.PostId); 
+         
+       // Assert
+       var statusCodeResult = Assert.IsType<ObjectResult>(result);
+       Assert.Equal(500, statusCodeResult.StatusCode);
+       Assert.Equal("Internal server error while updating post please try again", statusCodeResult.Value);
+   } 
 }
