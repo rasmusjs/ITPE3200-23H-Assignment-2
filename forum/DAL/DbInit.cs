@@ -11,7 +11,7 @@ public static class DbInit
         using var serviceScope = app.ApplicationServices.CreateScope();
         var context = serviceScope.ServiceProvider.GetRequiredService<ForumDbContext>();
 
-        await context.Database.EnsureDeletedAsync(); // Deletes database if it exists
+        //await context.Database.EnsureDeletedAsync(); // Deletes database if it exists
         await context.Database.EnsureCreatedAsync(); // Creates database if it doesn't exist
 
         // Sets categories
