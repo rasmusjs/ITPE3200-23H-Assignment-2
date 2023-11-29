@@ -17,7 +17,8 @@ using Xunit;
 
 namespace ForumTest.Controllers;
 
-// Source: https://learn.microsoft.com/en-us/aspnet/core/mvc/controllers/testing?view=aspnetcore-6.0
+// Source for unit testing: https://learn.microsoft.com/en-us/aspnet/core/mvc/controllers/testing?view=aspnetcore-6.0
+// Source for mocking User claim: https://stackoverflow.com/questions/38323895/how-to-add-claims-in-a-mock-claimsprincipal
 public class PostControllerTest
 {
     // Mock models from the PostController
@@ -165,6 +166,7 @@ public class PostControllerTest
     }
 
     // Method for creating a mock user with a claim to mock logged in users
+    // Source: https://stackoverflow.com/questions/38323895/how-to-add-claims-in-a-mock-claimsprincipal
     private (ApplicationUser, ClaimsPrincipal) CreateMockUser()
     {
         var userId = "user1";
@@ -2122,6 +2124,7 @@ public class PostControllerTest
        var mockComment = GetMockComments().First();
        var mockPost = GetMockPosts().First();
        
+       // Mock repos
        _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment);  
        _mockCommentRepository.Setup(repo => repo.Delete(It.IsAny<int>())).ReturnsAsync(true);
        _mockCommentRepository.Setup(repo => repo.Update(It.IsAny<Comment>())).ReturnsAsync(true);
@@ -2246,6 +2249,7 @@ public class PostControllerTest
        
        var mockComment = GetMockComments().First();
        
+       // Mock repos
        _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment);  
        _mockCommentRepository.Setup(repo => repo.Delete(It.IsAny<int>())).ReturnsAsync(false);
        
@@ -2274,6 +2278,7 @@ public class PostControllerTest
        var mockComment = GetMockComments().First();
        mockComment.CommentReplies = GetMockComments(); // Add subcomments
 
+       // Mock repos
        _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment);
        _mockCommentRepository.Setup(repo => repo.Update(It.IsAny<Comment>())).ReturnsAsync(false);
 
@@ -2301,6 +2306,7 @@ public class PostControllerTest
        
        var mockComment = GetMockComments().First();
        
+       // Mock repos
        _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment);  
        _mockCommentRepository.Setup(repo => repo.Delete(It.IsAny<int>())).ReturnsAsync(true);
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync((Post) null!);
@@ -2330,6 +2336,7 @@ public class PostControllerTest
        var mockComment = GetMockComments().First();
        var mockPost = GetMockPosts().First();
        
+       // Mock repos
        _mockCommentRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockComment);  
        _mockCommentRepository.Setup(repo => repo.Delete(It.IsAny<int>())).ReturnsAsync(true);
        _mockPostRepository.Setup(repo => repo.GetTById(It.IsAny<int>())).ReturnsAsync(mockPost);
