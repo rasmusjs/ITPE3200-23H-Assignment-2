@@ -390,6 +390,30 @@ public class DashBoardController : Controller
         }
     }
 
+    // Post request to create a new tag in the repo and redirect to admin dashboard
+    [HttpPost]
+    public async Task<IActionResult> NewTag(Tag tag)
+    {
+        var userId = GetUserId();
+        if (userId.IsNullOrEmpty()) return StatusCode(403, "User not found, please log in again"); //  403 Forbidden
+
+        if (!IsAdmin()) return BadRequest("User is not admin");
+
+        // Checks if the submitted form values passes validation
+        if (!ModelState.IsValid)
+        {
+            _logger.LogWarning("[Dashboard controller] Tag creation failed for {@tag}", tag);
+            return StatusCode(500, "Internal server error while creating tag please try again");
+        }
+
+        // Tries to create tag in repo, logs error if it cannot create tag
+        var newTag = await _tagsRepositoryRepository.Create(tag);
+        if (newTag != null) return Ok("Created tag");
+
+        _logger.LogWarning("[Dashboard controller] Tag creation failed for {@tag}", tag);
+        return StatusCode(500, "Internal server error while creating tag please try again");
+    }
+
     // Post request to update an existing tag in the repo and redirects to the admin dashboard
     [HttpPost]
     public async Task<IActionResult> UpdateTag(Tag tag)
@@ -400,43 +424,19 @@ public class DashBoardController : Controller
         if (!IsAdmin()) return BadRequest("User is not admin");
 
         // Checks if the submitted form values passes validation
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            // Tries to update tag in repo, logs error if it cannot update tag
-            var updateTag = await _tagsRepositoryRepository.Update(tag);
-            if (!updateTag)
-            {
-                _logger.LogWarning("[Dashboard controller] Tag update failed for {@tag}", tag);
-                return StatusCode(500, "Internal server error while updating tag please try again");
-            }
+            _logger.LogWarning("[Dashboard controller] Tag update failed for {@tag}", tag);
+            return StatusCode(500, "Internal server error while updating tag please try again");
         }
 
-        return Ok("Updated tag");
-    }
+        // Tries to update tag in repo, logs error if it cannot update tag
+        var updateTag = await _tagsRepositoryRepository.Update(tag);
 
-    // Post request to create a new tag in the repo and redirect to admin dashboard
-    [HttpPost]
-    public async Task<IActionResult> NewTag(Tag tag)
-    {
-        var userId = GetUserId();
-        if (userId.IsNullOrEmpty()) return StatusCode(403, "User not found, please log in again"); //  403 Forbidden
+        if (updateTag) return Ok("Updated tag");
 
-        if (!IsAdmin()) return BadRequest("User is not admin");
-
-
-        // Checks if the submitted form values passes validation
-        if (ModelState.IsValid)
-        {
-            // Tries to create tag in repo, logs error if it cannot create tag
-            var newTag = await _tagsRepositoryRepository.Create(tag);
-            if (newTag == null)
-            {
-                _logger.LogWarning("[Dashboard controller] Tag creation failed for {@tag}", tag);
-                return StatusCode(500, "Internal server error while creating tag please try again");
-            }
-        }
-
-        return Ok("Created tag");
+        _logger.LogWarning("[Dashboard controller] Tag update failed for {@tag}", tag);
+        return StatusCode(500, "Internal server error while updating tag please try again");
     }
 
     // Get request to delete a tag in the repo
@@ -450,12 +450,10 @@ public class DashBoardController : Controller
 
         // Tries to delete the tag, logs and returns error if there is no category to delete
         var deleteTag = await _tagsRepositoryRepository.Delete(id);
-        if (!deleteTag)
-        {
-            _logger.LogError("[Dashboard controller] DeleteTag() failed, error message: result is null");
-            return NotFound("Category not found");
-        }
 
-        return Ok("Deleted tag");
+        if (deleteTag) return Ok("Deleted tag");
+
+        _logger.LogError("[Dashboard controller] DeleteTag() failed, error message: result is null");
+        return NotFound("Category not found");
     }
 }
