@@ -103,6 +103,7 @@ public class AccountController : Controller
             username = userActivity.UserName,
             profilePicture = userActivity.ProfilePicture,
             creationdate = userActivity.CreationDate,
+            role = _userManager.GetRolesAsync(user).Result.FirstOrDefault(),
             posts,
             likedPosts,
             savedPosts,
