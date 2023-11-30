@@ -8,7 +8,6 @@
         <IsPackable>false</IsPackable>
         <SpaRoot>frontend/</SpaRoot>
         <SpaProxyServerUrl>http://localhost:3000</SpaProxyServerUrl>
-        <SpaProxyLaunchCommand>npm run build</SpaProxyLaunchCommand>
         <SpaProxyLaunchCommand>npm run preview</SpaProxyLaunchCommand>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
@@ -22,7 +21,7 @@
     <ItemGroup>
         <Folder Include="Logs\"/>
     </ItemGroup>
-    
+
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.25"/>
         <PackageReference Include="HtmlSanitizer" Version="8.0.718"/>
@@ -56,9 +55,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <_ContentIncludedByDefault Remove="BracketBros-frontend\package.json" />
-      <_ContentIncludedByDefault Remove="BracketBros-frontend\server\tsconfig.json" />
-      <_ContentIncludedByDefault Remove="BracketBros-frontend\tsconfig.json" />
+        <_ContentIncludedByDefault Remove="BracketBros-frontend\package.json"/>
+        <_ContentIncludedByDefault Remove="BracketBros-frontend\server\tsconfig.json"/>
+        <_ContentIncludedByDefault Remove="BracketBros-frontend\tsconfig.json"/>
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
